@@ -17,9 +17,10 @@ export default function useUser() {
     const setUserInfo = (response) => {
         localStorage.setItem("USERID", response.data.data.UserId);
         localStorage.setItem("USERNAME", response.data.data.UserName);
-        localStorage.setItem("token", response.data.data.Token);
+        localStorage.setItem("token", response.data.data.Token); 
         localStorage.setItem("role", response.data.data.Role);
     };
+    
 
     const getUserData = () => {
         const USERID = localStorage.getItem("USERID");
@@ -36,8 +37,9 @@ export default function useUser() {
 
     const isAuthenticated = () => {
         const hasToken = localStorage.getItem("token");
-        return hasToken !== null;
+        return hasToken !== null;  // Nếu có token, trả về true
     };
+    
 
     return {
         getUserId,

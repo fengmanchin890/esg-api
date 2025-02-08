@@ -35,6 +35,7 @@
         { path: '' },
       ],
     },
+    
   ];
 
   const router = createRouter({

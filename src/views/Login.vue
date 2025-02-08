@@ -35,9 +35,9 @@
                 placeholder="Select Factory"
                 class="input-field"
               >
-                <el-option label="Ty Xuan" value="Ty Xuan"></el-option>
-                <el-option label="Ty Bach" value="Ty Bach"></el-option>
-                <el-option label="Ty Thac" value="Ty Thac"></el-option>
+                <el-option label="Ty Xuan" value="LYN"></el-option>
+                <el-option label="Ty Bach" value="LYV"></el-option>
+                <el-option label="Ty Thac" value="LYS"></el-option>
               </el-select>
             </el-form-item>
 
@@ -80,58 +80,64 @@
     <div class="footer">© 2025 Lai Yih Web Team. All rights reserved.</div>
   </div>
 </template>
-
-
 <script setup>
 import { reactive, ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import TripleCircle from "../components/LoginPage/TripleCircle.vue";
-import { View } from "@element-plus/icons-vue";
+import { View, Hide } from "@element-plus/icons-vue";
 const router = useRouter();
 const showPassword = ref(false);
 
 const Users = reactive({
   UserID: localStorage.getItem("USERID") || "",
-  Password: localStorage.getItem("PASSWORD") || "",
-  Factory: localStorage.getItem("Factory") || "Ty Xuan",
+  Password: localStorage.getItem("PWD") || "",
+  Factory: localStorage.getItem("DB_CHOICE") || "LYN",
 });
-
-const Factory = ref("");
 
 const login = async () => {
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}api/qc/login`,
-      Users
-    );
-    if (typeof response.data.data === "object") {
-      localStorage.setItem("USERID", response.data.data.USERID);
-      localStorage.setItem("Factory", response.data.data.Factory);
-      localStorage.setItem("USERNAME", response.data.data.USERNAME);
+    const payload = {
+      DB_CHOICE: Users.Factory,
+      USERID: Users.UserID,
+      PWD: Users.Password,
+    };
 
+    const response = await axios.post(
+      `http://localhost:8081/api/v1/auth/login`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.data && response.data.data) {
+      setUserInfo(response.data);
       ElMessage({
-        message: "Login successful!",
+        message: response.data.data.message || "Login successful!",
         type: "success",
       });
 
-      router.push("/");
+      // Sau khi login thành công, điều hướng tới trang home
+      router.push("/home");
     } else {
       ElMessage({
-        message: response.data.data,
+        message: "Invalid login response from server",
         type: "warning",
       });
     }
   } catch (error) {
     ElMessage({
-      message: "Login failed. Please try again!",
+      message: error.response?.data?.message || "Đăng nhập thất bại!",
       type: "error",
     });
-    console.error(error);
   }
 };
 </script>
+
 
 <style scoped>
 .footer {
