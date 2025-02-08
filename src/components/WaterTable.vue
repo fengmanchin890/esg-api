@@ -4,6 +4,37 @@
       <img src="../assets/water.png" alt="water" class="icon" />
       <h1>Water</h1>
     </div>
+    <div class="water-input">
+      <div>
+        <el-icon class="icon-add">
+          <CirclePlus />
+        </el-icon>
+      </div>
+      <div>
+        <label>日期</label>
+        <el-input />
+      </div>
+      <div>
+        <label>位置</label>
+        <el-input />
+      </div>
+      <div>
+        <label>自來水度數</label>
+        <el-input />
+      </div>
+      <div>
+        <label>回收水度數</label>
+        <el-input />
+      </div>
+      <div>
+        <label>USERID</label>
+        <el-input />
+      </div>
+      <div>
+        <label>USERDATE</label>
+        <el-input />
+      </div>
+    </div>
     <ry-edit-table
       ref="ryEditTable"
       :listData="listData"
@@ -22,8 +53,13 @@
 </template>
 
 <script>
+import { CirclePlus } from '@element-plus/icons-vue';
+
 export default {
   name: "demoPage",
+  components: {
+    CirclePlus,
+  },
 
   data() {
     return {
@@ -244,5 +280,28 @@ export default {
 }
 .icon {
   width: 140px;
+}
+
+.icon-add {
+  color: green;
+  font-size: 25px;
+}
+
+.water-input {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  gap: 20px;
+}
+
+.water-input div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.water-input label {
+  white-space: nowrap;
+  text-align: right;
 }
 </style>
