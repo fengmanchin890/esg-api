@@ -7,6 +7,7 @@
             src="@/assets/lai_yih_logo.png"
             alt="Lai Yih Logo"
             class="lai-yih-logo"
+            @click="toggleCollapse()"
           />
           <div class="company-text">
             <span class="company-name-main">
@@ -25,16 +26,25 @@
       <el-col :span="6" class="right-section">
         <div class="logo-company">
           <img src="@/assets/logo.png" alt="Logo" class="logo" />
-          <span class="company-name">Ty Bach</span>
+          <span class="company-name">{{ factory }}</span>
         </div>
         <div class="user-info">
           <img src="@/assets/user.png" alt="User" class="user-icon" />
-          <span class="user-name">Admin</span>
+          <span class="user-name">{{ userName }}</span>
         </div>
       </el-col>
     </el-row>
   </el-header>
 </template>
+
+<script setup>
+import useMainPage from '../hooks/useMainPage';
+const { factory, userName, toggleCollapse } = useMainPage();
+
+</script>
+
+
+
 
 <style scoped>
 .header {
@@ -44,6 +54,7 @@
   width: 100%;
   height: 60px;
   z-index: 1000;
+  background-image: linear-gradient(to right, #07ef8a 0%, #0f6b03 100%);
 }
 
 .header-row {
@@ -112,7 +123,6 @@
 .dashboard-title {
   color: white;
   padding: 5px 15px;
-  -webkit-text-stroke: 0.8px green;
   font-size: 24px;
 }
 

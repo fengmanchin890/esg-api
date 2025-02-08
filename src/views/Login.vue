@@ -88,7 +88,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import TripleCircle from "../components/LoginPage/TripleCircle.vue";
-import { View } from "@element-plus/icons-vue";
+import { Hide,View } from "@element-plus/icons-vue";
 const router = useRouter();
 const showPassword = ref(false);
 

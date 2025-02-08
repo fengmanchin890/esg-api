@@ -35,8 +35,9 @@ export default function useUser() {
     };
 
     const isAuthenticated = () => {
-        const hasToken = localStorage.getItem("token");
-        return hasToken !== null;
+        // const hasToken = localStorage.getItem("token");
+        // return hasToken !== null;
+        return true
     };
 
     return {
