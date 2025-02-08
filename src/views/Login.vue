@@ -31,11 +31,11 @@
           >
             <el-form-item label-position="left">
               <el-select
-                v-model="Users.Factory"
+                v-model="Users.DB_CHOICE"
                 placeholder="Select Factory"
                 class="input-field"
               >
-                <el-option label="Ty Xuan" value="Ty Xuan"></el-option>
+                <el-option label="Ty Xuan" value="LYN"></el-option>
                 <el-option label="Ty Bach" value="Ty Bach"></el-option>
                 <el-option label="Ty Thac" value="Ty Thac"></el-option>
               </el-select>
@@ -43,7 +43,7 @@
 
             <el-form-item label-position="left">
               <el-input
-                v-model="Users.UserID"
+                v-model="Users.USERID"
                 placeholder="ID"
                 class="input-field"
               ></el-input>
@@ -51,7 +51,7 @@
 
             <el-form-item label-position="left">
               <el-input
-                v-model="Users.Password"
+                v-model="Users.PWD"
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="Password"
                 class="input-field"
@@ -93,9 +93,10 @@ const router = useRouter();
 const showPassword = ref(false);
 
 const Users = reactive({
-  UserID: localStorage.getItem("USERID") || "",
-  Password: localStorage.getItem("PASSWORD") || "",
-  Factory: localStorage.getItem("Factory") || "Ty Xuan",
+  
+  USERID: localStorage.getItem("USERID") || "",
+  PWD: localStorage.getItem("PASSWORD") || "",
+  DB_CHOICE: localStorage.getItem("DB_CHOICE") || "LYN",
 });
 
 const Factory = ref("");
@@ -103,20 +104,21 @@ const Factory = ref("");
 const login = async () => {
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}api/qc/login`,
+      `http://localhost:8081/api/v1/auth/login`,
       Users
     );
     if (typeof response.data.data === "object") {
+     
       localStorage.setItem("USERID", response.data.data.USERID);
-      localStorage.setItem("Factory", response.data.data.Factory);
-      localStorage.setItem("USERNAME", response.data.data.USERNAME);
+      localStorage.setItem("PWD", response.data.data.PWD);
+      localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
 
       ElMessage({
         message: "Login successful!",
         type: "success",
       });
 
-      router.push("/");
+      router.push("/input");
     } else {
       ElMessage({
         message: response.data.data,
