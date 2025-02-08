@@ -31,19 +31,19 @@
           >
             <el-form-item label-position="left">
               <el-select
-                v-model="Users.Factory"
+                v-model="Users.DB_CHOICE"
                 placeholder="Select Factory"
                 class="input-field"
               >
                 <el-option label="Ty Xuan" value="LYN"></el-option>
-                <el-option label="Ty Bach" value="LYV"></el-option>
-                <el-option label="Ty Thac" value="LYS"></el-option>
+                <el-option label="Ty Bach" value="Ty Bach"></el-option>
+                <el-option label="Ty Thac" value="Ty Thac"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label-position="left">
               <el-input
-                v-model="Users.UserID"
+                v-model="Users.USERID"
                 placeholder="ID"
                 class="input-field"
               ></el-input>
@@ -51,7 +51,7 @@
 
             <el-form-item label-position="left">
               <el-input
-                v-model="Users.Password"
+                v-model="Users.PWD"
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="Password"
                 class="input-field"
@@ -80,64 +80,60 @@
     <div class="footer">© 2025 Lai Yih Web Team. All rights reserved.</div>
   </div>
 </template>
+
+
 <script setup>
 import { reactive, ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import TripleCircle from "../components/LoginPage/TripleCircle.vue";
-import { View, Hide } from "@element-plus/icons-vue";
+import { View } from "@element-plus/icons-vue";
 const router = useRouter();
 const showPassword = ref(false);
 
 const Users = reactive({
-  UserID: localStorage.getItem("USERID") || "",
-  Password: localStorage.getItem("PWD") || "",
-  Factory: localStorage.getItem("DB_CHOICE") || "LYN",
+  
+  USERID: localStorage.getItem("USERID") || "",
+  PWD: localStorage.getItem("PASSWORD") || "",
+  DB_CHOICE: localStorage.getItem("DB_CHOICE") || "LYN",
 });
+
+const Factory = ref("");
 
 const login = async () => {
   try {
-    const payload = {
-      DB_CHOICE: Users.Factory,
-      USERID: Users.UserID,
-      PWD: Users.Password,
-    };
-
     const response = await axios.post(
       `http://localhost:8081/api/v1/auth/login`,
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      Users
     );
+    if (typeof response.data.data === "object") {
+     
+      localStorage.setItem("USERID", response.data.data.USERID);
+      localStorage.setItem("PWD", response.data.data.PWD);
+      localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
 
-    if (response.data && response.data.data) {
-      setUserInfo(response.data);
       ElMessage({
-        message: response.data.data.message || "Login successful!",
+        message: "Login successful!",
         type: "success",
       });
 
-      // Sau khi login thành công, điều hướng tới trang home
-      router.push("/home");
+      router.push("/input");
     } else {
       ElMessage({
-        message: "Invalid login response from server",
+        message: response.data.data,
         type: "warning",
       });
     }
   } catch (error) {
     ElMessage({
-      message: error.response?.data?.message || "Đăng nhập thất bại!",
+      message: "Login failed. Please try again!",
       type: "error",
     });
+    console.error(error);
   }
 };
 </script>
-
 
 <style scoped>
 .footer {
