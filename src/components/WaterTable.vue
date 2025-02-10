@@ -1,7 +1,7 @@
 <template>
   <div id="DemoPage">
     <div class="title">
-      <img src="../assets/water.png" alt="water" class="icon" />
+      <img src="../assets/water.png" alt="water" class="icon"/>
       <h1>Water</h1>
     </div>
     <div class="water-input">
@@ -53,12 +53,12 @@
   color: rgba(61, 243, 243, 0.973);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
-  padding: 20px;
-  margin-top: -35px;
+  padding: 20px 0;
+  margin: -35px 0;
 }
 
 .icon {
-  width: 140px;
+  width: 110px;
 }
 
 .icon-add {

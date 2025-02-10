@@ -56,11 +56,12 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   color: rgba(226, 44, 31, 0.829);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
-  padding: 20px;
+  padding: 20px 0;
+  margin-bottom: -35px;
 }
 
 .icon {
-  width: 140px;
+  width: 90px;
 }
 
 .icon-add {

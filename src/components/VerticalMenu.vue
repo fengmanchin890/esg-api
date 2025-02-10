@@ -47,7 +47,7 @@ const activeIndex = computed(() => {
   if (route.path.includes("/mainPage/input")) return "1";
   if (route.path.includes("/mainPage/analyze")) return "2";
   if (route.path.includes("/mainPage/settings")) return "3";
-  return "1-1";
+  return "1";
 });
 
 const navigateTo = (path: string) => {
