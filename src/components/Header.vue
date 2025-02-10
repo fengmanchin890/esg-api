@@ -7,7 +7,7 @@
             src="@/assets/lai_yih_logo.png"
             alt="Lai Yih Logo"
             class="lai-yih-logo"
-            @click="toggleCollapse()"
+            @click="toggleCollapse"
           />
           <div class="company-text">
             <span class="company-name-main">
@@ -28,18 +28,56 @@
           <img src="@/assets/logo.png" alt="Logo" class="logo" />
           <span class="company-name">{{ factory }}</span>
         </div>
+
         <div class="user-info">
-          <img src="@/assets/user.png" alt="User" class="user-icon" />
+          <el-dropdown trigger="click">
+            <span class="user-icon-container">
+              <img src="@/assets/user.png" alt="User" class="user-icon" />
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="openChangePassword">
+                  Đổi mật khẩu
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="logout">
+                  Đăng xuất
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
           <span class="user-name">{{ userName }}</span>
         </div>
       </el-col>
     </el-row>
+
+    <el-dialog v-model="showChangePassword" title="Đổi mật khẩu" width="400px">
+      <ChangePassword @close="showChangePassword = false" />
+    </el-dialog>
   </el-header>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import useMainPage from "../hooks/useMainPage";
+import useUser from "../hooks/useUser";
+import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+import ChangePassword from "../components/LoginPage/ChangePassword.vue";
+
 const { factory, userName, toggleCollapse } = useMainPage();
+const { clearUserData } = useUser();
+const router = useRouter();
+const showChangePassword = ref(false);
+
+const openChangePassword = () => {
+  showChangePassword.value = true;
+};
+
+const logout = () => {
+  clearUserData();
+  ElMessage.success("Logout successful!");
+  router.push("/");
+};
 </script>
 
 <style scoped>
@@ -81,6 +119,7 @@ const { factory, userName, toggleCollapse } = useMainPage();
 
 .lai-yih-logo {
   height: 70px;
+  cursor: pointer;
 }
 
 .company-text {
@@ -151,8 +190,15 @@ const { factory, userName, toggleCollapse } = useMainPage();
   gap: 10px;
 }
 
+.user-icon-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
 .user-icon {
   height: 35px;
+  border-radius: 50%;
 }
 
 .user-name {
