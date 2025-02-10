@@ -38,13 +38,9 @@
 </template>
 
 <script setup>
-import useMainPage from '../hooks/useMainPage';
+import useMainPage from "../hooks/useMainPage";
 const { factory, userName, toggleCollapse } = useMainPage();
-
 </script>
-
-
-
 
 <style scoped>
 .header {
@@ -66,6 +62,7 @@ const { factory, userName, toggleCollapse } = useMainPage();
 .left-section,
 .center-section,
 .right-section {
+  color: white;
   display: flex;
   align-items: center;
   height: 100%;
