@@ -33,23 +33,19 @@
               <img src="@/assets/user.png" alt="User Icon" class="user-icon" />
             </span>
             <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="openChangePassword">
-                  <el-icon><lock /></el-icon> Đổi mật khẩu
-                </el-dropdown-item>
+              <el-dropdown-menu class="custom-dropdown">
                 <el-dropdown-item divided @click="openLogoutDialog">
-                  <el-icon><switch-button /></el-icon> Đăng xuất
+                  <el-icon><switch-button /></el-icon>
+                  <span class="logout-text">Đăng xuất</span>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+
           <span class="user-name">{{ userName }}</span>
         </div>
       </el-col>
     </el-row>
-    <el-dialog v-model="showChangePassword" title="Đổi mật khẩu" width="400px">
-      <ChangePassword @close="showChangePassword = false" />
-    </el-dialog>
     <LogoutConfirmation ref="logoutDialog" @confirm="logout" />
   </el-header>
 </template>
@@ -60,30 +56,33 @@ import useMainPage from "../hooks/useMainPage";
 import useUser from "../hooks/useUser";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { Lock, SwitchButton } from "@element-plus/icons-vue";
-import ChangePassword from "../components/LoginPage/ChangePassword.vue";
+import { SwitchButton } from "@element-plus/icons-vue";
 import LogoutConfirmation from "../components/LoginPage/LogoutConfirmation.vue";
 
 const { factory, userName, toggleCollapse } = useMainPage();
 const { clearUserData } = useUser();
 const router = useRouter();
-const showChangePassword = ref(false);
 const logoutDialog = ref(null);
-
-const openChangePassword = () => {
-  showChangePassword.value = true;
-};
 
 const openLogoutDialog = () => {
   logoutDialog.value.open();
 };
 
-const logout = () => {  
+const logout = () => {
   clearUserData();
   ElMessage.success("Logout successful!");
   router.push("/");
 };
+const observer = new ResizeObserver((entries) => {
+  requestAnimationFrame(() => {
+    for (let entry of entries) {
+      // console.log("Resized:", entry.contentRect.width, entry.contentRect.height);
+    }
+  });
+});
+observer.observe(document.body);
 </script>
+
 
 <style scoped>
 .header {

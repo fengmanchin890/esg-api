@@ -14,6 +14,6 @@ export default function useMainPage() {
     factory,
     userName,
     isCollapse,
-    toggleCollapse, // 確保這個函數可以被組件使用
+    toggleCollapse,
   };
 }
