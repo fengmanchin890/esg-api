@@ -10,8 +10,8 @@
   </el-dialog>
 </template>
   
-  <script setup>
-import { ref, defineEmits } from "vue";
+<script setup>
+import { ref } from "vue";
 
 const visible = ref(false);
 const emit = defineEmits(["confirm", "close"]);
@@ -32,6 +32,7 @@ const confirmLogout = () => {
 
 defineExpose({ open });
 </script>
+
   
   <style scoped>
 .dialog-footer {
