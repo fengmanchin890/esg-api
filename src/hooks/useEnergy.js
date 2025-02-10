@@ -8,8 +8,8 @@ export function useEnergy() {
   const newRecord = ref({
     recordyear: "",
     recordmonth: "",
-    grid_electricity_meter: "",
-    solar_energy_meter: "",
+    gridElectricityMeter: "",
+    solarEnergyMeter: "",
   });
 
   const listConfig = [
@@ -17,8 +17,8 @@ export function useEnergy() {
     { label: "Factory", prop: "factoryid", minWidth: "150px" },
     { label: "Year", prop: "recordyear", minWidth: "100px" },
     { label: "Month", prop: "recordmonth", minWidth: "100px" },
-    { mode: "text", label: "Grid Electricity", prop: "grid_electricity_meter", minWidth: "150px" },
-    { mode: "text", label: "Solar Energy", prop: "solar_energy_meter", minWidth: "150px" },
+    { mode: "text", label: "Grid Electricity", prop: "gridElectricityMeter", minWidth: "150px" },
+    { mode: "text", label: "Solar Energy", prop: "solarEnergyMeter", minWidth: "150px" },
   ];
 
   const rowButtons = [
@@ -54,11 +54,13 @@ export function useEnergy() {
   const fetchEnergyData = async () => {
     try {
       const response = await axios.get("http://localhost:8081/api/v1/energy/get");
+      console.log("Dữ liệu nhận được:", response.data); // Log dữ liệu ra console
       listData.value = response.data.data;
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
     }
   };
+
 
   const addRecord = async () => {
     try {
@@ -74,8 +76,8 @@ export function useEnergy() {
         factoryid: factoryId,
         recordyear: parseInt(newRecord.value.recordyear),
         recordmonth: parseInt(newRecord.value.recordmonth),
-        grid_electricity_meter: parseFloat(newRecord.value.grid_electricity_meter),
-        solar_energy_meter: parseFloat(newRecord.value.solar_energy_meter),
+        grid_electricity_meter: parseFloat(newRecord.value.gridElectricityMeter),
+        solar_energy_meter: parseFloat(newRecord.value.solarEnergyMeter),
         userid: userId,
       });
 
@@ -98,8 +100,8 @@ export function useEnergy() {
         factoryid: row.factoryid,
         recordyear: parseInt(row.recordyear),
         recordmonth: parseInt(row.recordmonth),
-        grid_electricity_meter: parseFloat(row.grid_electricity_meter),
-        solar_energy_meter: parseFloat(row.solar_energy_meter),
+        grid_electricity_meter: parseFloat(row.gridElectricityMeter),
+        solar_energy_meter: parseFloat(row.solarEnergyMeter),
       });
 
       if (response.data.code === 200) {

@@ -22,11 +22,11 @@
       </div>
       <div>
         <label>Grid Electricity Meter</label>
-        <el-input v-model="newRecord.grid_electricity_meter" />
+        <el-input v-model="newRecord.gridElectricityMeter" />
       </div>
       <div>
         <label>Solar Energy Meter</label>
-        <el-input v-model="newRecord.solar_energy_meter" />
+        <el-input v-model="newRecord.solarEnergyMeter" />
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
 
