@@ -48,8 +48,6 @@ import { CirclePlus } from "@element-plus/icons-vue";
 const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord } = useEnergy();
 </script>
 
-
-
 <style scoped>
 .title {
   display: flex;
@@ -95,14 +93,11 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 .search-bar .el-input {
   max-width: 100%;
   border-radius: 8px;
-  /* Bo góc */
   border: 1px solid #ccc;
 }
 
 .search-bar .el-input input {
   font-size: 14px;
-  /* Cỡ chữ */
   padding: 10px;
-  /* Padding bên trong */
 }
 </style>
