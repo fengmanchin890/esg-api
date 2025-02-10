@@ -78,12 +78,10 @@ const login = async () => {
       Users
     );
     if (typeof response.data.data === "object") {
-      // Lưu vào localStorage và sessionStorage
       localStorage.setItem("USERID", response.data.data.USERID);
       localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
       sessionStorage.setItem("TOKEN", response.data.data.TOKEN);
       localStorage.setItem("USERNAME", response.data.data.USERNAME);
-      // Cập nhật vào Users (Vue Reactive
       Object.assign(Users, response.data.data);
       console.log("Users sau khi cập nhật:", Users);
 
@@ -92,8 +90,10 @@ const login = async () => {
         type: "success",
       });
 
-      router.push("/mainPage/input");
-      window.location.reload();
+      setTimeout(() => {
+        router.push("/mainPage/input");
+        window.location.reload();
+      }, 500); 
     } else {
       ElMessage({
         message: response.data.data,
@@ -108,6 +108,7 @@ const login = async () => {
     });
   }
 };
+
 
 </script>
 
