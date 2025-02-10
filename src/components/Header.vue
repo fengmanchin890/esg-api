@@ -78,7 +78,7 @@ const openLogoutDialog = () => {
   logoutDialog.value.open();
 };
 
-const logout = () => {
+const logout = () => {  
   clearUserData();
   ElMessage.success("Logout successful!");
   router.push("/");

@@ -23,13 +23,8 @@
         </div>
 
         <el-card class="custom-card">
-          <el-form
-            :model="Users"
-            @submit.prevent="login"
-            size="large"
-            label-width="auto"
-          >
-            <el-form-item label-position="left">
+          <el-form :model="Users" @submit.prevent="login" size="large">
+            <el-form-item>
               <el-select
                 v-model="Users.DB_CHOICE"
                 placeholder="Select Factory"
@@ -41,7 +36,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label-position="left">
+            <el-form-item>
               <el-input
                 v-model="Users.USERID"
                 placeholder="ID"
@@ -49,7 +44,7 @@
               ></el-input>
             </el-form-item>
 
-            <el-form-item label-position="left">
+            <el-form-item>
               <el-input
                 v-model="Users.PWD"
                 :type="showPassword ? 'text' : 'password'"
@@ -88,12 +83,11 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import TripleCircle from "../components/LoginPage/TripleCircle.vue";
-import { Hide,View } from "@element-plus/icons-vue";
+import { Hide, View } from "@element-plus/icons-vue";
 const router = useRouter();
 const showPassword = ref(false);
 
 const Users = reactive({
-  
   USERID: localStorage.getItem("USERID") || "",
   PWD: localStorage.getItem("PASSWORD") || "",
   DB_CHOICE: localStorage.getItem("DB_CHOICE") || "LYN",
@@ -108,7 +102,6 @@ const login = async () => {
       Users
     );
     if (typeof response.data.data === "object") {
-     
       localStorage.setItem("USERID", response.data.data.USERID);
       localStorage.setItem("PWD", response.data.data.PWD);
       localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
@@ -136,6 +129,17 @@ const login = async () => {
 </script>
 
 <style scoped>
+.custom-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-field {
+  width: 100%;
+}
+
 .footer {
   position: fixed;
   bottom: 10px;
