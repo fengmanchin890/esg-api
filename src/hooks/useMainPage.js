@@ -4,9 +4,9 @@ const isCollapse = ref(true);
 const userName = ref("Admin");
 
 const factoryNames = {
-  LYN: "Ty Xuan",
-  LYV: "Ty Bach",
-  LYS: "Ty Thac",
+  LYN: "TỶ XUÂN",
+  LYV: "TỶ BÁCH",
+  LYS: "TỶ THẠC",
 };
 
 const dbChoice = localStorage.getItem("DB_CHOICE") || "Unknown";

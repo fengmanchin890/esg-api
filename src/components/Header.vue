@@ -31,7 +31,7 @@
     <span class="user-icon-container">
       <img src="@/assets/user.png" alt="User Icon" class="user-icon" />
     </span>
-    <span class="user-name select-none ml-2">{{ userName }}</span>
+    <span class="user-name select-none ml-2">{{ USERNAME }}</span>
   </div>
   <template #dropdown>
     <el-dropdown-menu class="custom-dropdown" divided>
@@ -66,6 +66,8 @@ const logoutDialog = ref(null);
 const openLogoutDialog = () => {
   logoutDialog.value.open();
 };
+
+const USERNAME = localStorage.getItem("USERNAME");
 
 const logout = () => {
   clearUserData();

@@ -54,7 +54,6 @@ export function useEnergy() {
   const fetchEnergyData = async () => {
     try {
       const response = await axios.get("http://localhost:8081/api/v1/energy/get");
-      console.log("Dữ liệu nhận được:", response.data); // Log dữ liệu ra console
       listData.value = response.data.data;
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
