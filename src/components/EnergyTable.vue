@@ -12,48 +12,34 @@
         </el-icon>
       </div>
       <div>
-        <label>日期</label>
-        <el-input />
+        <label>Record Year</label>
+        <el-input v-model="newRecord.recordyear" />
       </div>
       <div>
-        <label>位置</label>
-        <el-input />
+        <label>Record Month</label>
+        <el-input v-model="newRecord.recordmonth" />
       </div>
       <div>
-        <label>市電度數</label>
-        <el-input />
+        <label>Grid Electricity Meter</label>
+        <el-input v-model="newRecord.grid_electricity_meter" />
       </div>
       <div>
-        <label>太陽能度數</label>
-        <el-input />
+        <label>Solar Energy Meter</label>
+        <el-input v-model="newRecord.solar_energy_meter" />
       </div>
-      <div>
-        <label>USERID</label>
-        <el-input />
-      </div>
-      <div>
-        <label>USERDATE</label>
-        <el-input />
-      </div>
+      <el-button type="primary" @click="addRecord">INSERT</el-button>
+
     </div>
-    <ry-edit-table
-      ref="ryEditTable"
-      :listData="listData"
-      :listConfig="listConfig"
-      :rowButtons="rowButtons"
-      :operationsConfig="{ width: 173 }"
-      :action="'action'"
-      :cellStyle="{ color: 'orange' }"
-      :cellClassName="'custom-cell-class'"
-      trigger="onChange"
-    >
-      <el-table-column type="selection" width="55px" fixed="left" />
-      <el-table-column type="index" label="Index" width="100px" fixed="left" />
-    </ry-edit-table>
+
+    <ry-edit-table ref="ryEditTable" :listData="listData" :listConfig="listConfig" :rowButtons="rowButtons"
+      :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }"
+      :cellClassName="'custom-cell-class'" trigger="onChange" />
+
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import { CirclePlus } from '@element-plus/icons-vue';
 
 export default {
@@ -61,152 +47,24 @@ export default {
   components: {
     CirclePlus,
   },
-
   data() {
     return {
-      dropDownOptions: {
-        job: [],
+      listData: [], // Dữ liệu từ API
+      newRecord: {
+        recorddate: "",
+        factoryid: "",
+        grid_electricity_meter: "",
+        solar_energy_meter: "",
+        userid: "",
+        userdate: "",
       },
-      list: [
-        {
-          name: "Time1",
-          age: "26",
-          pkid: 1,
-          date: "1998-01-30",
-          job: "0",
-          job$view: "Athlete",
-          items$view: "Badminton, Swimming",
-          items: ["0", "3"],
-        },
-        {
-          name: "cherry",
-          age: "13",
-          pkid: 2,
-          date: "1996-01-30",
-          job: "2",
-          job$view: "Student",
-          items$view: "Badminton, Swimming",
-          items: ["0", "3"],
-        },
-        {
-          name: "alex",
-          age: "28",
-          pkid: 3,
-          date: "1992-01-30",
-          job: "0",
-          job$view: "Athlete",
-          items$view: "Badminton, Swimming",
-          items: ["0", "3"],
-        },
-      ],
-      listData: [],
       listConfig: [
-        {
-          mode: "text",
-          label: "Name",
-          prop: "name",
-          minWidth: "150px",
-          disabled(row) {
-            return row.name === "cherry";
-          },
-          change: (v, row, index) => {
-            console.log("v, row, index: ", v, row, index);
-          },
-          blur: (v) => {
-            console.log("name blur");
-          },
-          rules: [
-            {
-              type: "string",
-              required: true,
-              message: "Name cannot be empty",
-            },
-          ],
-        },
-        {
-          mode: "text",
-          label: "Age",
-          prop: "age",
-          minWidth: "100px",
-          sortable: true,
-          change: (v, row) => (row.job = v <= 22 ? "2" : ""),
-          rules: [
-            {
-              type: "number",
-              asyncValidator: (rule, value) => {
-                return new Promise((resolve, reject) => {
-                  if (value < 1) {
-                    reject("Age must be greater than 1");
-                  } else {
-                    resolve();
-                  }
-                });
-              },
-            },
-          ],
-        },
-        {
-          mode: "date",
-          label: "Date of Birth",
-          prop: "date",
-          minWidth: "180px",
-          inputConfig: {
-            "value-format": "YYYY-MM-DD",
-          },
-          rules: [
-            {
-              type: "date",
-              required: true,
-              message: "Date of Birth cannot be empty",
-            },
-          ],
-        },
-        {
-          mode: "select",
-          label: "Occupation/Status",
-          prop: "job",
-          renderProp: "job$view",
-          minWidth: "100px",
-          placeholder: "Please select",
-          inputConfig: {
-            clearable: true,
-          },
-          options: (row) => {
-            return row.age > 22
-              ? this.dropDownOptions.job.filter((item) => item.value !== "2")
-              : this.dropDownOptions.job.filter((item) => item.value === "2");
-          },
-          rules: [
-            {
-              required: true,
-              message: "Occupation/Status cannot be empty",
-            },
-          ],
-        },
-        {
-          mode: "select",
-          label: "Competition Events",
-          minWidth: "300px",
-          prop: "items",
-          renderProp: "items$view",
-          placeholder: "Multiple choices",
-          inputConfig: {
-            clearable: true,
-            multiple: true,
-          },
-          options: [
-            { value: "0", label: "Badminton" },
-            { value: "1", label: "Basketball" },
-            { value: "2", label: "Table Tennis" },
-            { value: "3", label: "Swimming" },
-          ],
-          rules: [
-            {
-              required: true,
-              message: "Competition event cannot be empty",
-            },
-          ],
-        },
+        { label: "RecordID", prop: "recordid", minWidth: "150px" },
+        { label: "FactoryID", prop: "factoryid", minWidth: "150px" },
+        { label: "Year", prop: "recordyear", minWidth: "100px" },
+        { label: "Month", prop: "recordmonth", minWidth: "100px" },
+        { mode: "text", label: "Grid Electricity", prop: "grid_electricity_meter", minWidth: "150px" },
+        { mode: "text", label: "Solar Energy", prop: "solar_energy_meter", minWidth: "150px" },
       ],
       rowButtons: [
         {
@@ -221,12 +79,9 @@ export default {
           name: "Save",
           type: "success",
           vIf: (row) => row.isEdit,
-          click: (ref, row) => {
-            ref.validate((valid) => {
-              if (valid) {
-                ref.cancel();
-              }
-            });
+          click: async (ref, row) => {
+            await this.updateRecord(row); // Gọi API cập nhật dữ liệu
+            ref.cancel(); // Kết thúc chế độ chỉnh sửa
           },
         },
         {
@@ -241,33 +96,128 @@ export default {
           name: "Delete",
           type: "danger",
           vIf: (row) => !row.isEdit,
-          click: (ref) => {
-            ref.delete();
+          click: (ref, row) => {
+            this.deleteEnergy(row.recordid); // Gọi API xóa
           },
         },
-      ],
+      ]
     };
   },
   created() {
-    this.getDropDownOptions();
-    this.getList();
+    this.fetchEnergyData();
   },
   methods: {
-    getList() {
-      setTimeout(() => {
-        this.listData = [...this.list];
-      }, 1000);
+    async fetchEnergyData() {
+      try {
+        const response = await axios.get("http://localhost:8081/api/v1/energy/get");
+        this.listData = response.data.data;
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+      }
     },
-    async getDropDownOptions() {
-      this.dropDownOptions.job = await Promise.resolve([
-        { label: "Athlete", value: "0" },
-        { label: "Engineer", value: "1" },
-        { label: "Student", value: "2" },
-      ]);
+    async addRecord() {
+      try {
+        const userId = localStorage.getItem("USERID");
+        if (!userId) {
+          this.$message.error("Không tìm thấy UserID, vui lòng đăng nhập lại!");
+          return;
+        }
+
+        const factoryId = localStorage.getItem("DB_CHOICE");
+        if (!factoryId) {
+          this.$message.error("Không tìm thấy factoryId, vui lòng đăng nhập lại!");
+          return;
+        }
+
+        const response = await axios.post("http://localhost:8081/api/v1/energy/add", {
+          factoryid: factoryId,
+          recordyear: parseInt(this.newRecord.recordyear),
+          recordmonth: parseInt(this.newRecord.recordmonth),
+          grid_electricity_meter: parseFloat(this.newRecord.grid_electricity_meter),
+          solar_energy_meter: parseFloat(this.newRecord.solar_energy_meter),
+          userid: userId,
+        });
+
+        console.log("📩 API Response:", response.data); // Kiểm tra phản hồi từ server
+
+        if (response.data.code === 200) {
+          this.$message.success("Thêm dữ liệu thành công!");
+          this.fetchEnergyData();
+          this.clearForm();
+        } else {
+          this.$message.error("Thêm dữ liệu thất bại: " + response.data.msg);
+        }
+      } catch (error) {
+        console.error("❌ Lỗi khi thêm dữ liệu:", error);
+
+        // Kiểm tra nếu lỗi từ server có response
+        if (error.response) {
+          console.log("🛑 Server Response Error:", error.response.data);
+          this.$message.error("Lỗi từ server: " + (error.response.data.msg || "Không rõ nguyên nhân!"));
+        } else {
+          this.$message.error("Có lỗi xảy ra khi thêm dữ liệu!");
+        }
+      }
+    },
+    async updateRecord(row) {
+      try {
+        const response = await axios.put("http://localhost:8081/api/v1/energy/update", {
+          recordid: row.recordid,
+          factoryid: row.factoryid,
+          recordyear: parseInt(row.recordyear),   // Ép kiểu thành số nguyên
+          recordmonth: parseInt(row.recordmonth), // Ép kiểu thành số nguyên
+          grid_electricity_meter: parseFloat(row.grid_electricity_meter), // Ép kiểu thành float
+          solar_energy_meter: parseFloat(row.solar_energy_meter),         // Ép kiểu thành float
+        });
+
+        if (response.data.code === 200) {
+          this.$message.success("Cập nhật thành công!");
+          this.fetchEnergyData(); // Load lại dữ liệu từ API
+        } else {
+          this.$message.error("Cập nhật thất bại: " + response.data.msg);
+        }
+      } catch (error) {
+        console.error("Lỗi khi cập nhật:", error);
+        this.$message.error("Có lỗi xảy ra khi cập nhật!");
+      }
+    },
+    async deleteEnergy(recordid) {
+      try {
+        // Xác nhận trước khi xóa
+        this.$confirm(`Bạn có chắc chắn muốn xóa bản ghi có ID ${recordid}?`, "Xác nhận", {
+          confirmButtonText: "Có",
+          cancelButtonText: "Không",
+          type: "warning",
+        }).then(async () => {
+          const response = await axios.delete(`http://localhost:8081/api/v1/energy/delete`, {
+            data: { recordid: recordid }, // Gửi trong `data` nếu backend yêu cầu JSON
+          });
+
+          if (response.data.code === 200) {
+            this.$message.success("Xóa thành công!");
+            this.fetchEnergyData(); // Load lại danh sách
+          } else {
+            this.$message.error("Xóa thất bại: " + response.data.msg);
+          }
+        });
+      } catch (error) {
+        console.error("Lỗi khi xóa:", error);
+        this.$message.error("Có lỗi xảy ra khi xóa!");
+      }
+    },
+    // Hàm xóa dữ liệu trong form
+    clearForm() {
+      this.newRecord = {
+        recordyear: "",
+        recordmonth: "",
+        grid_electricity_meter: "",
+        solar_energy_meter: "",
+      };
     },
   },
 };
 </script>
+
 
 <style scoped>
 .title {
@@ -279,6 +229,7 @@ export default {
   justify-content: center;
   padding: 20px;
 }
+
 .icon {
   width: 140px;
 }
@@ -287,6 +238,7 @@ export default {
   color: green;
   font-size: 25px;
 }
+
 .energy-input {
   display: flex;
   align-items: center;
