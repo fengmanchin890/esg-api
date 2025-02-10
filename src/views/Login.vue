@@ -31,8 +31,8 @@
                 class="input-field"
               >
                 <el-option label="Ty Xuan" value="LYN"></el-option>
-                <el-option label="Ty Bach" value="Ty Bach"></el-option>
-                <el-option label="Ty Thac" value="Ty Thac"></el-option>
+                <el-option label="Ty Bach" value="LYV"></el-option>
+                <el-option label="Ty Thac" value="LYS"></el-option>
               </el-select>
             </el-form-item>
 

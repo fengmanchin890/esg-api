@@ -1,11 +1,18 @@
-
 import { ref } from "vue";
+
 const isCollapse = ref(true);
-const factory = ref("Ty Bach")
-const userName = ref("Admin")
+const userName = ref("Admin");
+
+const factoryNames = {
+  LYN: "Ty Xuan",
+  LYV: "Ty Bach",
+  LYS: "Ty Thac",
+};
+
+const dbChoice = localStorage.getItem("DB_CHOICE") || "LYV";
+const factory = ref(factoryNames[dbChoice]);
+
 export default function useMainPage() {
-
-
   const toggleCollapse = () => {
     isCollapse.value = !isCollapse.value;
   };

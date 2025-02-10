@@ -1,11 +1,13 @@
 // router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-import Input from '../views/Input.vue';
-import Analyze from '../views/Analyze.vue';
-import LoginPage from '../views/Login.vue';
+import Input from '@v/Input.vue';
+import Analyze from '@v/Analyze.vue';
+import LoginPage from '@v/Login.vue';
 import useUser from '@/hooks/useUser';
-import MainPage from '../views/MainPage.vue';
-// import ChangePassword from '@/component/ChangePassword.vue';
+import MainPage from '@v/MainPage.vue';
+import Settings from '@v/Settings.vue';
+
+
 const { isAuthenticated } = useUser();
 
 const routes = [
@@ -39,6 +41,10 @@ const routes = [
         path: 'analyze',
         component: Analyze,
       },
+      {
+        path: 'settings',
+        component: Settings,
+      }
     ],
   },
 
