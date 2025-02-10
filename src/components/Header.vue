@@ -18,29 +18,27 @@
           </div>
         </div>
       </el-col>
-
       <el-col :span="12" class="center-section">
         <span class="dashboard-title">ESG Dashboard</span>
       </el-col>
-
       <el-col :span="6" class="right-section">
         <div class="logo-company">
-          <img src="@/assets/logo.png" alt="Logo" class="logo" />
+          <img src="@/assets/logo.png" alt="Factory Logo" class="logo" />
           <span class="company-name">{{ factory }}</span>
         </div>
 
         <div class="user-info">
           <el-dropdown trigger="click">
             <span class="user-icon-container">
-              <img src="@/assets/user.png" alt="User" class="user-icon" />
+              <img src="@/assets/user.png" alt="User Icon" class="user-icon" />
             </span>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="openChangePassword">
-                  Đổi mật khẩu
+                  <el-icon><lock /></el-icon> Đổi mật khẩu
                 </el-dropdown-item>
-                <el-dropdown-item divided @click="logout">
-                  Đăng xuất
+                <el-dropdown-item divided @click="openLogoutDialog">
+                  <el-icon><switch-button /></el-icon> Đăng xuất
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -49,10 +47,10 @@
         </div>
       </el-col>
     </el-row>
-
     <el-dialog v-model="showChangePassword" title="Đổi mật khẩu" width="400px">
       <ChangePassword @close="showChangePassword = false" />
     </el-dialog>
+    <LogoutConfirmation ref="logoutDialog" @confirm="logout" />
   </el-header>
 </template>
 
@@ -62,15 +60,22 @@ import useMainPage from "../hooks/useMainPage";
 import useUser from "../hooks/useUser";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { Lock, SwitchButton } from "@element-plus/icons-vue";
 import ChangePassword from "../components/LoginPage/ChangePassword.vue";
+import LogoutConfirmation from "../components/LoginPage/LogoutConfirmation.vue";
 
 const { factory, userName, toggleCollapse } = useMainPage();
 const { clearUserData } = useUser();
 const router = useRouter();
 const showChangePassword = ref(false);
+const logoutDialog = ref(null);
 
 const openChangePassword = () => {
   showChangePassword.value = true;
+};
+
+const openLogoutDialog = () => {
+  logoutDialog.value.open();
 };
 
 const logout = () => {
