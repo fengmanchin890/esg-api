@@ -123,7 +123,7 @@ const login = async () => {
       message: "Login failed. Please try again!",
       type: "error",
     });
-    console.error(error);
+    // console.error(error);
   }
 };
 </script>
