@@ -9,7 +9,7 @@ const factoryNames = {
   LYS: "Ty Thac",
 };
 
-const dbChoice = localStorage.getItem("DB_CHOICE") || "LYV";
+const dbChoice = localStorage.getItem("DB_CHOICE") || "Unknown";
 const factory = ref(factoryNames[dbChoice]);
 
 export default function useMainPage() {
