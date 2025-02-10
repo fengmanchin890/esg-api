@@ -26,24 +26,23 @@
           <img src="@/assets/logo.png" alt="Factory Logo" class="logo" />
           <span class="company-name">{{ factory }}</span>
         </div>
+        <el-dropdown trigger="click">
+  <div class="user-info flex items-center cursor-pointer">
+    <span class="user-icon-container">
+      <img src="@/assets/user.png" alt="User Icon" class="user-icon" />
+    </span>
+    <span class="user-name select-none ml-2">{{ userName }}</span>
+  </div>
+  <template #dropdown>
+    <el-dropdown-menu class="custom-dropdown" divided>
+      <el-dropdown-item @click="openLogoutDialog">
+        <el-icon><switch-button /></el-icon>
+        <span class="logout-text">Đăng xuất</span>
+      </el-dropdown-item>
+    </el-dropdown-menu>
+  </template>
+</el-dropdown>
 
-        <div class="user-info">
-          <el-dropdown trigger="click">
-            <span class="user-icon-container">
-              <img src="@/assets/user.png" alt="User Icon" class="user-icon" />
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu class="custom-dropdown">
-                <el-dropdown-item divided @click="openLogoutDialog">
-                  <el-icon><switch-button /></el-icon>
-                  <span class="logout-text">Đăng xuất</span>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-
-          <span class="user-name">{{ userName }}</span>
-        </div>
       </el-col>
     </el-row>
     <LogoutConfirmation ref="logoutDialog" @confirm="logout" />
@@ -74,11 +73,11 @@ const logout = () => {
   router.push("/");
 };
 const observer = new ResizeObserver((entries) => {
-  requestAnimationFrame(() => {
-    for (let entry of entries) {
-      // console.log("Resized:", entry.contentRect.width, entry.contentRect.height);
-    }
-  });
+  // requestAnimationFrame(() => {
+  //   for (let entry of entries) {
+  //     console.log("Resized:", entry.contentRect.width, entry.contentRect.height);
+  //   }
+  // });
 });
 observer.observe(document.body);
 </script>
@@ -208,6 +207,9 @@ observer.observe(document.body);
 .user-name {
   font-size: 18px;
   font-weight: 600;
+  user-select: none;
+  cursor: pointer;
+  color:white;
 }
 
 @media (max-width: 768px) {
