@@ -14,10 +14,10 @@ export default function useECharts(echartRef, rawData, activeFilter) {
 
   const updateChart = () => {
     if (!chart) return;
-
+  
     const { months, energy, water } = rawData;
     const seriesData = [];
-
+    const legendData = []; 
     if (activeFilter.value === "all" || activeFilter.value === "energy") {
       seriesData.push({
         name: "Energy",
@@ -25,8 +25,9 @@ export default function useECharts(echartRef, rawData, activeFilter) {
         data: energy,
         itemStyle: { color: "rgba(144, 238, 144, 0.8)" },
       });
+      legendData.push("Energy"); 
     }
-
+  
     if (activeFilter.value === "all" || activeFilter.value === "water") {
       seriesData.push({
         name: "Water",
@@ -42,12 +43,13 @@ export default function useECharts(echartRef, rawData, activeFilter) {
         symbol: "circle",
         symbolSize: 8,
       });
+      legendData.push("Water"); 
     }
-
+  
     const option = {
       tooltip: { trigger: "axis" },
       legend: {
-        data: ["Energy", "Water"],
+        data: legendData, 
         textStyle: {
           color: "#333",
           fontWeight: "bold",
@@ -82,17 +84,21 @@ export default function useECharts(echartRef, rawData, activeFilter) {
       },
       series: seriesData,
     };
-
-    chart.setOption(option);
+  
+    chart.setOption(option, true);
   };
+  
+  
 
   onMounted(() => {
     initChart();
   });
 
-  watch(activeFilter, () => {
+  watch(activeFilter, (newValue) => {
+    // console.log("Updating chart for filter:", newValue);
     updateChart();
   });
+  
 
   return { updateChart };
 }
