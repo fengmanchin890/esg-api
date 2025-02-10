@@ -57,11 +57,11 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
   padding: 20px 0;
-  margin-bottom: -35px;
+  margin-bottom: -55px;
 }
 
 .icon {
-  width: 90px;
+  width: 60px;
 }
 
 .icon-add {

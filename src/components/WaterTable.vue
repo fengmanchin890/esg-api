@@ -54,11 +54,11 @@
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
   padding: 20px 0;
-  margin: -35px 0;
+  margin: -55px 0;
 }
 
 .icon {
-  width: 110px;
+  width: 60px;
 }
 
 .icon-add {
