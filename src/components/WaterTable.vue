@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { CirclePlus } from '@element-plus/icons-vue';
+import { CirclePlus } from "@element-plus/icons-vue";
 
 export default {
   name: "demoPage",
@@ -277,6 +277,7 @@ export default {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
   padding: 20px;
+  margin-top: -35px;
 }
 .icon {
   width: 140px;
