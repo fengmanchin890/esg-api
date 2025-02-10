@@ -1,16 +1,20 @@
-// hooks/useChart.js
-import { ref, onMounted } from "vue";
+// hooks/useECharts.js
+import { ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 
-export const useChart = (echartRef, rawData, activeFilter) => {
-  const chart = ref(null);
+export default function useECharts(echartRef, rawData, activeFilter) {
+  let chart = null;
 
   const initChart = () => {
-    chart.value = echarts.init(echartRef.value);
-    updateChart();
+    if (echartRef.value) {
+      chart = echarts.init(echartRef.value);
+      updateChart();
+    }
   };
 
   const updateChart = () => {
+    if (!chart) return;
+
     const { months, energy, water } = rawData;
     const seriesData = [];
 
@@ -39,7 +43,7 @@ export const useChart = (echartRef, rawData, activeFilter) => {
         symbolSize: 8,
       });
     }
-    
+
     const option = {
       tooltip: { trigger: "axis" },
       legend: {
@@ -48,6 +52,7 @@ export const useChart = (echartRef, rawData, activeFilter) => {
           color: "#333",
           fontWeight: "bold",
         },
+        bottom: 10,
       },
       xAxis: {
         type: "category",
@@ -60,16 +65,34 @@ export const useChart = (echartRef, rawData, activeFilter) => {
         max: 80,
         interval: 20,
         axisLabel: { fontWeight: "bold" },
+        splitLine: {
+          lineStyle: {
+            color: "rgba(39, 183, 226, 0.349)",
+            width: 1.5,
+          },
+        },
+        name: "USAGE",
+        nameLocation: "middle",
+        nameGap: 60,
+        nameTextStyle: {
+          fontSize: 22,
+          fontWeight: "bold",
+          rotate: 90,
+        },
       },
       series: seriesData,
     };
 
-    chart.value.setOption(option);
+    chart.setOption(option);
   };
 
   onMounted(() => {
     initChart();
   });
 
+  watch(activeFilter, () => {
+    updateChart();
+  });
+
   return { updateChart };
-};
+}

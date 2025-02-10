@@ -45,37 +45,25 @@
 
 <script setup>
 import { ref } from "vue";
-import { useChart } from "@/hooks/useChart.js";
+import useECharts from "@/hooks/useECharts";
 
 const echart = ref(null);
 const activeFilter = ref("all");
 
 const rawData = {
-  months: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
+  months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 75.5],
   water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 50],
 };
 
-const { updateChart } = useChart(echart, rawData, activeFilter);
+const { updateChart } = useECharts(echart, rawData, activeFilter);
 
 const filterData = (type) => {
   activeFilter.value = type;
   updateChart();
 };
-</script><style scoped>
+</script>
+<style scoped>
 .dashboard {
   display: flex;
   flex-direction: column;
