@@ -1,14 +1,19 @@
 <template>
   <div class="input-container">
-    <WaterTable />
-    <EnergyTable />
+    <template v-if="route.path === '/mainPage/input'">
+      <WaterTable />
+      <EnergyTable />
+    </template>
+    <router-view v-else/>
   </div>
 </template>
 
 <script setup>
+import { useRoute } from "vue-router";
 import WaterTable from "../components/WaterTable.vue";
 import EnergyTable from "../components/EnergyTable.vue";
 
+const route = useRoute();
 </script>
 
 <style scoped>

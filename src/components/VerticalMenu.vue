@@ -8,8 +8,8 @@
         </el-icon>
         <span>Input</span>
       </template>
-      <el-menu-item index="1-1">Water</el-menu-item>
-      <el-menu-item index="1-2">Energy</el-menu-item>
+      <el-menu-item index="1-1" @click="navigateTo('/mainPage/input/water')">Water</el-menu-item>
+      <el-menu-item index="1-2" @click="navigateTo('/mainPage/input/energy')">Energy</el-menu-item>
     </el-sub-menu>
     
     <!-- Analyze 頁面 -->
@@ -42,10 +42,12 @@ const route = useRoute();
 
 // 根據當前路徑動態計算 activeIndex
 const activeIndex = computed(() => {
+  if (route.path.includes("/mainPage/input/water")) return "1-1";
+  if (route.path.includes("/mainPage/input/energy")) return "1-2";
   if (route.path.includes("/mainPage/input")) return "1";
   if (route.path.includes("/mainPage/analyze")) return "2";
   if (route.path.includes("/mainPage/settings")) return "3";
-  return "1";
+  return "1-1";
 });
 
 const navigateTo = (path: string) => {
