@@ -8,6 +8,7 @@
 <script setup>
 import WaterTable from "../components/WaterTable.vue";
 import EnergyTable from "../components/EnergyTable.vue";
+
 </script>
 
 <style scoped>

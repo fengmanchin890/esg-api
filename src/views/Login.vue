@@ -111,6 +111,7 @@ const login = async () => {
       });
 
       router.push("/mainPage/input");
+      window.location.reload(); 
     } else {
       ElMessage({
         message: response.data.data,
