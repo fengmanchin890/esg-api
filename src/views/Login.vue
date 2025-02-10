@@ -118,7 +118,7 @@ const login = async () => {
         type: "success",
       });
 
-      router.push("/input");
+      router.push("/mainPage/input");
     } else {
       ElMessage({
         message: response.data.data,

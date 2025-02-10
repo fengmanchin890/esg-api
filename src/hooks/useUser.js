@@ -9,36 +9,30 @@ export default function useUser() {
 
     const clearUserData = () => {
         localStorage.removeItem("USERID");
-        localStorage.removeItem("USERNAME");
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
+        localStorage.removeItem("DB_CHOICE");
+
     };
 
     const setUserInfo = (response) => {
         localStorage.setItem("USERID", response.data.data.UserId);
-        localStorage.setItem("USERNAME", response.data.data.UserName);
-        localStorage.setItem("token", response.data.data.Token); 
-        localStorage.setItem("role", response.data.data.Role);
+        localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
     };
     
 
     const getUserData = () => {
         const USERID = localStorage.getItem("USERID");
-        const USERNAME = localStorage.getItem("USERNAME");
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
+        const DB_CHOICE = localStorage.getItem("DB_CHOICE");
 
-        if (!token) {
+        if (!USERID) {
             return null;
         }
 
-        return { USERID, USERNAME, token, role };
+        return { USERID, DB_CHOICE };
     };
 
     const isAuthenticated = () => {
-        // const hasToken = localStorage.getItem("token");
-        // return hasToken !== null;
-        return true
+        const hasUser = localStorage.getItem("USERID");
+        return hasUser !== null;
     };
     
 
