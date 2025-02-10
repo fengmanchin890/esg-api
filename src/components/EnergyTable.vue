@@ -11,6 +11,7 @@
           <CirclePlus />
         </el-icon>
       </div>
+
       <div>
         <label>Record Year</label>
         <el-input v-model="newRecord.recordyear" />
@@ -28,12 +29,19 @@
         <el-input v-model="newRecord.solar_energy_meter" />
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
+      <!-- Ô tìm kiếm -->
+      <div class="search-bar">
+        <el-input v-model="searchQuery" placeholder="search by Year - Month"
+          clearable />
+      </div>
 
     </div>
 
-    <ry-edit-table ref="ryEditTable" :listData="listData" :listConfig="listConfig" :rowButtons="rowButtons"
+
+    <ry-edit-table ref="ryEditTable" :listData="filteredList" :listConfig="listConfig" :rowButtons="rowButtons"
       :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }"
       :cellClassName="'custom-cell-class'" trigger="onChange" />
+
 
   </div>
 </template>
@@ -50,6 +58,7 @@ export default {
   data() {
     return {
       listData: [], // Dữ liệu từ API
+      searchQuery: "", // Biến lưu từ khóa tìm kiếm
       newRecord: {
         recorddate: "",
         factoryid: "",
@@ -59,8 +68,8 @@ export default {
         userdate: "",
       },
       listConfig: [
-        { label: "RecordID", prop: "recordid", minWidth: "150px" },
-        { label: "FactoryID", prop: "factoryid", minWidth: "150px" },
+        { label: "ID", prop: "recordid", minWidth: "150px" },
+        { label: "Factory", prop: "factoryid", minWidth: "150px" },
         { label: "Year", prop: "recordyear", minWidth: "100px" },
         { label: "Month", prop: "recordmonth", minWidth: "100px" },
         { mode: "text", label: "Grid Electricity", prop: "grid_electricity_meter", minWidth: "150px" },
@@ -105,6 +114,21 @@ export default {
   },
   created() {
     this.fetchEnergyData();
+  },
+  computed: {
+    filteredList() {
+      if (!this.searchQuery) return this.listData;
+      const searchLower = this.searchQuery.toLowerCase().trim();
+
+      return this.listData.filter((item) => {
+        const yearMonth = `${item.recordyear}-${item.recordmonth}`; // Ghép năm-tháng
+        return (
+          item.recordyear.toString().includes(searchLower) ||
+          item.recordmonth.toString().includes(searchLower) ||
+          yearMonth.includes(searchLower) // Tìm theo định dạng "YYYY-MM"
+        );
+      });
+    },
   },
   methods: {
     async fetchEnergyData() {
@@ -255,5 +279,23 @@ export default {
 .energy-input label {
   white-space: nowrap;
   text-align: right;
+}
+
+.search-bar {
+  display: flex;
+}
+
+.search-bar .el-input {
+  max-width: 100%;
+  border-radius: 8px;
+  /* Bo góc */
+  border: 1px solid #ccc;
+}
+
+.search-bar .el-input input {
+  font-size: 14px;
+  /* Cỡ chữ */
+  padding: 10px;
+  /* Padding bên trong */
 }
 </style>
