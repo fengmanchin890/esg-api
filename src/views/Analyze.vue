@@ -51,7 +51,20 @@ const echart = ref(null);
 const activeFilter = ref("all");
 
 const rawData = {
-  months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  months: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
   energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 75.5],
   water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 50],
 };
@@ -199,9 +212,7 @@ const filterData = (type) => {
 }
 
 .title {
-  background: linear-gradient(to right, #0055aa, #1f88d3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #0055aa;
   font-weight: bold;
   font-size: 28px;
   margin: 0 -10px;
