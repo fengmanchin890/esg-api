@@ -94,16 +94,16 @@ const Users = reactive({
 });
 
 const Factory = ref("");
-
 const login = async () => {
   try {
     const response = await axios.post(
-      `http://localhost:8081/api/v1/auth/login`,
+      "http://localhost:8081/api/v1/auth/login",
       Users
     );
     if (typeof response.data.data === "object") {
       localStorage.setItem("USERID", response.data.data.USERID);
       localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
+      sessionStorage.setItem("TOKEN", response.data.data.TOKEN);
 
       ElMessage({
         message: "Login successful!",
@@ -111,7 +111,7 @@ const login = async () => {
       });
 
       router.push("/mainPage/input");
-      window.location.reload(); 
+      window.location.reload();
     } else {
       ElMessage({
         message: response.data.data,
@@ -123,7 +123,6 @@ const login = async () => {
       message: "Login failed. Please try again!",
       type: "error",
     });
-    // console.error(error);
   }
 };
 </script>
