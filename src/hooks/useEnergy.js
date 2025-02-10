@@ -1,9 +1,10 @@
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 export function useEnergy() {
   const listData = ref([]);
+  const searchQuery = ref("");
   const newRecord = ref({
     recordyear: "",
     recordmonth: "",
@@ -12,12 +13,42 @@ export function useEnergy() {
   });
 
   const listConfig = [
-    { label: "RecordID", prop: "recordid", minWidth: "150px" },
-    { label: "FactoryID", prop: "factoryid", minWidth: "150px" },
+    { label: "ID", prop: "recordid", minWidth: "150px" },
+    { label: "Factory", prop: "factoryid", minWidth: "150px" },
     { label: "Year", prop: "recordyear", minWidth: "100px" },
     { label: "Month", prop: "recordmonth", minWidth: "100px" },
     { mode: "text", label: "Grid Electricity", prop: "grid_electricity_meter", minWidth: "150px" },
     { mode: "text", label: "Solar Energy", prop: "solar_energy_meter", minWidth: "150px" },
+  ];
+
+  const rowButtons = [
+    {
+      name: "Edit",
+      type: "primary",
+      vIf: (row) => !row.isEdit,
+      click: (ref) => ref.edit(),
+    },
+    {
+      name: "Save",
+      type: "success",
+      vIf: (row) => row.isEdit,
+      click: async (ref, row) => {
+        await updateRecord(row);
+        ref.cancel();
+      },
+    },
+    {
+      name: "Cancel",
+      type: "danger",
+      vIf: (row) => row.isEdit,
+      click: (ref) => ref.cancel(),
+    },
+    {
+      name: "Delete",
+      type: "danger",
+      vIf: (row) => !row.isEdit,
+      click: (ref, row) => deleteEnergy(row.recordid),
+    },
   ];
 
   const fetchEnergyData = async () => {
@@ -32,14 +63,10 @@ export function useEnergy() {
   const addRecord = async () => {
     try {
       const userId = localStorage.getItem("USERID");
-      if (!userId) {
-        ElMessage.error("Không tìm thấy UserID, vui lòng đăng nhập lại!");
-        return;
-      }
-
       const factoryId = localStorage.getItem("DB_CHOICE");
-      if (!factoryId) {
-        ElMessage.error("Không tìm thấy factoryId, vui lòng đăng nhập lại!");
+
+      if (!userId || !factoryId) {
+        ElMessage.error("Không tìm thấy thông tin đăng nhập!");
         return;
       }
 
@@ -60,7 +87,6 @@ export function useEnergy() {
         ElMessage.error("Thêm dữ liệu thất bại: " + response.data.msg);
       }
     } catch (error) {
-      console.error("Lỗi khi thêm dữ liệu:", error);
       ElMessage.error("Có lỗi xảy ra khi thêm dữ liệu!");
     }
   };
@@ -83,7 +109,6 @@ export function useEnergy() {
         ElMessage.error("Cập nhật thất bại: " + response.data.msg);
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật:", error);
       ElMessage.error("Có lỗi xảy ra khi cập nhật!");
     }
   };
@@ -96,8 +121,8 @@ export function useEnergy() {
         type: "warning",
       });
 
-      const response = await axios.delete(`http://localhost:8081/api/v1/energy/delete`, {
-        data: { recordid: recordid },
+      const response = await axios.delete("http://localhost:8081/api/v1/energy/delete", {
+        data: { recordid },
       });
 
       if (response.data.code === 200) {
@@ -107,7 +132,6 @@ export function useEnergy() {
         ElMessage.error("Xóa thất bại: " + response.data.msg);
       }
     } catch (error) {
-      console.error("Lỗi khi xóa:", error);
       ElMessage.error("Có lỗi xảy ra khi xóa!");
     }
   };
@@ -121,14 +145,30 @@ export function useEnergy() {
     };
   };
 
-  onMounted(() => {
-    fetchEnergyData();
+  const filteredList = computed(() => {
+    if (!searchQuery.value) return listData.value;
+    const searchLower = searchQuery.value.toLowerCase().trim();
+
+    return listData.value.filter((item) => {
+      const yearMonth = `${item.recordyear}-${item.recordmonth}`;
+      return (
+        item.recordyear.toString().includes(searchLower) ||
+        item.recordmonth.toString().includes(searchLower) ||
+        yearMonth.includes(searchLower)
+      );
+    });
   });
+
+  onMounted(fetchEnergyData);
 
   return {
     listData,
+    searchQuery,
     newRecord,
     listConfig,
+    rowButtons,
+    filteredList,
+    fetchEnergyData,
     addRecord,
     updateRecord,
     deleteEnergy,
