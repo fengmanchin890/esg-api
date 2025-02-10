@@ -1,5 +1,9 @@
 <template>
-  <div class="footer">© 2025 Lai Yih Web Team. All rights reserved.</div>
+  <div class="footer">
+    <a>
+      <!-- © 2025 Lai Yih Web Team. All rights reserved. -->
+    </a>
+  </div>
 </template>
 
 <style>
