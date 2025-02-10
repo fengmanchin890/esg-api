@@ -8,8 +8,7 @@ export default function useUser() {
     };
 
     const clearUserData = () => {
-        localStorage.removeItem("USERID");
-        localStorage.removeItem("DB_CHOICE");
+        localStorage.clear();
 
     };
 

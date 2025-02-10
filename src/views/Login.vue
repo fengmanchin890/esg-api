@@ -103,7 +103,6 @@ const login = async () => {
     );
     if (typeof response.data.data === "object") {
       localStorage.setItem("USERID", response.data.data.USERID);
-      localStorage.setItem("PWD", response.data.data.PWD);
       localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
 
       ElMessage({
