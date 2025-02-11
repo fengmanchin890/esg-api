@@ -1,6 +1,6 @@
 import { ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
-
+import { ElMessage } from "element-plus";
 export default function useECharts(echartRef, rawData, activeFilter) {
   let chart = null;
 
@@ -11,33 +11,37 @@ export default function useECharts(echartRef, rawData, activeFilter) {
     }
   };
 
-  const updateChart = () => {
-    if (!chart) return;
-
-    const { months, energy, water } = rawData;
+  const updateChart = (data) => {
+    if (!data || !data.months || !data.energy || !data.water) {
+      ElMessage.warning("Dữ liệu không có sẵn cho năm này!");
+      if (chart) chart.clear(); // Xóa biểu đồ nếu có dữ liệu cũ
+      return;
+    }
+  
+    const { months, energy, water } = data;
     const seriesData = [];
     const legendData = [];
-
+  
     const maxEnergy = Math.ceil(Math.max(...energy) / 10) * 10;
     const maxWater = Math.ceil(Math.max(...water) / 10) * 10;
-
+  
     if (activeFilter.value === "all" || activeFilter.value === "energy") {
       seriesData.push({
         name: "Energy (kWh)",
         type: "bar",
         data: energy,
-        yAxisIndex: 0, 
+        yAxisIndex: 0,
         itemStyle: { color: "rgba(144, 238, 144, 0.8)" },
       });
       legendData.push("Energy (kWh)");
     }
-
+  
     if (activeFilter.value === "all" || activeFilter.value === "water") {
       seriesData.push({
         name: "Water (m³)",
         type: "line",
         data: water,
-        yAxisIndex: 1, 
+        yAxisIndex: 1,
         smooth: true,
         itemStyle: {
           color: "rgba(30, 144, 255, 1)",
@@ -50,7 +54,7 @@ export default function useECharts(echartRef, rawData, activeFilter) {
       });
       legendData.push("Water (m³)");
     }
-
+  
     const option = {
       tooltip: { trigger: "axis" },
       legend: {
@@ -69,7 +73,7 @@ export default function useECharts(echartRef, rawData, activeFilter) {
           name: "Energy (kWh)",
           position: "left",
           min: 0,
-          max: maxEnergy, 
+          max: maxEnergy,
           axisLabel: { fontWeight: "bold" },
           splitLine: { lineStyle: { color: "rgba(39, 183, 226, 0.349)" } },
           nameTextStyle: { fontSize: 16, fontWeight: "bold", color: "#28a745" },
@@ -79,7 +83,7 @@ export default function useECharts(echartRef, rawData, activeFilter) {
           name: "Water (m³)",
           position: "right",
           min: 0,
-          max: maxWater, 
+          max: maxWater,
           axisLabel: { fontWeight: "bold" },
           splitLine: { show: false },
           nameTextStyle: { fontSize: 16, fontWeight: "bold", color: "#007bff" },
@@ -87,17 +91,21 @@ export default function useECharts(echartRef, rawData, activeFilter) {
       ],
       series: seriesData,
     };
-
+  
     chart.setOption(option, true);
   };
+  
 
   onMounted(() => {
     initChart();
   });
 
   watch(activeFilter, () => {
-    updateChart();
+    if (rawData[baseYear.value]) {
+      updateChart(rawData[baseYear.value]);
+    }
   });
+  
 
   return { updateChart };
 }

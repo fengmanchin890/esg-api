@@ -142,9 +142,8 @@
         >
       </div>
       <div class="right-buttons-bottom">
-        <el-button type="primary" @click="toggleCategory">Category</el-button>
+        <el-button type="primary">Category</el-button>
         <el-button type="primary">Test</el-button>
-
       </div>
     </div>
   </div>
@@ -152,27 +151,66 @@
 <script setup>
 import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
+import { ElMessage } from "element-plus";
 
 const activeFilter = ref("all");
 const activeFactory = ref("tyxuan");
 const echart = ref(null);
 const rawData = {
-  months: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
-  energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 755],
-  water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 50],
+  2023: {
+    months: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 55],
+    water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 100],
+  },
+  2024: {
+    months: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    energy: [50, 30, 60, 35, 75, 70, 65, 63, 60, 45, 55, 60],
+    water: [35, 45, 30, 25, 65, 85, 80, 75, 70, 50, 40, 105],
+  },
+  2025: {
+    months: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    energy: [55, 35, 65, 40, 80, 75, 70, 68, 65, 50, 60, 65],
+    water: [40, 50, 35, 30, 70, 90, 85, 80, 75, 55, 45, 110],
+  },
 };
 
 const { updateChart } = useECharts(echart, rawData, activeFilter);
@@ -200,12 +238,14 @@ const baseYear = ref(currentDate.getFullYear().toString());
 const comparisonYear = ref("");
 
 const selectedStartMonth = ref(
-  (currentDate.getMonth() ).toString().padStart(2, "0")
+  currentDate.getMonth().toString().padStart(2, "0")
 );
 const selectedEndMonth = ref("12");
 const currentYear = new Date().getFullYear();
 const availableYears = ref(
-  Array.from({ length: currentYear - 1999 + 1 }, (_, i) => (1999 + i).toString())
+  Array.from({ length: currentYear - 1999 + 1 }, (_, i) =>
+    (1999 + i).toString()
+  ).reverse()
 );
 
 const availableMonths = ref([
@@ -223,14 +263,19 @@ const availableMonths = ref([
   { label: "December", value: "12" },
 ]);
 
+
 const confirmSelection = () => {
   showDatePicker.value = false;
   showDatePickerYear.value = false;
-  // console.log("Start Month:", selectedStartMonth.value);
-  // console.log("End Month:", selectedEndMonth.value);
-  // console.log("Base Year:", baseYear.value);
-  // console.log("Comparison Year:", comparisonYear.value);
+
+  if (rawData[baseYear.value]) {
+    updateChart(rawData[baseYear.value]);
+  } else {
+    ElMessage.warning("Dữ liệu cho năm này chưa có!");
+  }
 };
+
+
 </script>
 
 <style scoped>
@@ -262,7 +307,8 @@ const confirmSelection = () => {
 }
 
 .right-buttons-top .el-button,
-.left-buttons-bottom .el-button, .right-buttons-bottom .el-button {
+.left-buttons-bottom .el-button,
+.right-buttons-bottom .el-button {
   min-width: 80px;
   text-align: center;
   padding: 8px 12px;
