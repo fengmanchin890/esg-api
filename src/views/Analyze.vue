@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard">
+    <!-- Comparison button -->
     <el-dialog v-model="showDatePicker">
       <h1 class="title-choose">Choose Date</h1>
-
       <div class="date-picker-container">
         <div class="picker-row">
           <div class="picker-group">
@@ -54,14 +54,18 @@
           </div>
         </div>
       </div>
-
-      
+      <div class="footer-buttons">
+        <el-button type="primary" @click="confirmSelection">Apply</el-button>
+        <el-button @click="showDatePickerYear = false">Cancel</el-button>
+      </div>
     </el-dialog>
+
+<!-- Choose Year -->
     <el-dialog v-model="showDatePickerYear">
       <div class="date-picker-year-container">
+        <h1 class="title-choose">Choose Year</h1>
         <div class="picker-row">
           <div class="picker-group">
-            <label class="picker-label">Base Year</label>
             <el-select v-model="baseYear" class="styled-select">
               <el-option
                 v-for="year in availableYears"
@@ -71,7 +75,6 @@
               />
             </el-select>
           </div>
-
         </div>
       </div>
       <div class="footer-buttons">
@@ -325,6 +328,10 @@ const confirmSelection = () => {
   width: 80%;
 }
 
+.title-water, .title-energy{
+  margin-top:-0px;
+}
+
 .left-buttons,
 .right-buttons {
   display: flex;
@@ -496,6 +503,7 @@ const confirmSelection = () => {
   text-align: center;
   color: #0055aa;
   margin-bottom: 10px;
+  margin-top:-10px;
 }
 
 .date-picker-container {
@@ -520,6 +528,7 @@ const confirmSelection = () => {
   font-weight: 500;
   color: #333;
   margin-bottom: 4px;
+  text-align: center;
 }
 
 .styled-select {
