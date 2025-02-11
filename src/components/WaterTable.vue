@@ -35,7 +35,7 @@
     <ry-edit-table ref="ryEditTable" class="table-container"
       :listData="filteredList" :listConfig="listConfig" :rowButtons="rowButtons"
       :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }" 
-      :cellClassName="'custom-cell-class'" trigger="onChange" />
+      :cellClassName="'custom-cell-class'" trigger="onChange" height="625px"/>
   </div>
 </template>
 
@@ -95,5 +95,12 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   max-height: 625px;
   overflow-y: auto;
   border-radius: 5px;
+}
+
+:deep(.el-table thead) {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
 }
 </style>
