@@ -275,7 +275,6 @@ const confirmSelection = () => {
   }
 };
 
-
 </script>
 
 <style scoped>

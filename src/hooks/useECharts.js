@@ -14,7 +14,8 @@ export default function useECharts(echartRef, rawData, activeFilter) {
   const updateChart = (data) => {
     if (!data || !data.months || !data.energy || !data.water) {
       ElMessage.warning("Dữ liệu không có sẵn cho năm này!");
-      if (chart) chart.clear(); // Xóa biểu đồ nếu có dữ liệu cũ
+      
+      if (chart) chart.clear(); 
       return;
     }
   
@@ -104,8 +105,8 @@ export default function useECharts(echartRef, rawData, activeFilter) {
     if (rawData[baseYear.value]) {
       updateChart(rawData[baseYear.value]);
     }
+   
   });
   
-
-  return { updateChart };
+ return { updateChart };
 }
