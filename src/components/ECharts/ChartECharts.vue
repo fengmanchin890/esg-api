@@ -272,6 +272,7 @@ const confirmSelection = () => {
     ElMessage.warning("Dữ liệu cho năm này chưa có!");
   }
 };
+console.log(chooseYear.value);
 </script>
 
 <style scoped>

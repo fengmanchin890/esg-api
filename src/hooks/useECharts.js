@@ -3,6 +3,8 @@ import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
 export default function useECharts(echartRef, rawData, activeFilter) {
   let chart = null;
+  const chooseYear = ref(new Date().getFullYear().toString());
+
 
   const initChart = () => {
     if (echartRef.value) {
@@ -11,21 +13,29 @@ export default function useECharts(echartRef, rawData, activeFilter) {
     }
   };
 
-  const updateChart = (data) => {
+  const updateChart = () => {
+    const data = rawData[chooseYear.value];
+
     if (!data || !data.months || !data.energy || !data.water) {
       ElMessage.warning("Dữ liệu không có sẵn cho năm này!");
-      
-      if (chart) chart.clear(); 
+      if (chart) {
+        chart.setOption({
+          title: { text: "Không có dữ liệu", left: "center", top: "middle" },
+          xAxis: { show: false },
+          yAxis: { show: false },
+          series: [],
+        });
+      }
       return;
     }
-  
+
     const { months, energy, water } = data;
     const seriesData = [];
     const legendData = [];
-  
+
     const maxEnergy = Math.ceil(Math.max(...energy) / 10) * 10;
     const maxWater = Math.ceil(Math.max(...water) / 10) * 10;
-  
+
     if (activeFilter.value === "all" || activeFilter.value === "energy") {
       seriesData.push({
         name: "Energy (kWh)",
@@ -36,7 +46,7 @@ export default function useECharts(echartRef, rawData, activeFilter) {
       });
       legendData.push("Energy (kWh)");
     }
-  
+
     if (activeFilter.value === "all" || activeFilter.value === "water") {
       seriesData.push({
         name: "Water (m³)",
@@ -55,7 +65,7 @@ export default function useECharts(echartRef, rawData, activeFilter) {
       });
       legendData.push("Water (m³)");
     }
-  
+
     const option = {
       tooltip: { trigger: "axis" },
       legend: {
@@ -92,21 +102,21 @@ export default function useECharts(echartRef, rawData, activeFilter) {
       ],
       series: seriesData,
     };
-  
+
     chart.setOption(option, true);
   };
-  
 
   onMounted(() => {
     initChart();
+    updateChart();
   });
 
-  watch(activeFilter, () => {
-    if (rawData[chooseYear.value]) {
-      updateChart(rawData[chooseYear.value]);
-    }
-   
+  watch(chooseYear, (newYear) => {
+    console.log("Giá trị chooseYear mới:", newYear);
+    updateChart();
   });
   
- return { updateChart };
+  
+
+  return { updateChart, chooseYear };
 }
