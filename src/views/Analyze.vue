@@ -56,7 +56,7 @@
       </div>
       <div class="footer-buttons">
         <el-button type="primary" @click="confirmSelection">Apply</el-button>
-        <el-button @click="showDatePickerYear = false">Cancel</el-button>
+        <el-button @click="showDatePicker = false">Cancel</el-button>
       </div>
     </el-dialog>
 
@@ -273,6 +273,7 @@ const confirmSelection = () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  margin-top:-30px;
 }
 
 .button-group {
