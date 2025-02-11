@@ -64,7 +64,7 @@
       <h1 class="title-choose">Choose Year</h1>
       <div class="picker-row">
         <div class="picker-group">
-          <el-select v-model="baseYear" class="styled-select">
+          <el-select v-model="chooseYear" class="styled-select">
             <el-option
               v-for="year in availableYears"
               :key="year"
@@ -228,12 +228,11 @@ const filterFactory = (type) => {
 const filterData = (type) => {
   activeFilter.value = type;
 };
-
+const currentDate = new Date();
 const showDatePicker = ref(false);
 const showDatePickerYear = ref(false);
-
-const currentDate = new Date();
 const baseYear = ref(currentDate.getFullYear().toString());
+const chooseYear = ref(currentDate.getFullYear().toString());
 // const comparisonYear = ref((currentDate.getFullYear() + 1).toString());
 const comparisonYear = ref("");
 
@@ -263,18 +262,16 @@ const availableMonths = ref([
   { label: "December", value: "12" },
 ]);
 
-
 const confirmSelection = () => {
   showDatePicker.value = false;
   showDatePickerYear.value = false;
 
-  if (rawData[baseYear.value]) {
-    updateChart(rawData[baseYear.value]);
+  if (rawData[chooseYear.value]) {
+    updateChart(rawData[chooseYear.value]);
   } else {
     ElMessage.warning("Dữ liệu cho năm này chưa có!");
   }
 };
-
 </script>
 
 <style scoped>

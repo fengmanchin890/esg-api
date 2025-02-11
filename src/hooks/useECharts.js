@@ -102,8 +102,8 @@ export default function useECharts(echartRef, rawData, activeFilter) {
   });
 
   watch(activeFilter, () => {
-    if (rawData[baseYear.value]) {
-      updateChart(rawData[baseYear.value]);
+    if (rawData[chooseYear.value]) {
+      updateChart(rawData[chooseYear.value]);
     }
    
   });
