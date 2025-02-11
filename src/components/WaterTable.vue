@@ -28,7 +28,7 @@
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
       <div class="search-bar">
-        <el-input v-model="searchQuery" placeholder="search by Year - Month" clearable />
+        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable />
       </div>
     </div>
 
@@ -94,13 +94,16 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 .table-container {
   max-height: 625px;
   overflow-y: auto;
-  border-radius: 5px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-:deep(.el-table thead) {
+:deep(.el-table thead th) {
   position: sticky;
   top: 0;
-  background: #fff;
   z-index: 10;
+  font-size: 18px;
+  padding: 13=0px 0;
 }
 </style>

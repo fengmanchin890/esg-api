@@ -109,13 +109,17 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 .table-container {
   max-height: 625px;
   overflow-y: auto;
-  border-radius: 5px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-:deep(.el-table thead) {
+:deep(.el-table thead th) {
   position: sticky;
   top: 0;
   background: #fff;
   z-index: 10;
+  font-size: 18px;
+  padding: 10px 0;
 }
 </style>
