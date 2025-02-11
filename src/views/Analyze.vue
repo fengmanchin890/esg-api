@@ -1,33 +1,60 @@
 <template>
   <div class="dashboard">
-    <el-dialog v-model="showDatePicker" title="Choose Date">
-      <div class="demo-date-picker">
-        <div class="block">
-          <span class="demonstration-water">
-            <img src="@i/water.png" alt="water" class="icon" />Water</span
-          >
-          <el-date-picker
-  v-model="value1"
-  type="monthrange"
-  range-separator="To"
-  start-placeholder="Start month"
-  end-placeholder="End month"
-/>
+    <el-dialog v-model="showDatePicker">
+      <h1 class="title-choose">Choose Date</h1>
+      <div class="date-picker-container">
+        <div class="picker-group">
+          <label class="picker-label">Start Month</label>
+          <el-select v-model="selectedStartMonth" class="styled-select">
+            <el-option
+              v-for="month in availableMonths"
+              :key="month.value"
+              :label="month.label"
+              :value="month.value"
+            />
+          </el-select>
         </div>
-        <div class="block">
-          <span class="demonstration-energy"
-            ><img src="@i/energy.png" alt="water" class="icon" />Energy</span
-          >
-          <el-date-picker
-  v-model="value2"
-  type="monthrange"
-  unlink-panels
-  range-separator="To"
-  start-placeholder="Start month"
-  end-placeholder="End month"
-  :shortcuts="shortcuts"
-/>
+
+        <div class="picker-group">
+          <label class="picker-label">End Month</label>
+          <el-select v-model="selectedEndMonth" class="styled-select">
+            <el-option
+              v-for="month in availableMonths"
+              :key="month.value"
+              :label="month.label"
+              :value="month.value"
+            />
+          </el-select>
         </div>
+
+        <div class="picker-group">
+          <label class="picker-label">Base Year</label>
+          <el-select v-model="baseYear" class="styled-select">
+            <el-option
+              v-for="year in availableYears"
+              :key="year"
+              :label="year"
+              :value="year"
+            />
+          </el-select>
+        </div>
+
+        <div class="picker-group">
+          <label class="picker-label">Comparison Year</label>
+          <el-select v-model="comparisonYear" class="styled-select">
+            <el-option
+              v-for="year in availableYears"
+              :key="year"
+              :label="year"
+              :value="year"
+            />
+          </el-select>
+        </div>
+      </div>
+
+      <div class="footer-buttons">
+        <el-button type="primary" @click="confirmSelection">Compare</el-button>
+        <el-button @click="showDatePicker = false">Cancel</el-button>
       </div>
     </el-dialog>
 
@@ -39,20 +66,22 @@
           <el-button type="primary" @click="toggleDatePicker"
             >Choose Date</el-button
           >
-          <el-button type="success">Comparison</el-button>
         </div>
         <div class="right-buttons">
           <el-button
+            class="button-w"
             :class="{ active: activeFilter === 'all' }"
             @click="filterData('all')"
             >All</el-button
           >
           <el-button
+            class="button-w"
             :class="{ active: activeFilter === 'water' }"
             @click="filterData('water')"
             >Water</el-button
           >
           <el-button
+            class="button-w"
             :class="{ active: activeFilter === 'energy' }"
             @click="filterData('energy')"
             >Energy</el-button
@@ -64,7 +93,8 @@
     <div class="usage-container">
       <div class="usage-card-water">
         <h3 class="title-water">
-          Water Usage <span class="percent greentext">5% ↓</span>
+          <img src="@i/water.png" alt="water" class="icon" />Water Usage
+          <span class="percent greentext">5% ↓</span>
         </h3>
         <div class="usage-content">
           <div class="usage-year">
@@ -79,7 +109,8 @@
       </div>
       <div class="usage-card-energy">
         <h3 class="title-energy">
-          Energy Usage <span class="percent red">2% ↑</span>
+          <img src="@i/energy.png" alt="water" class="icon" />Energy Usage
+          <span class="percent red">2% ↑</span>
         </h3>
         <div class="usage-content">
           <div class="usage-year">
@@ -102,23 +133,9 @@ import useECharts from "@/hooks/useECharts";
 
 const echart = ref(null);
 const activeFilter = ref("all");
-const showDatePicker = ref(false);
 
 const rawData = {
-  months: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
+  months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 75.5],
   water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 50],
 };
@@ -127,46 +144,42 @@ const { updateChart } = useECharts(echart, rawData, activeFilter);
 
 const filterData = (type) => {
   activeFilter.value = type;
-  // console.log("Active filter changed to:", activeFilter.value);
 };
 
 const toggleDatePicker = () => {
   showDatePicker.value = true;
 };
 
-const value1 = ref("");
-const value2 = ref("");
+const showDatePicker = ref(false);
+const selectedStartMonth = ref("01");
+const selectedEndMonth = ref("12");
+const baseYear = ref(new Date().getFullYear().toString());
+const comparisonYear = ref(null);
+const availableYears = ref(["2019", "2020", "2021", "2022", "2023", "2024"]);
+const availableMonths = ref([
+  { label: "January", value: "01" },
+  { label: "February", value: "02" },
+  { label: "March", value: "03" },
+  { label: "April", value: "04" },
+  { label: "May", value: "05" },
+  { label: "June", value: "06" },
+  { label: "July", value: "07" },
+  { label: "August", value: "08" },
+  { label: "September", value: "09" },
+  { label: "October", value: "10" },
+  { label: "November", value: "11" },
+  { label: "December", value: "12" },
+]);
 
-const shortcuts = [
-  {
-    text: "Last week",
-    value: () => {
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-      return [start, end];
-    },
-  },
-  {
-    text: "Last month",
-    value: () => {
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      return [start, end];
-    },
-  },
-  {
-    text: "Last 3 months",
-    value: () => {
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-      return [start, end];
-    },
-  },
-];
+const confirmSelection = () => {
+  showDatePicker.value = false;
+  console.log("Start Month:", selectedStartMonth.value);
+  console.log("End Month:", selectedEndMonth.value);
+  console.log("Base Year:", baseYear.value);
+  console.log("Comparison Year:", comparisonYear.value);
+};
 </script>
+
 
 <style scoped>
 .dashboard {
@@ -190,6 +203,9 @@ const shortcuts = [
   gap: 10px;
 }
 
+.left-buttons .el-button {
+  width: 100px;
+}
 .right-buttons button.active {
   background: #0288d1;
   color: white;
@@ -273,7 +289,12 @@ const shortcuts = [
   flex-direction: column;
   align-items: center;
 }
-
+.title-water,
+.title-energy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .circle {
   width: 80px;
   height: 80px;
@@ -289,6 +310,7 @@ const shortcuts = [
 .percent {
   font-size: 18px;
   font-weight: bold;
+  margin-left: 5px;
 }
 
 .greentext {
@@ -312,7 +334,6 @@ const shortcuts = [
 }
 
 .demo-date-picker .block {
-  padding: 30px 0;
   text-align: center;
   border-right: solid 1px var(--el-border-color);
   flex: 1;
@@ -320,17 +341,6 @@ const shortcuts = [
 
 .demo-date-picker .block:last-child {
   border-right: none;
-}
-
-.demo-date-picker .demonstration-water {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--el-text-color-secondary);
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: rgb(24, 110, 180);
-  font-weight: bold;
 }
 .demo-date-picker .demonstration-energy {
   display: flex;
@@ -346,5 +356,68 @@ const shortcuts = [
 .icon {
   width: 30px;
   margin-right: 10px;
+}
+
+.button-w {
+  width: 70px;
+}
+
+:deep(.el-dialog) {
+  width: 400px !important;
+  height: 470px !important;
+  min-width: 200px !important;
+  padding: 5px;
+}
+
+:deep(.el-dialog__body) {
+  padding: 5px;
+}
+
+.title-choose {
+  font-size: 30px;
+  text-align: center;
+  margin-top: 10px;
+  color: #0055aa;
+}
+
+.demo-date-picker {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+.date-picker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px;
+}
+
+.picker-group {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 5px;
+  margin-left: 19px;
+}
+
+.picker-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.styled-picker {
+  width: 100%;
+}
+
+.styled-select {
+  width: 94%;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 }
 </style>
