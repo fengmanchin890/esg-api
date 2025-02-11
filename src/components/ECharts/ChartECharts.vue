@@ -82,7 +82,7 @@
   </el-dialog>
   <div class="chart-container">
     <div class="button-group">
-      <div class="left-buttons">
+      <div class="left-buttons-bottom">
         <el-button
           class="factory-pd"
           :class="{ active: activeFactory === 'tyxuan' }"
@@ -105,7 +105,7 @@
         >
       </div>
 
-      <div class="right-buttons">
+      <div class="right-buttons-top">
         <el-button
           class="button-w"
           :class="{ active: activeFilter === 'all' }"
@@ -133,13 +133,18 @@
     <div ref="echart" class="chart"></div>
 
     <div class="chart-controls">
-      <div class="left-buttons">
+      <div class="left-buttons-bottom">
         <el-button type="primary" @click="toggleDatePickerYear"
           >Choose Year</el-button
         >
         <el-button type="primary" @click="toggleDatePicker"
           >Comparison</el-button
         >
+      </div>
+      <div class="right-buttons-bottom">
+        <el-button type="primary" @click="toggleCategory">Category</el-button>
+        <el-button type="primary">Test</el-button>
+
       </div>
     </div>
   </div>
@@ -236,20 +241,25 @@ const confirmSelection = () => {
   padding: 10px 0;
 }
 
-.left-buttons {
+.right-buttons-bottom {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.right-buttons {
+.left-buttons-bottom {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.right-buttons-top {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.right-buttons .el-button,
-.left-buttons .el-button {
+.right-buttons-top .el-button,
+.left-buttons-bottom .el-button, .right-buttons-bottom .el-button {
   min-width: 80px;
   text-align: center;
   padding: 8px 12px;
@@ -279,15 +289,15 @@ const confirmSelection = () => {
   width: 80%;
 }
 
-.left-buttons .right-buttons {
+.left-buttons-bottom .right-buttons-top {
   display: flex;
   gap: 10px;
 }
-.left-buttons button.active {
+.left-buttons-bottom button.active {
   background: #0288d1;
   color: white;
 }
-.right-buttons button.active {
+.right-buttons-top button.active {
   background: #0288d1;
   color: white;
 }
@@ -374,7 +384,7 @@ const confirmSelection = () => {
 
 .picker-row {
   display: flex;
-  gap: 10px;
+  gap: 20px;
 }
 
 .picker-group {
@@ -405,7 +415,7 @@ const confirmSelection = () => {
   flex: 1;
   font-size: 14px;
 }
-.mg{
-    margin-left:-64px;
+.mg {
+  margin-left: -64px;
 }
 </style>
