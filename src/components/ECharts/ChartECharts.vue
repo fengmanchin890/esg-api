@@ -196,15 +196,18 @@ const showDatePickerYear = ref(false);
 
 const currentDate = new Date();
 const baseYear = ref(currentDate.getFullYear().toString());
-const comparisonYear = ref((currentDate.getFullYear() + 1).toString());
+// const comparisonYear = ref((currentDate.getFullYear() + 1).toString());
+const comparisonYear = ref("");
 
 const selectedStartMonth = ref(
-  (currentDate.getMonth() + 1).toString().padStart(2, "0")
+  (currentDate.getMonth() ).toString().padStart(2, "0")
 );
 const selectedEndMonth = ref("12");
+const currentYear = new Date().getFullYear();
 const availableYears = ref(
-  Array.from({ length: 2099 - 2000 + 1 }, (_, i) => (2019 + i).toString())
+  Array.from({ length: currentYear - 1999 + 1 }, (_, i) => (1999 + i).toString())
 );
+
 const availableMonths = ref([
   { label: "January", value: "01" },
   { label: "February", value: "02" },
