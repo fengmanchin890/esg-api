@@ -47,9 +47,10 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 
 <style scoped>
 #DemoPage {
+  height: 85vh;
   display: flex;
   flex-direction: column;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .title {
