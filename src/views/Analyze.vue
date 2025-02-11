@@ -55,12 +55,30 @@
         </div>
       </div>
 
+      
+    </el-dialog>
+    <el-dialog v-model="showDatePickerYear">
+      <div class="date-picker-year-container">
+        <div class="picker-row">
+          <div class="picker-group">
+            <label class="picker-label">Base Year</label>
+            <el-select v-model="baseYear" class="styled-select">
+              <el-option
+                v-for="year in availableYears"
+                :key="year"
+                :label="year"
+                :value="year"
+              />
+            </el-select>
+          </div>
+
+        </div>
+      </div>
       <div class="footer-buttons">
-        <el-button type="primary" @click="confirmSelection">Compare</el-button>
-        <el-button @click="showDatePicker = false">Cancel</el-button>
+        <el-button type="primary" @click="confirmSelection">Apply</el-button>
+        <el-button @click="showDatePickerYear = false">Cancel</el-button>
       </div>
     </el-dialog>
-
     <div class="chart-container">
       <div class="button-group">
         <div class="left-buttons">
@@ -115,7 +133,9 @@
 
       <div class="chart-controls">
         <div class="left-buttons">
-          <el-button type="primary">Choose Year</el-button>
+          <el-button type="primary" @click="toggleDatePickerYear"
+            >Choose Year</el-button
+          >
           <el-button type="primary" @click="toggleDatePicker"
             >Comparison</el-button
           >
@@ -166,7 +186,7 @@ import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
 
 const activeFilter = ref("all");
-const activeFactory = ref("tyxuan"); 
+const activeFactory = ref("tyxuan");
 const echart = ref(null);
 const rawData = {
   months: [
@@ -191,7 +211,9 @@ const { updateChart } = useECharts(echart, rawData, activeFilter);
 const toggleDatePicker = () => {
   showDatePicker.value = true;
 };
-
+const toggleDatePickerYear = () => {
+  showDatePickerYear.value = true;
+};
 
 const filterFactory = (type) => {
   activeFactory.value = type;
@@ -202,6 +224,7 @@ const filterData = (type) => {
 };
 
 const showDatePicker = ref(false);
+const showDatePickerYear = ref(false);
 
 const currentDate = new Date();
 const baseYear = ref(currentDate.getFullYear().toString());
@@ -231,6 +254,7 @@ const availableMonths = ref([
 
 const confirmSelection = () => {
   showDatePicker.value = false;
+  showDatePickerYear.value = false;
   // console.log("Start Month:", selectedStartMonth.value);
   // console.log("End Month:", selectedEndMonth.value);
   // console.log("Base Year:", baseYear.value);
