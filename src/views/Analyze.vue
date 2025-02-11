@@ -63,10 +63,27 @@
 
     <div class="chart-container">
       <div class="button-group">
-        <div class="top-right-buttons">
-          <el-button class="factory-pd" type="primary">Ty Xuan</el-button>
-          <el-button class="factory-pd" type="primary">Ty Bach</el-button>
-          <el-button class="factory-pd" type="primary">Ty Thac</el-button>
+        <div class="left-buttons">
+          <el-button
+            class="factory-pd"
+            :class="{ active: activeFilter === 'tyxuan' }"
+            @click="filterData('tyxuan')"
+            >Ty Xuan</el-button
+          >
+
+          <el-button
+            class="factory-pd"
+            :class="{ active: activeFilter === 'tybach' }"
+            @click="filterData('tybach')"
+            >Ty Bach</el-button
+          >
+
+          <el-button
+            class="factory-pd"
+            :class="{ active: activeFilter === 'tythac' }"
+            @click="filterData('tythac')"
+            >Ty Thac</el-button
+          >
         </div>
 
         <div class="right-buttons">
@@ -96,8 +113,9 @@
 
       <div class="chart-controls">
         <div class="left-buttons">
+          <el-button type="primary">Choose Year</el-button>
           <el-button type="primary" @click="toggleDatePicker"
-            >Choose Date</el-button
+            >Comparison</el-button
           >
         </div>
       </div>
@@ -234,7 +252,7 @@ const confirmSelection = () => {
   padding: 10px 0;
 }
 
-.top-right-buttons {
+.left-buttons {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -247,7 +265,7 @@ const confirmSelection = () => {
 }
 
 .right-buttons .el-button,
-.top-right-buttons .el-button {
+.left-buttons .el-button {
   min-width: 80px;
   text-align: center;
   padding: 8px 12px;
@@ -282,7 +300,10 @@ const confirmSelection = () => {
   display: flex;
   gap: 10px;
 }
-
+.left-buttons button.active {
+  background: #0288d1;
+  color: white;
+}
 .right-buttons button.active {
   background: #0288d1;
   color: white;
@@ -406,9 +427,23 @@ const confirmSelection = () => {
 .button-w {
   width: 65px;
 }
-.factory-pd{
+.factory-pd {
   width: 65px;
+  background-color: #fff;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
 }
+
+.factory-pd.active {
+  background-color: #0288d1;
+  color: white;
+  font-weight: bold;
+}
+
 :deep(.el-dialog) {
   width: 320px !important;
   max-width: 90%;
