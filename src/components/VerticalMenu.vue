@@ -3,8 +3,10 @@
     <!-- Input 頁面 -->
     <el-sub-menu index="1">
       <template #title>
-          <el-icon @click="navigateTo('/mainPage/input')"><Edit /></el-icon>
-          <span @click="navigateTo('/mainPage/input')">Input</span>
+        <el-icon @click="navigateTo('/mainPage/input')">
+          <Edit />
+        </el-icon>
+        <span @click="navigateTo('/mainPage/input')">Input</span>
       </template>
       <el-menu-item index="1-1" @click="navigateTo('/mainPage/input/water')">Water</el-menu-item>
       <el-menu-item index="1-2" @click="navigateTo('/mainPage/input/energy')">Energy</el-menu-item>
@@ -40,8 +42,8 @@ const route = useRoute();
 
 // 根據當前路徑動態計算 activeIndex
 const activeIndex = computed(() => {
-  if (route.path === "/mainPage/input/water") return "1-1";
-  if (route.path === "/mainPage/input/energy") return "1-2";
+  if (route.path.includes("/mainPage/input/water")) return "1-1";
+  if (route.path.includes("/mainPage/input/energy")) return "1-2";
   if (route.path.includes("/mainPage/input")) return "1";
   if (route.path.includes("/mainPage/analyze")) return "2";
   if (route.path.includes("/mainPage/settings")) return "3";

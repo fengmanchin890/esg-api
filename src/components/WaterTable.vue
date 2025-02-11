@@ -27,25 +27,30 @@
         <el-input v-model="newRecord.recycledWaterMeter" />
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
-
       <div class="search-bar">
         <el-input v-model="searchQuery" placeholder="search by Year - Month" clearable />
       </div>
     </div>
 
-    <ry-edit-table ref="ryEditTable" :listData="filteredList" :listConfig="listConfig" :rowButtons="rowButtons"
-      :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }"
-      :cellClassName="'custom-cell-class'" trigger="onChange" />
+      <ry-edit-table ref="ryEditTable" :listData="filteredList" :listConfig="listConfig" :rowButtons="rowButtons"
+        :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }"
+        :cellClassName="'custom-cell-class'" trigger="onChange" />
   </div>
 </template>
 
 <script setup>
-  import { CirclePlus } from "@element-plus/icons-vue";
-  import { useWater } from "@/hooks/useWater";
-  const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord } = useWater();
+import { CirclePlus } from "@element-plus/icons-vue";
+import { useWater } from "@/hooks/useWater";
+const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord } = useWater();
 </script>
 
 <style scoped>
+#DemoPage {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
 .title {
   display: flex;
   align-items: center;

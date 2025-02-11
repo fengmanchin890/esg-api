@@ -49,6 +49,12 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 </script>
 
 <style scoped>
+#DemoPage {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
 .title {
   display: flex;
   align-items: center;
@@ -57,7 +63,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
   padding: 20px 0;
-  margin-bottom: -55px;
+  margin: -55px 0;
 }
 
 .icon {
