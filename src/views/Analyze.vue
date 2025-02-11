@@ -66,22 +66,22 @@
         <div class="left-buttons">
           <el-button
             class="factory-pd"
-            :class="{ active: activeFilter === 'tyxuan' }"
-            @click="filterData('tyxuan')"
+            :class="{ active: activeFactory === 'tyxuan' }"
+            @click="filterFactory('tyxuan')"
             >Ty Xuan</el-button
           >
 
           <el-button
             class="factory-pd"
-            :class="{ active: activeFilter === 'tybach' }"
-            @click="filterData('tybach')"
+            :class="{ active: activeFactory === 'tybach' }"
+            @click="filterFactory('tybach')"
             >Ty Bach</el-button
           >
 
           <el-button
             class="factory-pd"
-            :class="{ active: activeFilter === 'tythac' }"
-            @click="filterData('tythac')"
+            :class="{ active: activeFactory === 'tythac' }"
+            @click="filterFactory('tythac')"
             >Ty Thac</el-button
           >
         </div>
@@ -93,12 +93,14 @@
             @click="filterData('all')"
             >All</el-button
           >
+
           <el-button
             class="button-w"
             :class="{ active: activeFilter === 'water' }"
             @click="filterData('water')"
             >Water</el-button
           >
+
           <el-button
             class="button-w"
             :class="{ active: activeFilter === 'energy' }"
@@ -163,9 +165,8 @@
 import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
 
+const activeFilter = ref("all"); // Trạng thái cho All, Water, Energy
 const echart = ref(null);
-const activeFilter = ref("all");
-
 const rawData = {
   months: [
     "Jan",
@@ -186,13 +187,17 @@ const rawData = {
 };
 
 const { updateChart } = useECharts(echart, rawData, activeFilter);
+const toggleDatePicker = () => {
+  showDatePicker.value = true;
+};
+const activeFactory = ref(""); 
+
+const filterFactory = (type) => {
+  activeFactory.value = type;
+};
 
 const filterData = (type) => {
   activeFilter.value = type;
-};
-
-const toggleDatePicker = () => {
-  showDatePicker.value = true;
 };
 
 const showDatePicker = ref(false);
@@ -427,7 +432,8 @@ const confirmSelection = () => {
 .button-w {
   width: 65px;
 }
-.factory-pd {
+.factory-pd,
+.button-w {
   width: 65px;
   background-color: #fff;
   color: #333;
@@ -438,7 +444,8 @@ const confirmSelection = () => {
   transition: background-color 0.2s, color 0.2s;
 }
 
-.factory-pd.active {
+.factory-pd.active,
+.button-w.active {
   background-color: #0288d1;
   color: white;
   font-weight: bold;
