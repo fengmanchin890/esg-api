@@ -3,52 +3,54 @@
     <el-dialog v-model="showDatePicker">
       <h1 class="title-choose">Choose Date</h1>
       <div class="date-picker-container">
-        <div class="picker-group">
-          <label class="picker-label">Start Month</label>
-          <el-select v-model="selectedStartMonth" class="styled-select">
-            <el-option
-              v-for="month in availableMonths"
-              :key="month.value"
-              :label="month.label"
-              :value="month.value"
-            />
-          </el-select>
+        <div class="picker-row">
+          <div class="picker-group">
+            <label class="picker-label">Start Month</label>
+            <el-select v-model="selectedStartMonth" class="styled-select">
+              <el-option
+                v-for="month in availableMonths"
+                :key="month.value"
+                :label="month.label"
+                :value="month.value"
+              />
+            </el-select>
+          </div>
+          <div class="picker-group">
+            <label class="picker-label">End Month</label>
+            <el-select v-model="selectedEndMonth" class="styled-select">
+              <el-option
+                v-for="month in availableMonths"
+                :key="month.value"
+                :label="month.label"
+                :value="month.value"
+              />
+            </el-select>
+          </div>
         </div>
 
-        <div class="picker-group">
-          <label class="picker-label">End Month</label>
-          <el-select v-model="selectedEndMonth" class="styled-select">
-            <el-option
-              v-for="month in availableMonths"
-              :key="month.value"
-              :label="month.label"
-              :value="month.value"
-            />
-          </el-select>
-        </div>
-
-        <div class="picker-group">
-          <label class="picker-label">Base Year</label>
-          <el-select v-model="baseYear" class="styled-select">
-            <el-option
-              v-for="year in availableYears"
-              :key="year"
-              :label="year"
-              :value="year"
-            />
-          </el-select>
-        </div>
-
-        <div class="picker-group">
-          <label class="picker-label">Comparison Year</label>
-          <el-select v-model="comparisonYear" class="styled-select">
-            <el-option
-              v-for="year in availableYears"
-              :key="year"
-              :label="year"
-              :value="year"
-            />
-          </el-select>
+        <div class="picker-row">
+          <div class="picker-group">
+            <label class="picker-label">Base Year</label>
+            <el-select v-model="baseYear" class="styled-select">
+              <el-option
+                v-for="year in availableYears"
+                :key="year"
+                :label="year"
+                :value="year"
+              />
+            </el-select>
+          </div>
+          <div class="picker-group">
+            <label class="picker-label">Comparison Year</label>
+            <el-select v-model="comparisonYear" class="styled-select">
+              <el-option
+                v-for="year in availableYears"
+                :key="year"
+                :label="year"
+                :value="year"
+              />
+            </el-select>
+          </div>
         </div>
       </div>
 
@@ -135,7 +137,20 @@ const echart = ref(null);
 const activeFilter = ref("all");
 
 const rawData = {
-  months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  months: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
   energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 75.5],
   water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 50],
 };
@@ -151,11 +166,18 @@ const toggleDatePicker = () => {
 };
 
 const showDatePicker = ref(false);
-const selectedStartMonth = ref("01");
+
+const currentDate = new Date();
+const baseYear = ref(currentDate.getFullYear().toString());
+const comparisonYear = ref((currentDate.getFullYear() + 1).toString());
+
+const selectedStartMonth = ref(
+  (currentDate.getMonth() + 1).toString().padStart(2, "0")
+);
 const selectedEndMonth = ref("12");
-const baseYear = ref(new Date().getFullYear().toString());
-const comparisonYear = ref(null);
-const availableYears = ref(["2019", "2020", "2021", "2022", "2023", "2024"]);
+const availableYears = ref(
+  Array.from({ length: 2099 - 2000 + 1 }, (_, i) => (2019 + i).toString())
+);
 const availableMonths = ref([
   { label: "January", value: "01" },
   { label: "February", value: "02" },
@@ -173,10 +195,10 @@ const availableMonths = ref([
 
 const confirmSelection = () => {
   showDatePicker.value = false;
-  console.log("Start Month:", selectedStartMonth.value);
-  console.log("End Month:", selectedEndMonth.value);
-  console.log("Base Year:", baseYear.value);
-  console.log("Comparison Year:", comparisonYear.value);
+  // console.log("Start Month:", selectedStartMonth.value);
+  // console.log("End Month:", selectedEndMonth.value);
+  // console.log("Base Year:", baseYear.value);
+  // console.log("Comparison Year:", comparisonYear.value);
 };
 </script>
 
@@ -361,63 +383,65 @@ const confirmSelection = () => {
 .button-w {
   width: 70px;
 }
-
 :deep(.el-dialog) {
-  width: 400px !important;
-  height: 470px !important;
-  min-width: 200px !important;
-  padding: 5px;
+  width: 320px !important;
+  max-width: 90%;
+  border-radius: 12px;
+  padding: 12px;
 }
 
 :deep(.el-dialog__body) {
-  padding: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .title-choose {
-  font-size: 30px;
+  font-size: 18px;
+  font-weight: 600;
   text-align: center;
-  margin-top: 10px;
   color: #0055aa;
+  margin-bottom: 10px;
 }
 
-.demo-date-picker {
-  display: flex;
-  justify-content: center;
-  padding: 5px;
-}
 .date-picker-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 10px;
+  gap: 8px;
+}
+
+.picker-row {
+  display: flex;
+  gap: 10px;
 }
 
 .picker-group {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: start;
-  gap: 5px;
-  margin-left: 19px;
 }
 
 .picker-label {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   color: #333;
-}
-
-.styled-picker {
-  width: 100%;
+  margin-bottom: 4px;
 }
 
 .styled-select {
-  width: 94%;
+  width: 100%;
 }
 
 .footer-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 12px;
+}
+
+.footer-buttons .el-button {
+  flex: 1;
+  font-size: 14px;
 }
 </style>
