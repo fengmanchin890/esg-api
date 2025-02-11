@@ -1,4 +1,3 @@
-// hooks/useECharts.js
 import { ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 
@@ -14,25 +13,31 @@ export default function useECharts(echartRef, rawData, activeFilter) {
 
   const updateChart = () => {
     if (!chart) return;
-  
+
     const { months, energy, water } = rawData;
     const seriesData = [];
-    const legendData = []; 
+    const legendData = [];
+
+    const maxEnergy = Math.ceil(Math.max(...energy) / 10) * 10;
+    const maxWater = Math.ceil(Math.max(...water) / 10) * 10;
+
     if (activeFilter.value === "all" || activeFilter.value === "energy") {
       seriesData.push({
-        name: "Energy",
+        name: "Energy (kWh)",
         type: "bar",
         data: energy,
+        yAxisIndex: 0, 
         itemStyle: { color: "rgba(144, 238, 144, 0.8)" },
       });
-      legendData.push("Energy"); 
+      legendData.push("Energy (kWh)");
     }
-  
+
     if (activeFilter.value === "all" || activeFilter.value === "water") {
       seriesData.push({
-        name: "Water",
+        name: "Water (m³)",
         type: "line",
         data: water,
+        yAxisIndex: 1, 
         smooth: true,
         itemStyle: {
           color: "rgba(30, 144, 255, 1)",
@@ -43,17 +48,14 @@ export default function useECharts(echartRef, rawData, activeFilter) {
         symbol: "circle",
         symbolSize: 8,
       });
-      legendData.push("Water"); 
+      legendData.push("Water (m³)");
     }
-  
+
     const option = {
       tooltip: { trigger: "axis" },
       legend: {
-        data: legendData, 
-        textStyle: {
-          color: "#333",
-          fontWeight: "bold",
-        },
+        data: legendData,
+        textStyle: { color: "#333", fontWeight: "bold" },
         bottom: 10,
       },
       xAxis: {
@@ -61,44 +63,41 @@ export default function useECharts(echartRef, rawData, activeFilter) {
         data: months,
         axisLabel: { interval: 0 },
       },
-      yAxis: {
-        type: "value",
-        min: 0,
-        max: 80,
-        interval: 20,
-        axisLabel: { fontWeight: "bold" },
-        splitLine: {
-          lineStyle: {
-            color: "rgba(39, 183, 226, 0.349)",
-            width: 1.5,
-          },
+      yAxis: [
+        {
+          type: "value",
+          name: "Energy (kWh)",
+          position: "left",
+          min: 0,
+          max: maxEnergy, 
+          axisLabel: { fontWeight: "bold" },
+          splitLine: { lineStyle: { color: "rgba(39, 183, 226, 0.349)" } },
+          nameTextStyle: { fontSize: 16, fontWeight: "bold", color: "#28a745" },
         },
-        name: "USAGE",
-        nameLocation: "middle",
-        nameGap: 60,
-        nameTextStyle: {
-          fontSize: 22,
-          fontWeight: "bold",
-          rotate: 90,
+        {
+          type: "value",
+          name: "Water (m³)",
+          position: "right",
+          min: 0,
+          max: maxWater, 
+          axisLabel: { fontWeight: "bold" },
+          splitLine: { show: false },
+          nameTextStyle: { fontSize: 16, fontWeight: "bold", color: "#007bff" },
         },
-      },
+      ],
       series: seriesData,
     };
-  
+
     chart.setOption(option, true);
   };
-  
-  
 
   onMounted(() => {
     initChart();
   });
 
-  watch(activeFilter, (newValue) => {
-    // console.log("Updating chart for filter:", newValue);
+  watch(activeFilter, () => {
     updateChart();
   });
-  
 
   return { updateChart };
 }
