@@ -2,6 +2,7 @@
   <div class="dashboard">
     <el-dialog v-model="showDatePicker">
       <h1 class="title-choose">Choose Date</h1>
+
       <div class="date-picker-container">
         <div class="picker-row">
           <div class="picker-group">
@@ -61,14 +62,13 @@
     </el-dialog>
 
     <div class="chart-container">
-      <h2 class="title">Performance Dashboard</h2>
-      <div ref="echart" class="chart"></div>
-      <div class="chart-controls">
-        <div class="left-buttons">
-          <el-button type="primary" @click="toggleDatePicker"
-            >Choose Date</el-button
-          >
+      <div class="button-group">
+        <div class="top-right-buttons">
+          <el-button class="factory-pd" type="primary">Ty Xuan</el-button>
+          <el-button class="factory-pd" type="primary">Ty Bach</el-button>
+          <el-button class="factory-pd" type="primary">Ty Thac</el-button>
         </div>
+
         <div class="right-buttons">
           <el-button
             class="button-w"
@@ -90,7 +90,19 @@
           >
         </div>
       </div>
+
+      <h2 class="title">Performance Dashboard</h2>
+      <div ref="echart" class="chart"></div>
+
+      <div class="chart-controls">
+        <div class="left-buttons">
+          <el-button type="primary" @click="toggleDatePicker"
+            >Choose Date</el-button
+          >
+        </div>
+      </div>
     </div>
+
     <br />
     <div class="usage-container">
       <div class="usage-card-water">
@@ -205,32 +217,40 @@ const confirmSelection = () => {
 
 <style scoped>
 .dashboard {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
 }
 
-.controls {
+.button-group {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   max-width: 900px;
-  margin-bottom: 10px;
+  margin: 0 auto;
+  padding: 10px 0;
 }
 
-.left-buttons,
+.top-right-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .right-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  align-items: center;
 }
 
-.left-buttons .el-button {
-  width: 100px;
-}
-.right-buttons button.active {
-  background: #0288d1;
-  color: white;
+.right-buttons .el-button,
+.top-right-buttons .el-button {
+  min-width: 80px;
+  text-align: center;
+  padding: 8px 12px;
 }
 
 .chart-container {
@@ -311,12 +331,14 @@ const confirmSelection = () => {
   flex-direction: column;
   align-items: center;
 }
+
 .title-water,
 .title-energy {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .circle {
   width: 80px;
   height: 80px;
@@ -364,6 +386,7 @@ const confirmSelection = () => {
 .demo-date-picker .block:last-child {
   border-right: none;
 }
+
 .demo-date-picker .demonstration-energy {
   display: flex;
   align-items: center;
@@ -381,7 +404,10 @@ const confirmSelection = () => {
 }
 
 .button-w {
-  width: 70px;
+  width: 65px;
+}
+.factory-pd{
+  width: 65px;
 }
 :deep(.el-dialog) {
   width: 320px !important;
