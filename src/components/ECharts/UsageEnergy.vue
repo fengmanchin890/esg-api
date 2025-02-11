@@ -20,6 +20,9 @@
 <style scoped>
 .title-energy {
   margin-top: -0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .usage-card-energy {
