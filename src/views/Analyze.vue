@@ -165,7 +165,8 @@
 import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
 
-const activeFilter = ref("all"); // Trạng thái cho All, Water, Energy
+const activeFilter = ref("all");
+const activeFactory = ref("tyxuan"); 
 const echart = ref(null);
 const rawData = {
   months: [
@@ -190,7 +191,7 @@ const { updateChart } = useECharts(echart, rawData, activeFilter);
 const toggleDatePicker = () => {
   showDatePicker.value = true;
 };
-const activeFactory = ref(""); 
+
 
 const filterFactory = (type) => {
   activeFactory.value = type;
