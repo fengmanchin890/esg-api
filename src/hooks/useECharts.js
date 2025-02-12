@@ -44,8 +44,9 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
     const seriesData = [];
     const legendData = [];
 
-    const maxEnergy = Math.ceil(Math.max(...energy) / 10) * 10;
-    const maxWater = Math.ceil(Math.max(...water) / 10) * 10;
+    const maxEnergy = Math.ceil(Math.max(...energy) / 10) * 10 + 10;
+    const maxWater = Math.ceil(Math.max(...water) / 10) * 10 + 10;
+    
 
     if (activeFilter.value === "all" || activeFilter.value === "energy") {
       seriesData.push({
