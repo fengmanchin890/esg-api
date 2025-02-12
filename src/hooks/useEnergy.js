@@ -53,13 +53,28 @@ export function useEnergy() {
 
   const fetchEnergyData = async () => {
     try {
-      const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/energy/get`);
+      // Lấy factoryID từ localStorage
+      const factoryID = localStorage.getItem('DB_CHOICE');
+  
+      if (!factoryID) {
+        console.error('Không tìm thấy FactoryID trong localStorage.');
+        return;
+      }
+  
+      // Gửi request với factoryID trong query string
+      const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/energy/get`, {
+        params: {
+          factoryID: factoryID, // Truyền factoryID vào query string
+        },
+      });
+  
+      // Lưu dữ liệu vào listData
       listData.value = response.data.data;
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
     }
   };
-
+  
 
   const addRecord = async () => {
     try {
