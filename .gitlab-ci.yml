@@ -35,26 +35,26 @@ deploy:
     - ssh-keyscan -H 192.168.40.105 >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-  # Xóa thư mục backup cũ
-  - ssh administrator@192.168.40.105 "rm -rf /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak"
+    # Di chuyển thư mục cũ và tạo bản sao lưu
+    - ssh administrator@192.168.40.105 "rm -rf /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak"
+    - ssh administrator@192.168.40.105 "if [ -d /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME} ]; then mv /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME} /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak; fi"
 
-  # Backup thư mục cũ (nếu có)
-  - ssh administrator@192.168.40.105 "[ -d /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME} ] && mv /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME} /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak"
+    # Đổi tên thư mục dist thành tên dịch vụ (nếu cần)
+    - mv dist ${SERVICE_NAME}   # Đổi tên dist thành tên dịch vụ
 
-  # Đổi tên thư mục build và upload lên server
-  - mv dist ${SERVICE_NAME}
-  - scp -r ${SERVICE_NAME} administrator@192.168.40.105:/home/administrator/Docker/Nginx/nginx_html/
+    # Chuyển thư mục đã đổi tên đến server
+    - scp -r ${SERVICE_NAME} administrator@192.168.40.105:/home/administrator/Docker/Nginx/nginx_html/
 
-  # Dừng và xóa container cũ (nếu có)
-  - ssh administrator@192.168.40.105 "docker stop ${SERVICE_NAME} 2>/dev/null || true"
-  - ssh administrator@192.168.40.105 "docker rm ${SERVICE_NAME} 2>/dev/null || true"
+    # Kiểm tra và dừng dịch vụ ${SERVICE_NAME} nếu đang chạy
+    - ssh administrator@192.168.40.105 "docker ps -q --filter name=${SERVICE_NAME} | xargs -r docker stop"
+    - ssh administrator@192.168.40.105 "docker ps -a -q --filter name=${SERVICE_NAME} | xargs -r docker rm"
 
-  # Xóa container Nginx cũ nếu có
-  - ssh administrator@192.168.40.105 "docker stop nginx 2>/dev/null || true"
-  - ssh administrator@192.168.40.105 "docker rm nginx 2>/dev/null || true"
+    # Dừng và xóa container Nginx cũ nếu có
+    - ssh administrator@192.168.40.105 "docker ps -q --filter name=nginx | xargs -r docker stop"
+    - ssh administrator@192.168.40.105 "docker ps -a -q --filter name=nginx | xargs -r docker rm"
 
-  # Chạy container Nginx mới
-  - ssh administrator@192.168.40.105 "docker run -d --name ${SERVICE_NAME} -p 3000:80 \
+    # Khởi động container Nginx mới với thư mục nginx_html là thư mục tĩnh
+    - ssh administrator@192.168.40.105 "docker run -d --name esg -p 3000:80 \
       -v /home/administrator/Docker/Nginx/nginx_config/nginx.conf:/etc/nginx/conf.d/default.conf:ro \
       -v /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}:/usr/share/nginx/html:ro \
       nginx:latest"
