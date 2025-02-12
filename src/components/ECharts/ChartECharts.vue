@@ -60,27 +60,24 @@
   </el-dialog>
 
   <!-- Choose Year -->
-  <el-dialog v-model="showDatePickerYear" :style="{ width: '320px' }">
-    <div class="date-picker-year-container">
-      <h1 class="title-choose">Choose Year</h1>
-      <div class="picker-row">
-        <div class="picker-group">
-          <el-select v-model="chooseYear" class="styled-select">
-            <el-option
-              v-for="year in availableYears"
-              :key="year"
-              :label="year"
-              :value="year"
-            />
-          </el-select>
-        </div>
+  <el-dialog v-model="showDatePickerYear" :style="{ width: '200px' }">
+  <div class="date-picker-year-container">
+    <h1 class="title-choose">Choose Year</h1>
+    <div class="picker-row">
+      <div class="picker-group">
+        <el-select v-model="chooseYear" class="styled-select" @change="confirmYearSelection">
+          <el-option
+            v-for="year in availableYears"
+            :key="year"
+            :label="year"
+            :value="year"
+          />
+        </el-select>
       </div>
     </div>
-    <div class="footer-buttons">
-      <el-button type="primary" @click="confirmSelection">Apply</el-button>
-      <el-button @click="showDatePickerYear = false">Cancel</el-button>
-    </div>
-  </el-dialog>
+  </div>
+</el-dialog>
+
   <div class="chart-container">
     <div class="button-group">
       <div class="left-buttons-bottom">
@@ -152,7 +149,6 @@
   <script setup>
 import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
-import { ElMessage } from "element-plus";
 
 const activeFilter = ref("all");
 const activeFactory = ref("tyxuan");
@@ -235,7 +231,6 @@ const baseYear = ref(currentDate.getFullYear().toString());
 
 //get chooseYear
 const chooseYear = ref(new Date().getFullYear().toString());
-const tempChooseYear = ref(chooseYear.value); // Lưu tạm 
 const { updateChart } = useECharts(echart, rawData, activeFilter, chooseYear); // Truyền chooseYear vào
 
 const currentYear = new Date().getFullYear();
@@ -268,21 +263,14 @@ const availableMonths = ref([
   { label: "December", value: "12" },
 ]);
 
-const confirmSelection = () => {
-  showDatePicker.value = false;
+const confirmYearSelection = () => {
   showDatePickerYear.value = false;
-
-  if (showDatePickerYear.value) {
-    // Khi chọn năm từ hộp thoại Choose Year
-    console.log("Năm đã chọn:", chooseYear.value);
-  }
 
   if (rawData[chooseYear.value]) {
     updateChart();
-  } else {
-    ElMessage.warning("Dữ liệu cho năm này chưa có!");
-  }
+  } 
 };
+
 
 </script>
 
