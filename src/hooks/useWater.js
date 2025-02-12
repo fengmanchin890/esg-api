@@ -75,12 +75,13 @@ export function useWater() {
     try {
       const userId = localStorage.getItem("USERID");
       const factoryId = localStorage.getItem("DB_CHOICE");
-
+  
       if (!userId || !factoryId) {
         ElMessage.error("Không tìm thấy thông tin đăng nhập!");
         return;
       }
-
+  
+      // Gửi request đến API
       const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/water/add`, {
         factoryid: factoryId,
         recordyear: parseInt(newRecord.value.recordyear) || 0,
@@ -89,7 +90,8 @@ export function useWater() {
         recycledWaterMeter: isNaN(parseFloat(newRecord.value.recycledWaterMeter)) ? 0 : parseFloat(newRecord.value.recycledWaterMeter),
         userid: userId,
       });
-
+  
+      // Kiểm tra mã phản hồi từ server
       if (response.data.code === 200) {
         ElMessage.success("Thêm dữ liệu thành công!");
         fetchWaterData();
@@ -98,9 +100,22 @@ export function useWater() {
         ElMessage.error("Thêm dữ liệu thất bại: " + response.data.msg);
       }
     } catch (error) {
-      ElMessage.error("Có lỗi xảy ra khi thêm dữ liệu!");
+      // Ghi log lỗi chi tiết
+      console.error("Lỗi chi tiết khi thêm dữ liệu:", error);
+      
+      if (error.response) {
+        // Nếu lỗi từ server (HTTP response lỗi)
+        ElMessage.error(`Lỗi từ server: ${error.response.data.message || "Không xác định"}`);
+      } else if (error.request) {
+        // Nếu không có phản hồi từ server (có thể lỗi kết nối mạng)
+        ElMessage.error("Không nhận được phản hồi từ server. Vui lòng kiểm tra kết nối mạng!");
+      } else {
+        // Nếu lỗi trong khi thiết lập yêu cầu (có thể do cấu hình sai)
+        ElMessage.error("Lỗi khi thiết lập yêu cầu: " + error.message);
+      }
     }
   };
+  
 
   const updateRecord = async (row) => {
     try {
