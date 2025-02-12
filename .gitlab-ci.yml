@@ -24,7 +24,7 @@ build:
     paths:
       - "docker_cache/"  # 缓存 Docker 镜像文件
   only:
-    - master
+    - main
     
 
 
@@ -59,4 +59,4 @@ deploy:
     - ssh administrator@192.168.40.105 "docker run -d --name ${SERVICE_NAME} -p ${PORT_MAPPING} ${SERVICE_NAME}:latest"
   retry: 2
   only:
-    - master
+    - main
