@@ -36,14 +36,14 @@ deploy:
     - chmod 644 ~/.ssh/known_hosts
   script:
     # Di chuyển thư mục cũ và tạo bản sao lưu
-    - ssh administrator@192.168.40.105 "rm -rf /home/ubuntu/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak"
-    - ssh administrator@192.168.40.105 "if [ -d /home/ubuntu/Docker/Nginx/nginx_html/${SERVICE_NAME} ]; then mv /home/ubuntu/Docker/Nginx/nginx_html/${SERVICE_NAME} /home/ubuntu/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak; fi"
+    - ssh administrator@192.168.40.105 "rm -rf /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak"
+    - ssh administrator@192.168.40.105 "if [ -d /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME} ]; then mv /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME} /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}-bak; fi"
 
     # Đổi tên thư mục dist thành tên dịch vụ (nếu cần)
     - mv dist ${SERVICE_NAME}   # Đổi tên dist thành tên dịch vụ
 
     # Chuyển thư mục đã đổi tên đến server
-    - scp -r ${SERVICE_NAME} administrator@192.168.40.105:/home/ubuntu/Docker/Nginx/nginx_html/
+    - scp -r ${SERVICE_NAME} administrator@192.168.40.105:/home/administrator/Docker/Nginx/nginx_html/
 
     # Kiểm tra và dừng dịch vụ ${SERVICE_NAME} nếu đang chạy
     - ssh administrator@192.168.40.105 "docker ps -q --filter name=${SERVICE_NAME} | xargs -r docker stop"
@@ -54,7 +54,7 @@ deploy:
     - ssh administrator@192.168.40.105 "docker ps -a -q --filter name=nginx | xargs -r docker rm"
 
     # Khởi động container Nginx mới với thư mục nginx_html là thư mục tĩnh
-    - ssh administrator@192.168.40.105 "docker run -d --name nginx -p 3000:80 -v /home/ubuntu/Docker/Nginx/nginx_config/nginx.conf:/etc/nginx/nginx.conf:ro -v /home/ubuntu/Docker/Nginx/nginx_html/${SERVICE_NAME}:/usr/share/nginx/html:ro nginx:latest"
+    - ssh administrator@192.168.40.105 "docker run -d --name nginx -p 3000:80 -v /home/administrator/Docker/Nginx/nginx_config/nginx.conf:/etc/nginx/nginx.conf:ro -v /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}:/usr/share/nginx/html:ro nginx:latest"
   retry: 2
   only:
     - main
