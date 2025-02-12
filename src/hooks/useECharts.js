@@ -16,18 +16,18 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
   };
 
   const updateChart = async () => {
-    await nextTick(); // Vue cập nhật chooseYear
-
+    await nextTick();
+  
     let selectedYear = chooseYear.value;
-
+  
     if (!rawData[selectedYear]) {
       ElMessage.warning(`Dữ liệu không có sẵn cho năm ${selectedYear}, hiển thị dữ liệu của ${currentYear}.`);
-      selectedYear = currentYear; // currentYear nếu không có dữ liệu
-      chooseYear.value = currentYear; // Cập nhật lại giá trị trong UI
+      selectedYear = currentYear;
+      chooseYear.value = currentYear;
     }
-
+  
     const data = rawData[selectedYear];
-
+  
     if (!data || !data.months || !data.energy || !data.water) {
       if (chart) {
         chart.setOption({
@@ -39,16 +39,13 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
       }
       return;
     }
-
+  
     const { months, energy, water } = data;
     const seriesData = [];
-    const legendData = [];
-
-    const maxEnergy = Math.ceil(Math.max(...energy) / 10) * 10 + 10;
-    const maxWater = Math.ceil(Math.max(...water) / 10) * 10 + 10;
-    
-
+    const legendData = {}; // Object để kiểm soát trạng thái bật/tắt
+  
     if (activeFilter.value === "all" || activeFilter.value === "energy") {
+      legendData["Energy (kWh)"] = true;
       seriesData.push({
         name: "Energy (kWh)",
         type: "bar",
@@ -56,67 +53,38 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
         yAxisIndex: 0,
         itemStyle: { color: "rgba(144, 238, 144, 0.8)" },
       });
-      legendData.push("Energy (kWh)");
     }
-
+  
     if (activeFilter.value === "all" || activeFilter.value === "water") {
+      legendData["Water (m³)"] = true;
       seriesData.push({
         name: "Water (m³)",
         type: "line",
         data: water,
         yAxisIndex: 1,
         smooth: true,
-        itemStyle: {
-          color: "rgba(30, 144, 255, 1)",
-          borderColor: "rgba(255, 255, 255, 1)",
-          borderWidth: 2,
-        },
-        lineStyle: { width: 3 },
-        symbol: "circle",
-        symbolSize: 8,
+        itemStyle: { color: "rgba(30, 144, 255, 1)" },
       });
-      legendData.push("Water (m³)");
     }
-
+  
     const option = {
       tooltip: { trigger: "axis" },
       legend: {
-        data: legendData,
-        textStyle: { color: "#333", fontWeight: "bold" },
-        bottom: 10,
+        data: Object.keys(legendData), // Lấy danh sách tên series hợp lệ
+        selected: legendData, // Ánh xạ trạng thái bật/tắt
+        selectedMode: "multiple", // Cho phép bật/tắt nhiều series
       },
-      xAxis: {
-        type: "category",
-        data: months,
-        axisLabel: { interval: 0 },
-      },
+      xAxis: { type: "category", data: months },
       yAxis: [
-        {
-          type: "value",
-          name: "Energy (kWh)",
-          position: "left",
-          min: 0,
-          max: maxEnergy,
-          axisLabel: { fontWeight: "bold" },
-          splitLine: { lineStyle: { color: "rgba(39, 183, 226, 0.349)" } },
-          nameTextStyle: { fontSize: 16, fontWeight: "bold", color: "#28a745" },
-        },
-        {
-          type: "value",
-          name: "Water (m³)",
-          position: "right",
-          min: 0,
-          max: maxWater,
-          axisLabel: { fontWeight: "bold" },
-          splitLine: { show: false },
-          nameTextStyle: { fontSize: 16, fontWeight: "bold", color: "#007bff" },
-        },
+        { type: "value", name: "Energy (kWh)" },
+        { type: "value", name: "Water (m³)" },
       ],
       series: seriesData,
     };
-
-    chart.setOption(option, true);
+  
+    chart.setOption(option);
   };
+  
 
   onMounted(() => {
     initChart();
