@@ -104,7 +104,7 @@
       </div>
 
       <div class="right-buttons-top">
-        <el-button
+        <!-- <el-button
           class="button-w"
           :class="{ active: activeFilter === 'all' }"
           @click="filterData('all')"
@@ -123,13 +123,12 @@
           :class="{ active: activeFilter === 'energy' }"
           @click="filterData('energy')"
           >Energy</el-button
-        >
+        > -->
       </div>
     </div>
 
     <h2 class="title">Performance Dashboard</h2>
     <div ref="echart" class="chart"></div>
-
     <div class="chart-controls">
       <div class="left-buttons-bottom">
         <el-button type="primary" @click="toggleDatePickerYear"
@@ -323,6 +322,7 @@ const confirmYearSelection = () => {
 
 .chart {
   height: 390px;
+  margin-top: -20px;
 }
 
 .chart-controls {
@@ -333,6 +333,13 @@ const confirmYearSelection = () => {
   display: flex;
   justify-content: space-between;
   width: 80%;
+}
+.chart-controls {
+  pointer-events: none;
+}
+
+.chart-controls button {
+  pointer-events: auto;
 }
 
 .left-buttons-bottom .right-buttons-top {
@@ -349,7 +356,9 @@ const confirmYearSelection = () => {
 }
 .title {
   color: #0055aa;
-  font-size: 20px;
+  font-size: 28px;
+  margin-bottom: 10px;
+  margin-top: 5px;
 }
 .demo-date-picker {
   display: flex;

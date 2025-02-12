@@ -3,11 +3,9 @@ import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
 
 export default function useECharts(echartRef, rawData, activeFilter, chooseYear) {
-
   let chart = null;
   const currentYear = new Date().getFullYear().toString();
-  // const chooseYear = ref(currentYear);
-  // console.log("js", chooseYear.value)
+
   const initChart = () => {
     if (echartRef.value) {
       chart = echarts.init(echartRef.value);
@@ -17,17 +15,17 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
 
   const updateChart = async () => {
     await nextTick();
-  
+
     let selectedYear = chooseYear.value;
-  
+
     if (!rawData[selectedYear]) {
       ElMessage.warning(`Dữ liệu không có sẵn cho năm ${selectedYear}, hiển thị dữ liệu của ${currentYear}.`);
       selectedYear = currentYear;
       chooseYear.value = currentYear;
     }
-  
+
     const data = rawData[selectedYear];
-  
+
     if (!data || !data.months || !data.energy || !data.water) {
       if (chart) {
         chart.setOption({
@@ -39,11 +37,11 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
       }
       return;
     }
-  
+
     const { months, energy, water } = data;
     const seriesData = [];
-    const legendData = {}; // Object để kiểm soát trạng thái bật/tắt
-  
+    const legendData = {};
+
     if (activeFilter.value === "all" || activeFilter.value === "energy") {
       legendData["Energy (kWh)"] = true;
       seriesData.push({
@@ -54,7 +52,7 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
         itemStyle: { color: "rgba(144, 238, 144, 0.8)" },
       });
     }
-  
+
     if (activeFilter.value === "all" || activeFilter.value === "water") {
       legendData["Water (m³)"] = true;
       seriesData.push({
@@ -64,35 +62,73 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
         yAxisIndex: 1,
         smooth: true,
         itemStyle: { color: "rgba(30, 144, 255, 1)" },
+        lineStyle: { width: 4 },
+        emphasis: {
+          focus: "series",
+          itemStyle: { color: "#fff", borderColor: "#fff", borderWidth: 3, opacity: 1 },
+          lineStyle: { width: 6 },
+          symbolSize: 12,
+        },
+        symbolSize: 6,
       });
     }
-  
+
     const option = {
-      tooltip: { trigger: "axis" },
-      legend: {
-        data: Object.keys(legendData), // Lấy danh sách tên series hợp lệ
-        selected: legendData, // Ánh xạ trạng thái bật/tắt
-        selectedMode: "multiple", // Cho phép bật/tắt nhiều series
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "cross",
+          crossStyle: { color: "#aaa", width: 1.5, type: "dashed" },
+        },
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        textStyle: { color: "#000", fontSize: 14, fontWeight: "bold" },
+        borderColor: "#ddd",
+        borderWidth: 2,
+        padding: [10, 15],
+        extraCssText: "box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);",
       },
+
+      legend: {
+        data: Object.keys(legendData),
+        selected: legendData,
+        selectedMode: "multiple",
+        bottom: 0,
+        left: "center",
+        orient: "horizontal",
+      },
+
       xAxis: { type: "category", data: months },
       yAxis: [
-        { type: "value", name: "Energy (kWh)" },
-        { type: "value", name: "Water (m³)" },
+        {
+          type: "value",
+          name: "Energy (kWh)",
+          splitLine: {
+            show: true,
+            lineStyle: { color: "rgba(173, 216, 230, 0.8)", type: "dashed", width: 1.5 },
+          },
+        },
+        {
+          type: "value",
+          name: "Water (m³)",
+          splitLine: {
+            show: true,
+            lineStyle: { color: "rgba(173, 216, 230, 0.8)", type: "dashed", width: 1.5 },
+          },
+        },
       ],
+
       series: seriesData,
     };
-  
+
     chart.setOption(option);
   };
-  
 
   onMounted(() => {
     initChart();
   });
 
   watch(chooseYear, async (newYear) => {
-    // console.log("Giá trị chooseYear mới:", newYear);
-    await nextTick(); // Chờ chooseYear cập nhật
+    await nextTick();
     updateChart();
   });
 
