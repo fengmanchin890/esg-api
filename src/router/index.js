@@ -1,14 +1,14 @@
 // router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-import Input from './src/views/Input.vue';
-import Analyze from './src/views/Analyze.vue';
+import Input from '@/views/Input.vue';
+import Analyze from '@/views/Analyze.vue';
 import WaterTable from '@/components/WaterTable.vue';
 import EnergyTable from '@/components/EnergyTable.vue';
-import LoginPage from './src/views/Login.vue';
-import useUser from '@/hooks/useUser';
-import MainPage from './src/views/MainPage.vue';
-import Settings from './src/views/Settings.vue';
+import LoginPage from '@/views/Login.vue';
+import MainPage from '@/views/MainPage.vue';
+import Settings from '@/views/Settings.vue';
 
+import useUser from '@/hooks/useUser';
 
 const { isAuthenticated } = useUser();
 
