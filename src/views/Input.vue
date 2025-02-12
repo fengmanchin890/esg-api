@@ -1,8 +1,8 @@
 <template>
   <div class="input-container">
     <template v-if="route.path === '/mainPage/input'">
-      <WaterTable />
-      <EnergyTable />
+      <WaterTable class="container"/>
+      <EnergyTable class="container"/>
     </template>
     <router-view v-else/>
   </div>
@@ -21,5 +21,9 @@ const route = useRoute();
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+.container {
+  max-height: 413px;
 }
 </style>

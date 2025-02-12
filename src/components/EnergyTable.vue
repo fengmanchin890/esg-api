@@ -28,7 +28,7 @@
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
       <div class="search-bar">
-        <el-input v-model="searchQuery" placeholder="search by Year - Month" clearable />
+        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable />
       </div>
     </div>
 
@@ -47,10 +47,9 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 
 <style scoped>
 #DemoPage {
-  height: 85vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
 }
 
 .title {
@@ -60,8 +59,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   color: rgba(226, 44, 31, 0.829);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
-  padding: 10px 0;
-  margin: -50px 0;
+  margin: -50px 0 -50px 0;
 }
 
 .icon {
@@ -100,7 +98,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 }
 
 .table-container {
-  max-height: 580px;
+  max-height: 1080px;
   overflow-y: auto;
   border-radius: 10px;
   overflow: hidden;
@@ -114,8 +112,6 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 :deep(.el-table thead th) {
   position: sticky;
   top: 0;
-  background: #fff;
   z-index: 10;
-  font-size: 18px;
 }
 </style>

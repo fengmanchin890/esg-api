@@ -47,21 +47,20 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 
 <style scoped>
 #DemoPage {
-  height: 85vh;
+  height: 86vh;
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .title {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 10px;
-  color: rgba(61, 243, 243, 0.973);
+  color: rgba(226, 44, 31, 0.829);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-  padding: 10px 0;
-  margin: -50px 0;
+  justify-content: center;
+  margin:-50px 0 -50px 0;
 }
 
 .icon {
@@ -93,7 +92,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 }
 
 .table-container {
-  max-height: 580px;
+  max-height: 1200px;
   overflow-y: auto;
   border-radius: 10px;
   overflow: hidden;
