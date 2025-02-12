@@ -53,7 +53,18 @@ export function useWater() {
 
   const fetchWaterData = async () => {
     try {
-      const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/water/get`);
+      const factoryID = localStorage.getItem('DB_CHOICE');
+  
+      if (!factoryID) {
+        console.error('Không tìm thấy FactoryID trong localStorage.');
+        return;
+      }
+  
+      const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/water/get`, {
+        params: {
+          factoryID: factoryID, // Truyền factoryID vào query string
+        },
+      });
       listData.value = response.data.data;
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
