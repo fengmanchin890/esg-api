@@ -6,21 +6,30 @@
 
     <div class="form-section">
       <div class="form-content">
-        <div style="
+        <div
+          style="
             position: absolute;
             top: 5%;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-          ">
-          <img src="https://www.laiyih.com/uploads/tw/company/20231218206.png" class="logo-image" />
+          "
+        >
+          <img
+            src="https://www.laiyih.com/uploads/tw/company/20231218206.png"
+            class="logo-image"
+          />
         </div>
 
         <el-card class="custom-card">
           <el-form :model="Users" @submit.prevent="login" size="large">
             <el-form-item>
-              <el-select v-model="Users.DB_CHOICE" placeholder="Select Factory" class="input-field">
+              <el-select
+                v-model="Users.DB_CHOICE"
+                placeholder="Select Factory"
+                class="input-field"
+              >
                 <el-option label="Ty Xuan" value="LYN"></el-option>
                 <el-option label="Ty Bach" value="LYV"></el-option>
                 <el-option label="Ty Thac" value="LYS"></el-option>
@@ -28,19 +37,35 @@
             </el-form-item>
 
             <el-form-item>
-              <el-input v-model="Users.USERID" placeholder="ID" class="input-field"></el-input>
+              <el-input
+                v-model="Users.USERID"
+                placeholder="ID"
+                class="input-field"
+              ></el-input>
             </el-form-item>
 
             <el-form-item>
-              <el-input v-model="Users.PWD" :type="showPassword ? 'text' : 'password'" placeholder="Password"
-                class="input-field">
+              <el-input
+                v-model="Users.PWD"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="Password"
+                class="input-field"
+              >
                 <template #append>
-                  <el-button :icon="showPassword ? Hide : View" @click="showPassword = !showPassword"></el-button>
+                  <el-button
+                    :icon="showPassword ? Hide : View"
+                    @click="showPassword = !showPassword"
+                  ></el-button>
                 </template>
               </el-input>
             </el-form-item>
 
-            <el-button type="primary" native-type="submit" class="login-button" block>
+            <el-button
+              type="primary"
+              native-type="submit"
+              class="login-button"
+              block
+            >
               Login
             </el-button>
           </el-form>
@@ -70,7 +95,6 @@ const Users = reactive({
   USERNAME: sessionStorage.getItem("USERNAME") || "",
 });
 
-
 const Factory = ref("");
 const login = async () => {
   try {
@@ -84,7 +108,7 @@ const login = async () => {
       sessionStorage.setItem("TOKEN", response.data.data.TOKEN);
       localStorage.setItem("USERNAME", response.data.data.USERNAME);
       Object.assign(Users, response.data.data);
-      console.log("Users sau khi cập nhật:", Users);
+      // console.log("Users sau khi cập nhật:", Users);
 
       ElMessage({
         message: "Login successful!",
@@ -94,7 +118,7 @@ const login = async () => {
       setTimeout(() => {
         router.push("/mainPage/input");
         window.location.reload();
-      }, 500); 
+      }, 500);
     } else {
       ElMessage({
         message: response.data.data,
@@ -102,15 +126,13 @@ const login = async () => {
       });
     }
   } catch (error) {
-    console.log("Lỗi từ API:", error.response);
+    // console.log("Lỗi từ API:", error.response);
     ElMessage({
       message: "Login failed. Please try again!",
       type: "error",
     });
   }
 };
-
-
 </script>
 
 <style scoped>

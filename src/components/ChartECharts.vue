@@ -88,11 +88,7 @@
     <h1 class="title-choose">Choose Factory</h1>
     <div class="picker-row">
       <div class="picker-group">
-        <el-select
-          v-model="selectedFactory"
-          class="styled-select"
-          @change="confirmFactorySelection"
-        >
+        <el-select v-model="selectedFactoryTemp" class="styled-select">
           <el-option
             v-for="factory in factoryList"
             :key="factory.value"
@@ -100,8 +96,14 @@
             :value="factory.value"
           />
         </el-select>
+        <br>
+        <el-button type="primary" @click="confirmFactorySelection">
+          Xác nhận
+        </el-button>
       </div>
     </div>
+
+    <!-- <h2>Nhà máy hiện tại: {{ factoryList.find(f => f.value === selectedFactory)?.label || "Chưa chọn" }}</h2> -->
   </div>
 </el-dialog>
 
@@ -252,23 +254,34 @@ const confirmYearSelection = () => {
 };
 
 const showFactoryPicker = ref(false);
-const selectedFactory = ref("tyxuan");
-
-const factoryList = ref([
-  { label: "Ty Xuan", value: "tyxuan" },
-  { label: "Ty Bach", value: "tybach" },
-  { label: "Ty Thac", value: "tythac" },
-]);
-
 const toggleFactoryPicker = () => {
   showFactoryPicker.value = true;
 };
+// const selectedFactory = ref("tyxuan");
 
+// const factoryList = ref([
+//   { label: "Ty Xuan", value: "tyxuan" },
+//   { label: "Ty Bach", value: "tybach" },
+//   { label: "Ty Thac", value: "tythac" },
+// ]);
+const factoryList = [
+  { label: "TỶ XUÂN", value: "LYN" },
+  { label: "TỶ BÁCH", value: "LYV" },
+  { label: "TỶ THẠC", value: "LYS" },
+];
+
+// Lấy DB_CHOICE từ localStorage nhưng không ghi lại
+const dbChoice = localStorage.getItem("DB_CHOICE") || "Unknown";
+
+// Biến tạm lưu giá trị nhà máy được chọn
+const selectedFactoryTemp = ref(dbChoice);
+const selectedFactory = ref(dbChoice);
+console.log(`Nhà máy đang hiển thị khi mới vào: ${factoryList.find(f => f.value === selectedFactory.value)?.label}`);
+// Khi người dùng bấm nút xác nhận
 const confirmFactorySelection = () => {
-  showFactoryPicker.value = false;
-  console.log("Selected Factory:", selectedFactory.value);
+  selectedFactory.value = selectedFactoryTemp.value;
+  console.log(`Nhà máy đang hiển thị: ${factoryList.find(f => f.value === selectedFactory.value)?.label}`);
 };
-
 </script>
 
 <style scoped>

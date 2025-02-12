@@ -2,6 +2,7 @@ import { ref, onMounted, watch, nextTick } from "vue";
 import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
 
+
 export default function useECharts(echartRef, rawData, activeFilter, chooseYear) {
   let chart = null;
   const currentYear = new Date().getFullYear().toString();
