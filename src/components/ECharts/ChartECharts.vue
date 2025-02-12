@@ -223,7 +223,9 @@ const filterFactory = (type) => {
 
 const filterData = (type) => {
   activeFilter.value = type;
+  updateChart(); 
 };
+
 const currentDate = new Date();
 const showDatePicker = ref(false);
 const showDatePickerYear = ref(false);
@@ -270,7 +272,6 @@ const confirmYearSelection = () => {
     updateChart();
   } 
 };
-
 
 </script>
 
