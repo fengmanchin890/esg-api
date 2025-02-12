@@ -125,6 +125,7 @@ observer.observe(document.body);
 .lai-yih-logo {
   height: 70px;
   cursor: pointer;
+  margin-left: -18px;
 }
 
 .company-text {
