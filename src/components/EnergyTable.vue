@@ -6,11 +6,6 @@
     </div>
     <div class="energy-input">
       <div>
-        <el-icon class="icon-add">
-          <CirclePlus />
-        </el-icon>
-      </div>
-      <div>
         <label>Record Year</label>
         <el-input v-model="newRecord.recordyear" />
       </div>
@@ -28,7 +23,7 @@
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
       <div class="search-bar">
-        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable />
+        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable :prefix-icon="Search"/>
       </div>
     </div>
 
@@ -39,8 +34,8 @@
 </template>
 
 <script setup>
+import { Search } from "@element-plus/icons-vue";
 import { useEnergy } from "@/hooks/useEnergy";
-import { CirclePlus } from "@element-plus/icons-vue";
 
 const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord } = useEnergy();
 </script>
@@ -59,16 +54,11 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   color: rgba(226, 44, 31, 0.829);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
-  margin: -50px 0 -50px 0;
+  margin: -50px 0 -50px -200px;
 }
 
 .icon {
   width: 60px;
-}
-
-.icon-add {
-  color: green;
-  font-size: 25px;
 }
 
 .energy-input {

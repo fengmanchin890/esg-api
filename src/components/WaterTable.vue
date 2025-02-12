@@ -1,15 +1,10 @@
 <template>
   <div id="DemoPage">
     <div class="title">
-      <img src="../assets/water.png" alt="water" class="icon"/>
+      <img src="../assets/water.png" alt="water" class="icon" />
       <h1>Water</h1>
     </div>
     <div class="water-input">
-      <div>
-        <el-icon class="icon-add">
-          <CirclePlus />
-        </el-icon>
-      </div>
       <div>
         <label>Record Year</label>
         <el-input v-model="newRecord.recordyear" />
@@ -28,20 +23,21 @@
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
       <div class="search-bar">
-        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable />
+        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable :prefix-icon="Search">
+        </el-input>
       </div>
     </div>
 
-    <ry-edit-table ref="ryEditTable" class="table-container"
-      :listData="filteredList" :listConfig="listConfig" :rowButtons="rowButtons"
-      :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }" 
-      :cellClassName="'custom-cell-class'" trigger="onChange" height="625px"/>
+    <ry-edit-table ref="ryEditTable" class="table-container" :listData="filteredList" :listConfig="listConfig"
+      :rowButtons="rowButtons" :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }"
+      :cellClassName="'custom-cell-class'" trigger="onChange" height="625px" />
   </div>
 </template>
 
 <script setup>
-import { CirclePlus } from "@element-plus/icons-vue";
+import { Search } from "@element-plus/icons-vue";
 import { useWater } from "@/hooks/useWater";
+
 const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord } = useWater();
 </script>
 
@@ -60,16 +56,12 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   color: rgba(226, 44, 31, 0.829);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
-  margin:-50px 0 -50px 0;
+  margin: -50px 0 -50px -200px;
+
 }
 
 .icon {
   width: 60px;
-}
-
-.icon-add {
-  color: green;
-  font-size: 25px;
 }
 
 .water-input {
