@@ -15,17 +15,17 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
 
   const updateChart = async () => {
     await nextTick();
-
+  
     let selectedYear = chooseYear.value;
-
+  
     if (!rawData[selectedYear]) {
       ElMessage.warning(`Dữ liệu không có sẵn cho năm ${selectedYear}, hiển thị dữ liệu của ${currentYear}.`);
       selectedYear = currentYear;
       chooseYear.value = currentYear;
     }
-
+  
     const data = rawData[selectedYear];
-
+  
     if (!data || !data.months || !data.energy || !data.water) {
       if (chart) {
         chart.setOption({
@@ -37,8 +37,16 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
       }
       return;
     }
+  
+    const { months } = data;
 
-    const { months, energy, water } = data;
+    // Xử lý dữ liệu: -1 không hiển thị trên biểu đồ, nhưng tooltip vẫn hiện "N/A"
+    const processData = (arr) =>
+      arr.map((value) => (value === -1 ? { value: null, display: "N/A" } : { value, display: value }));
+
+    const energy = processData(data.energy);
+    const water = processData(data.water);
+
     const seriesData = [];
     const legendData = {};
 
@@ -79,6 +87,13 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
         axisPointer: {
           type: "cross",
           crossStyle: { color: "#aaa", width: 1.5, type: "dashed" },
+        },
+        formatter: function (params) {
+          return params
+            .map((param) => {
+              return `${param.marker} ${param.seriesName}: <b>${param.data?.display ?? "N/A"}</b>`;
+            })
+            .join("<br>");
         },
         backgroundColor: "rgba(255, 255, 255, 0.9)",
         textStyle: { color: "#000", fontSize: 14, fontWeight: "bold" },
