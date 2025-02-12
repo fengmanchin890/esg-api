@@ -55,13 +55,13 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 
 .title {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   color: rgba(61, 243, 243, 0.973);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-  justify-content: center;
-  padding: 20px 0;
-  margin: -55px 0;
+  padding: 10px 0;
+  margin: -50px 0;
 }
 
 .icon {
@@ -78,6 +78,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   align-items: center;
   padding: 20px 0;
   gap: 20px;
+  font-size: 18px;
 }
 
 .water-input div {
@@ -92,11 +93,15 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 }
 
 .table-container {
-  max-height: 625px;
+  max-height: 580px;
   overflow-y: auto;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+:deep(.el-table) {
+  font-size: 18px;
 }
 
 :deep(.el-table thead th) {
@@ -104,6 +109,5 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   top: 0;
   z-index: 10;
   font-size: 18px;
-  padding: 13=0px 0;
 }
 </style>
