@@ -3,7 +3,7 @@ stages:
   - deploy
 
 variables:
-  SERVICE_NAME: "ESG"          # 服务名称，定义后自动应用于整个流程
+  SERVICE_NAME: "esg-web"          # 服务名称，定义后自动应用于整个流程
   PORT_MAPPING: "3001:80"       # 端口映射，定义后自动应用于 Docker 启动
   TAR_IMAGES_FILE: "${SERVICE_NAME}.tar"  # 构建的 Docker 镜像文件名称
 
