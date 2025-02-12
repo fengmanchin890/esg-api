@@ -61,16 +61,43 @@
 
   <!-- Choose Year -->
   <el-dialog v-model="showDatePickerYear" :style="{ width: '200px' }">
-  <div class="date-picker-year-container">
-    <h1 class="title-choose">Choose Year</h1>
+    <div class="date-picker-year-container">
+      <h1 class="title-choose">Choose Year</h1>
+      <div class="picker-row">
+        <div class="picker-group">
+          <el-select
+            v-model="chooseYear"
+            class="styled-select"
+            @change="confirmYearSelection"
+          >
+            <el-option
+              v-for="year in availableYears"
+              :key="year"
+              :label="year"
+              :value="year"
+            />
+          </el-select>
+        </div>
+      </div>
+    </div>
+  </el-dialog>
+
+  <!-- Choose Factory -->
+<el-dialog v-model="showFactoryPicker" :style="{ width: '200px' }">
+  <div class="factory-picker-container">
+    <h1 class="title-choose">Choose Factory</h1>
     <div class="picker-row">
       <div class="picker-group">
-        <el-select v-model="chooseYear" class="styled-select" @change="confirmYearSelection">
+        <el-select
+          v-model="selectedFactory"
+          class="styled-select"
+          @change="confirmFactorySelection"
+        >
           <el-option
-            v-for="year in availableYears"
-            :key="year"
-            :label="year"
-            :value="year"
+            v-for="factory in factoryList"
+            :key="factory.value"
+            :label="factory.label"
+            :value="factory.value"
           />
         </el-select>
       </div>
@@ -78,69 +105,31 @@
   </div>
 </el-dialog>
 
+<!-- Cập nhật nút Factory -->
+
+
   <div class="chart-container">
     <div class="button-group">
-      <div class="left-buttons-bottom">
-        <el-button
-          class="factory-pd"
-          :class="{ active: activeFactory === 'tyxuan' }"
-          @click="filterFactory('tyxuan')"
-          >Ty Xuan</el-button
-        >
+      <div class="left-buttons-bottom"></div>
 
-        <el-button
-          class="factory-pd"
-          :class="{ active: activeFactory === 'tybach' }"
-          @click="filterFactory('tybach')"
-          >Ty Bach</el-button
-        >
-
-        <el-button
-          class="factory-pd"
-          :class="{ active: activeFactory === 'tythac' }"
-          @click="filterFactory('tythac')"
-          >Ty Thac</el-button
-        >
-      </div>
-
-      <div class="right-buttons-top">
-        <!-- <el-button
-          class="button-w"
-          :class="{ active: activeFilter === 'all' }"
-          @click="filterData('all')"
-          >All</el-button
-        >
-
-        <el-button
-          class="button-w"
-          :class="{ active: activeFilter === 'water' }"
-          @click="filterData('water')"
-          >Water</el-button
-        >
-
-        <el-button
-          class="button-w"
-          :class="{ active: activeFilter === 'energy' }"
-          @click="filterData('energy')"
-          >Energy</el-button
-        > -->
-      </div>
+      <div class="right-buttons-top"></div>
     </div>
 
     <h2 class="title">Performance Dashboard</h2>
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
       <div class="left-buttons-bottom">
-        <el-button type="primary" @click="toggleDatePickerYear"
-          >Choose Year</el-button
-        >
+        <el-button type="primary">Category</el-button>
+
         <el-button type="primary" @click="toggleDatePicker"
           >Comparison</el-button
         >
       </div>
       <div class="right-buttons-bottom">
-        <el-button type="primary">Category</el-button>
-        <el-button type="primary">Test</el-button>
+        <el-button type="primary" @click="toggleDatePickerYear"
+          >Choose Year</el-button
+        >
+        <el-button type="primary" @click="toggleFactoryPicker">Factory</el-button>
       </div>
     </div>
   </div>
@@ -148,7 +137,6 @@
   <script setup>
 import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
-
 const activeFilter = ref("all");
 const activeFactory = ref("tyxuan");
 const echart = ref(null);
@@ -216,15 +204,6 @@ const toggleDatePickerYear = () => {
   showDatePickerYear.value = true;
 };
 
-const filterFactory = (type) => {
-  activeFactory.value = type;
-};
-
-const filterData = (type) => {
-  activeFilter.value = type;
-  updateChart(); 
-};
-
 const currentDate = new Date();
 const showDatePicker = ref(false);
 const showDatePickerYear = ref(false);
@@ -269,7 +248,25 @@ const confirmYearSelection = () => {
 
   if (rawData[chooseYear.value]) {
     updateChart();
-  } 
+  }
+};
+
+const showFactoryPicker = ref(false);
+const selectedFactory = ref("tyxuan");
+
+const factoryList = ref([
+  { label: "Ty Xuan", value: "tyxuan" },
+  { label: "Ty Bach", value: "tybach" },
+  { label: "Ty Thac", value: "tythac" },
+]);
+
+const toggleFactoryPicker = () => {
+  showFactoryPicker.value = true;
+};
+
+const confirmFactorySelection = () => {
+  showFactoryPicker.value = false;
+  console.log("Selected Factory:", selectedFactory.value);
 };
 
 </script>
@@ -358,7 +355,7 @@ const confirmYearSelection = () => {
   color: #0055aa;
   font-size: 28px;
   margin-bottom: 10px;
-  margin-top: 5px;
+  margin-top: -20px;
 }
 .demo-date-picker {
   display: flex;
