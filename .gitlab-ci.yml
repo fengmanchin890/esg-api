@@ -54,7 +54,7 @@ deploy:
     - ssh administrator@192.168.40.105 "docker ps -a -q --filter name=nginx | xargs -r docker rm"
 
     # Khởi động container Nginx mới với thư mục nginx_html là thư mục tĩnh
-    - ssh administrator@192.168.40.105 "docker run -d --name nginx -p 3000:80 -v /home/administrator/Docker/Nginx/nginx_config/nginx.conf:/etc/nginx/conf.d/default.conf:ro -v /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}:/usr/share/nginx/html:ro nginx:latest"
+    - ssh administrator@192.168.40.105 "docker run -d --name esg -p 3000:80 -v /home/administrator/Docker/Nginx/nginx_config/nginx.conf:/etc/nginx/conf.d/default.conf:ro -v /home/administrator/Docker/Nginx/nginx_html/${SERVICE_NAME}:/usr/share/nginx/html:ro nginx:latest"
   retry: 2
   only:
     - main
