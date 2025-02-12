@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import ChartECharts from "/components/ChartECharts.vue";
+import ChartECharts from "@/components/ChartECharts.vue";
 
 // import UsageWater from "@/components/Echarts/UsageWater.vue";
 // import UsageEnergy from "@/components/Echarts/UsageEnergy.vue";
