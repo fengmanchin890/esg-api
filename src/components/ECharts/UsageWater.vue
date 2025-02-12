@@ -1,7 +1,7 @@
 <template>
   <div class="usage-card-water">
     <h3 class="title-water">
-      <img src="../src/assets/water.png" alt="water" class="icon" />Water Usage
+      <img src="@/assets/water.png" alt="water" class="icon" />Water Usage
       <span class="percent greentext">5% ↓</span>
     </h3>
     <div class="usage-content">

@@ -1,7 +1,7 @@
 <template>
     <div class="usage-card-energy">
         <h3 class="title-energy">
-          <img src="../src/assets/energy.png" alt="water" class="icon" />Energy Usage
+          <img src="@/assets/energy.png" alt="water" class="icon" />Energy Usage
           <span class="percent red">2% ↑</span>
         </h3>
         <div class="usage-content">
