@@ -1,11 +1,13 @@
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
-export default function useECharts(echartRef, rawData, activeFilter) {
+
+export default function useECharts(echartRef, rawData, activeFilter, chooseYear) {
+
   let chart = null;
-  const chooseYear = ref(new Date().getFullYear().toString());
-
-
+  const currentYear = new Date().getFullYear().toString();
+  // const chooseYear = ref(currentYear);
+  // console.log("js", chooseYear.value)
   const initChart = () => {
     if (echartRef.value) {
       chart = echarts.init(echartRef.value);
@@ -13,11 +15,20 @@ export default function useECharts(echartRef, rawData, activeFilter) {
     }
   };
 
-  const updateChart = () => {
-    const data = rawData[chooseYear.value];
+  const updateChart = async () => {
+    await nextTick(); // Vue cập nhật chooseYear
+
+    let selectedYear = chooseYear.value;
+
+    if (!rawData[selectedYear]) {
+      ElMessage.warning(`Dữ liệu không có sẵn cho năm ${selectedYear}, hiển thị dữ liệu của ${currentYear}.`);
+      selectedYear = currentYear; // currentYear nếu không có dữ liệu
+      chooseYear.value = currentYear; // Cập nhật lại giá trị trong UI
+    }
+
+    const data = rawData[selectedYear];
 
     if (!data || !data.months || !data.energy || !data.water) {
-      ElMessage.warning("Dữ liệu không có sẵn cho năm này!");
       if (chart) {
         chart.setOption({
           title: { text: "Không có dữ liệu", left: "center", top: "middle" },
@@ -108,15 +119,13 @@ export default function useECharts(echartRef, rawData, activeFilter) {
 
   onMounted(() => {
     initChart();
-    updateChart();
   });
 
-  watch(chooseYear, (newYear) => {
-    console.log("Giá trị chooseYear mới:", newYear);
+  watch(chooseYear, async (newYear) => {
+    // console.log("Giá trị chooseYear mới:", newYear);
+    await nextTick(); // Chờ chooseYear cập nhật
     updateChart();
   });
-  
-  
 
   return { updateChart, chooseYear };
 }

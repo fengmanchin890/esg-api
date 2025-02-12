@@ -1,4 +1,5 @@
-<template>
+  <template>
+  <!-- comparisom -->
   <el-dialog v-model="showDatePicker" :style="{ width: '320px' }">
     <h1 class="title-choose">Choose Date</h1>
     <div class="date-picker-container">
@@ -148,7 +149,7 @@
     </div>
   </div>
 </template>
-<script setup>
+  <script setup>
 import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
 import { ElMessage } from "element-plus";
@@ -173,7 +174,7 @@ const rawData = {
       "Dec",
     ],
     energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 55],
-    water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 100],
+    water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 1001],
   },
   2024: {
     months: [
@@ -190,7 +191,7 @@ const rawData = {
       "Nov",
       "Dec",
     ],
-    energy: [50, 30, 60, 35, 75, 70, 65, 63, 60, 45, 55, 60],
+    energy: [50, 30, 60, 35, 75, 70, 65, 63, 60, 45, 55, 6011],
     water: [35, 45, 30, 25, 65, 85, 80, 75, 70, 50, 40, 105],
   },
   2025: {
@@ -213,7 +214,6 @@ const rawData = {
   },
 };
 
-const { updateChart } = useECharts(echart, rawData, activeFilter);
 const toggleDatePicker = () => {
   showDatePicker.value = true;
 };
@@ -232,7 +232,13 @@ const currentDate = new Date();
 const showDatePicker = ref(false);
 const showDatePickerYear = ref(false);
 const baseYear = ref(currentDate.getFullYear().toString());
-const chooseYear = ref(currentDate.getFullYear().toString());
+
+//get chooseYear
+const chooseYear = ref(new Date().getFullYear().toString());
+const tempChooseYear = ref(chooseYear.value); // Lưu tạm 
+const { updateChart } = useECharts(echart, rawData, activeFilter, chooseYear); // Truyền chooseYear vào
+
+const currentYear = new Date().getFullYear();
 // const comparisonYear = ref((currentDate.getFullYear() + 1).toString());
 const comparisonYear = ref("");
 
@@ -240,7 +246,7 @@ const selectedStartMonth = ref(
   currentDate.getMonth().toString().padStart(2, "0")
 );
 const selectedEndMonth = ref("12");
-const currentYear = new Date().getFullYear();
+
 const availableYears = ref(
   Array.from({ length: currentYear - 1999 + 1 }, (_, i) =>
     (1999 + i).toString()
@@ -266,13 +272,18 @@ const confirmSelection = () => {
   showDatePicker.value = false;
   showDatePickerYear.value = false;
 
+  if (showDatePickerYear.value) {
+    // Khi chọn năm từ hộp thoại Choose Year
+    console.log("Năm đã chọn:", chooseYear.value);
+  }
+
   if (rawData[chooseYear.value]) {
-    updateChart(rawData[chooseYear.value]);
+    updateChart();
   } else {
     ElMessage.warning("Dữ liệu cho năm này chưa có!");
   }
 };
-console.log(chooseYear.value);
+
 </script>
 
 <style scoped>
