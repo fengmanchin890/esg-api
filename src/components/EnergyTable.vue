@@ -2,7 +2,7 @@
   <div id="DemoPage">
     <div class="title">
       <img src="../assets/energy.png" alt="energy" class="icon" />
-      <h1> Energy</h1>
+      <h1>Energy</h1>
     </div>
     <div class="energy-input">
       <div>
@@ -23,7 +23,7 @@
       </div>
       <el-button type="primary" @click="addRecord">INSERT</el-button>
       <div class="search-bar">
-        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable :prefix-icon="Search"/>
+        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable :prefix-icon="Search" />
       </div>
     </div>
 
@@ -54,7 +54,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   color: rgba(226, 44, 31, 0.829);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
-  margin: -50px 0 -50px -200px;
+  margin: -50px 0 -50px -64px;
 }
 
 .icon {
@@ -88,7 +88,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 }
 
 .table-container {
-  max-height: 1080px;
+  max-height: 1000px;
   overflow-y: auto;
   border-radius: 10px;
   overflow: hidden;

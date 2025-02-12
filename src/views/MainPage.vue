@@ -14,14 +14,14 @@
     </el-container>
   </el-container>
 </template>
-  
-  <script setup>
+
+<script setup>
 import Header from "@components/Header.vue";
 import VerticalMenu from "@components/VerticalMenu.vue";
 import Footer from "../components/Footer.vue";
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .app-container {
   height: 100vh;
   display: flex;
@@ -60,4 +60,3 @@ import Footer from "../components/Footer.vue";
   background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
 }
 </style>
-  

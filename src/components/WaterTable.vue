@@ -43,10 +43,10 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 
 <style scoped>
 #DemoPage {
-  height: 86vh;
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
+
 }
 
 .title {
@@ -56,7 +56,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   color: rgba(226, 44, 31, 0.829);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
-  margin: -50px 0 -50px -200px;
+  margin: -50px 0 -50px -64px;
 
 }
 
@@ -84,7 +84,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 }
 
 .table-container {
-  max-height: 1200px;
+  max-height: 1000px;
   overflow-y: auto;
   border-radius: 10px;
   overflow: hidden;
