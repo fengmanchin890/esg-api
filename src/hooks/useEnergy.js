@@ -1,7 +1,7 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { ElMessage, ElMessageBox } from "element-plus";
-
+const VITE_BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}`;
 export function useEnergy() {
   const listData = ref([]);
   const searchQuery = ref("");
@@ -53,7 +53,7 @@ export function useEnergy() {
 
   const fetchEnergyData = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/api/v1/energy/get");
+      const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/energy/get`);
       listData.value = response.data.data;
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
@@ -71,7 +71,7 @@ export function useEnergy() {
         return;
       }
 
-      const response = await axios.post("http://localhost:8081/api/v1/energy/add", {
+      const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/energy/add`, {
         factoryid: factoryId,
         recordyear: parseInt(newRecord.value.recordyear),
         recordmonth: parseInt(newRecord.value.recordmonth),
@@ -94,7 +94,7 @@ export function useEnergy() {
 
   const updateRecord = async (row) => {
     try {
-      const response = await axios.put("http://localhost:8081/api/v1/energy/update", {
+      const response = await axios.put(`${VITE_BACKEND_URL}/api/v1/energy/update`, {
         recordid: row.recordid,
         factoryid: row.factoryid,
         recordyear: parseInt(row.recordyear),
@@ -122,7 +122,7 @@ export function useEnergy() {
         type: "warning",
       });
 
-      const response = await axios.delete("http://localhost:8081/api/v1/energy/delete", {
+      const response = await axios.delete(`${VITE_BACKEND_URL}/api/v1/energy/delete`, {
         data: { recordid },
       });
 

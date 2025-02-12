@@ -1,7 +1,7 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { ElMessage, ElMessageBox } from "element-plus";
-
+const VITE_BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}`;
 export function useWater() {
   const listData = ref([]);
   const searchQuery = ref("");
@@ -53,7 +53,7 @@ export function useWater() {
 
   const fetchWaterData = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/api/v1/water/get");
+      const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/water/get`);
       listData.value = response.data.data;
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
@@ -70,7 +70,7 @@ export function useWater() {
         return;
       }
 
-      const response = await axios.post("http://localhost:8081/api/v1/water/add", {
+      const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/water/add`, {
         factoryid: factoryId,
         recordyear: parseInt(newRecord.value.recordyear) || 0,
         recordmonth: parseInt(newRecord.value.recordmonth) || 0,
@@ -93,7 +93,7 @@ export function useWater() {
 
   const updateRecord = async (row) => {
     try {
-      const response = await axios.put("http://localhost:8081/api/v1/water/update", {
+      const response = await axios.put(`${VITE_BACKEND_URL}/api/v1/water/update`, {
         recordid: row.recordid,
         factoryid: row.factoryid,
         recordyear: parseInt(row.recordyear) || 0,
@@ -121,7 +121,7 @@ export function useWater() {
         type: "warning",
       });
 
-      const response = await axios.delete("http://localhost:8081/api/v1/water/delete", {
+      const response = await axios.delete(`${VITE_BACKEND_URL}/api/v1/water/delete`, {
         data: { recordid },
       });
 

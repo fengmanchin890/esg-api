@@ -59,6 +59,7 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import TripleCircle from "../components/LoginPage/TripleCircle.vue";
 import { Hide, View } from "@element-plus/icons-vue";
+const VITE_BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}`;
 const router = useRouter();
 const showPassword = ref(false);
 
@@ -74,7 +75,7 @@ const Factory = ref("");
 const login = async () => {
   try {
     const response = await axios.post(
-      "http://localhost:8081/api/v1/auth/login",
+      `${VITE_BACKEND_URL}/api/v1/auth/login`,
       Users
     );
     if (typeof response.data.data === "object") {
