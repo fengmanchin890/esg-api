@@ -1,39 +1,37 @@
-# Docker file
+# Use Node.js LTS phiên bản mới hơn
+FROM node:18-alpine AS build-stage
 
-# Use the node image from official Docker Hub
-FROM node:16.10.0-alpine3.13 AS build-stage
-
-# set the working directory
+# Set thư mục làm việc
 WORKDIR /app
 
-# Copy the working directory in the container
-COPY package*.json ./
+# Copy file package.json & package-lock.json
+COPY package.json package-lock.json ./
 
-# Install the project dependecies
-# if you npm then npm install 
-RUN npm install 
+# Xóa cache npm và cài đặt dependency chuẩn
+RUN npm cache clean --force
+RUN npm ci --only=production
 
-# Copy the rest of the project files to the container
+# Copy toàn bộ mã nguồn vào container
 COPY . .
 
-#Build the Vue.js application to the production mode to dist folder
-# here also if you use npm then npm run build
+# Cấp quyền thư mục build
+RUN mkdir -p /app/dist && chmod -R 777 /app/dist
+
+# Build Vue.js
 RUN npm run build
 
-# use the lighweight Nignx image from the previus state to the nginx container
+# Chuyển sang Nginx để phục vụ ứng dụng
 FROM nginx:alpine AS production-stage
 
-# Copy the build application from the previos state to the Nginx container
-# her we can see the path of the build application and the path where we want to copy it
+# Copy ứng dụng đã build vào Nginx
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-
-# here should be the same name as the nginx configuration file in the project
+# Copy file cấu hình Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose the port 80
+# Mở cổng 80
 EXPOSE 80
 
-
-# start nginx to server the application
+# Chạy Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
