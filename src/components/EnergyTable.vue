@@ -28,7 +28,7 @@
     </div>
 
     <ry-edit-table ref="ryEditTable" class="table-container" :listData="filteredList" :listConfig="listConfig"
-      :rowButtons="rowButtons" :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }"
+      :rowButtons="rowButtons" :operationsConfig="{ width: 165 }" :action="'action'" :cellStyle="{ color: 'orange' }"
       :cellClassName="'custom-cell-class'" trigger="onChange" height="725" />
   </div>
 </template>
@@ -102,5 +102,10 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+:deep(.el-table .cell) {
+  display: flex;
+  flex-wrap: nowrap;
 }
 </style>
