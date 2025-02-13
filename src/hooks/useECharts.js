@@ -58,7 +58,8 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
         type: "bar",
         data: energy,
         yAxisIndex: 0,
-        itemStyle: { color: "rgba(144, 238, 144, 0.8)" },
+        // itemStyle: { color: "#40E0D0" },
+        itemStyle: { color: "rgba(255, 183, 77, 0.8)" },
       });
     }
 
@@ -71,7 +72,7 @@ export default function useECharts(echartRef, rawData, activeFilter, chooseYear)
         yAxisIndex: 1,
         smooth: true,
         itemStyle: { color: "rgba(30, 144, 255, 1)" },
-        lineStyle: { width: 4 },
+        lineStyle: { width: 5 },
         emphasis: {
           focus: "series",
           itemStyle: { color: "#fff", borderColor: "#fff", borderWidth: 3, opacity: 1 },
