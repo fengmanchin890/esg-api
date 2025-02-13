@@ -1,7 +1,7 @@
   <template>
   <!-- comparisom -->
   <el-dialog v-model="showDatePicker" :style="{ width: '320px' }">
-    <h1 class="title-choose">Choose Date</h1>
+    <h1 class="title-choose">Comparison</h1>
     <div class="date-picker-container">
       <div class="picker-row">
         <div class="picker-group">
@@ -60,7 +60,10 @@
   </el-dialog>
 
   <!-- Choose Year -->
-  <el-dialog v-model="showDatePickerYear" :style="{ width: '200px' }">
+  <el-dialog
+    v-model="showDatePickerYear"
+    :style="{ width: '220px', height: '165px' }"
+  >
     <div class="date-picker-year-container">
       <h1 class="title-choose">Choose Year</h1>
       <div class="picker-row">
@@ -77,38 +80,48 @@
               :value="year"
             />
           </el-select>
+          <div class="footer-buttons">
+            <el-button type="primary" @click="confirmSelection"
+              >Apply</el-button
+            >
+            <el-button @click="showDatePickerYear = false">Cancel</el-button>
+          </div>
         </div>
       </div>
     </div>
   </el-dialog>
 
   <!-- Choose Factory -->
-<el-dialog v-model="showFactoryPicker" :style="{ width: '200px' }">
-  <div class="factory-picker-container">
-    <h1 class="title-choose">Choose Factory</h1>
-    <div class="picker-row">
-      <div class="picker-group">
-        <el-select v-model="selectedFactoryTemp" class="styled-select">
-          <el-option
-            v-for="factory in factoryList"
-            :key="factory.value"
-            :label="factory.label"
-            :value="factory.value"
-          />
-        </el-select>
-        <br>
-        <el-button type="primary" @click="confirmFactorySelection">
-          Xác nhận
-        </el-button>
+  <el-dialog
+    v-model="showFactoryPicker"
+    :style="{ width: '220px', height: '165px' }"
+  >
+    <div class="factory-picker-container">
+      <h1 class="title-choose">Factory</h1>
+      <div class="picker-row">
+        <div class="picker-group">
+          <el-select v-model="selectedFactoryTemp" class="styled-select">
+            <el-option
+              v-for="factory in factoryList"
+              :key="factory.value"
+              :label="factory.label"
+              :value="factory.value"
+            />
+          </el-select>
+          <div class="footer-buttons">
+            <el-button type="primary" @click="confirmFactorySelection">
+              Apply
+            </el-button>
+            <el-button @click="showFactoryPicker = false">Cancel</el-button>
+          </div>
+        </div>
       </div>
+
+      <!-- <h2>Nhà máy hiện tại: {{ factoryList.find(f => f.value === selectedFactory)?.label || "Chưa chọn" }}</h2> -->
     </div>
+  </el-dialog>
 
-    <!-- <h2>Nhà máy hiện tại: {{ factoryList.find(f => f.value === selectedFactory)?.label || "Chưa chọn" }}</h2> -->
-  </div>
-</el-dialog>
-
-<!-- Cập nhật nút Factory -->
-
+  <!-- Cập nhật nút Factory -->
 
   <div class="chart-container">
     <div class="button-group">
@@ -121,17 +134,28 @@
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
       <div class="left-buttons-bottom">
-        <el-button type="primary">Category</el-button>
+        <el-button type="primary" class="button-echarts">Category</el-button>
 
-        <el-button type="primary" @click="toggleDatePicker"
+        <el-button
+          type="primary"
+          @click="toggleDatePicker"
+          class="button-echarts"
           >Comparison</el-button
         >
       </div>
       <div class="right-buttons-bottom">
-        <el-button type="primary" @click="toggleDatePickerYear"
-          >Choose Year</el-button
+        <el-button
+          type="primary"
+          @click="toggleDatePickerYear"
+          class="button-echarts"
+          >Year</el-button
         >
-        <el-button type="primary" @click="toggleFactoryPicker">Factory</el-button>
+        <el-button
+          type="primary"
+          @click="toggleFactoryPicker"
+          class="button-echarts"
+          >Factory</el-button
+        >
       </div>
     </div>
   </div>
@@ -276,11 +300,19 @@ const dbChoice = localStorage.getItem("DB_CHOICE") || "Unknown";
 // Biến tạm lưu giá trị nhà máy được chọn
 const selectedFactoryTemp = ref(dbChoice);
 const selectedFactory = ref(dbChoice);
-console.log(`Nhà máy đang hiển thị khi mới vào: ${factoryList.find(f => f.value === selectedFactory.value)?.label}`);
+console.log(
+  `Nhà máy đang hiển thị khi mới vào: ${
+    factoryList.find((f) => f.value === selectedFactory.value)?.label
+  }`
+);
 // Khi người dùng bấm nút xác nhận
 const confirmFactorySelection = () => {
   selectedFactory.value = selectedFactoryTemp.value;
-  console.log(`Nhà máy đang hiển thị: ${factoryList.find(f => f.value === selectedFactory.value)?.label}`);
+  console.log(
+    `Nhà máy đang hiển thị: ${
+      factoryList.find((f) => f.value === selectedFactory.value)?.label
+    }`
+  );
 };
 </script>
 
@@ -437,7 +469,7 @@ const confirmFactorySelection = () => {
   font-weight: 600;
   text-align: center;
   color: #0055aa;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   margin-top: -10px;
 }
 
@@ -473,12 +505,18 @@ const confirmFactorySelection = () => {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 20px;
 }
 
 .footer-buttons .el-button {
   flex: 1;
   font-size: 14px;
+}
+
+.button-echarts {
+  width: 90px;
+  text-align: center;
+  padding: 8px 12px;
 }
 .mg {
   margin-left: -64px;
