@@ -1,6 +1,6 @@
   <template>
   <!-- comparisom -->
-  <el-dialog v-model="showDatePicker" :style="{ width: '320px' }">
+  <el-dialog v-model="showComparison" :style="{ width: '320px' }">
     <h1 class="title-choose">Comparison</h1>
     <div class="date-picker-container">
       <div class="picker-row">
@@ -54,16 +54,13 @@
       </div>
     </div>
     <div class="footer-buttons">
-      <el-button type="primary" @click="confirmSelection">Apply</el-button>
-      <el-button @click="showDatePicker = false">Cancel</el-button>
+      <el-button type="primary" @click="confirmComparison">Apply</el-button>
+      <el-button @click="showComparison = false">Cancel</el-button>
     </div>
   </el-dialog>
 
   <!-- Choose Year -->
-  <el-dialog
-    v-model="showDatePickerYear"
-    :style="{ width: '220px', height: '165px' }"
-  >
+  <el-dialog v-model="showYear" :style="{ width: '220px', height: '165px' }">
     <div class="date-picker-year-container">
       <h1 class="title-choose">Choose Year</h1>
       <div class="picker-row">
@@ -71,7 +68,7 @@
           <el-select
             v-model="chooseYear"
             class="styled-select"
-            @change="confirmYearSelection"
+            @change="confirmYear"
           >
             <el-option
               v-for="year in availableYears"
@@ -81,10 +78,8 @@
             />
           </el-select>
           <div class="footer-buttons">
-            <el-button type="primary" @click="confirmSelection"
-              >Apply</el-button
-            >
-            <el-button @click="showDatePickerYear = false">Cancel</el-button>
+            <el-button type="primary" @click="confirmYear">Apply</el-button>
+            <el-button @click="showYear = false">Cancel</el-button>
           </div>
         </div>
       </div>
@@ -109,7 +104,7 @@
             />
           </el-select>
           <div class="footer-buttons">
-            <el-button type="primary" @click="confirmFactorySelection">
+            <el-button type="primary" @click="confirmFactory">
               Apply
             </el-button>
             <el-button @click="showFactoryPicker = false">Cancel</el-button>
@@ -160,11 +155,13 @@
     </div>
   </div>
 </template>
-  <script setup>
+<script setup>
 import { ref } from "vue";
 import useECharts from "@/hooks/useECharts";
+
+// State variables
 const activeFilter = ref("all");
-const activeFactory = ref("tyxuan");
+// const activeFactory = ref("tyxuan");
 const echart = ref(null);
 const rawData = {
   2023: {
@@ -223,37 +220,26 @@ const rawData = {
   },
 };
 
-const toggleDatePicker = () => {
-  showDatePicker.value = true;
-};
-const toggleDatePickerYear = () => {
-  showDatePickerYear.value = true;
-};
+const showComparison = ref(false);
 
-const currentDate = new Date();
-const showDatePicker = ref(false);
-const showDatePickerYear = ref(false);
-const baseYear = ref(currentDate.getFullYear().toString());
+const showYear = ref(false);
 
-//get chooseYear
+const baseYear = ref(new Date().getFullYear().toString());
+
 const chooseYear = ref(new Date().getFullYear().toString());
-const { updateChart } = useECharts(echart, rawData, activeFilter, chooseYear); // Truyền chooseYear vào
-
-const currentYear = new Date().getFullYear();
-// const comparisonYear = ref((currentDate.getFullYear() + 1).toString());
 const comparisonYear = ref("");
-
 const selectedStartMonth = ref(
-  currentDate.getMonth().toString().padStart(2, "0")
+  new Date().getMonth().toString().padStart(2, "0")
 );
 const selectedEndMonth = ref("12");
 
-const availableYears = ref(
-  Array.from({ length: currentYear - 1999 + 1 }, (_, i) =>
-    (1999 + i).toString()
-  ).reverse()
-);
+const yearForButton = ref(new Date().getFullYear().toString()); // For button
 
+const availableYears = ref(
+  [...Array(new Date().getFullYear() - 1999 + 1).keys()]
+    .map((i) => (1999 + i).toString())
+    .reverse()
+);
 const availableMonths = ref([
   { label: "January", value: "01" },
   { label: "February", value: "02" },
@@ -269,51 +255,64 @@ const availableMonths = ref([
   { label: "December", value: "12" },
 ]);
 
-const confirmYearSelection = () => {
-  showDatePickerYear.value = false;
-
-  if (rawData[chooseYear.value]) {
-    updateChart();
-  }
-};
-
 const showFactoryPicker = ref(false);
-const toggleFactoryPicker = () => {
-  showFactoryPicker.value = true;
-};
-// const selectedFactory = ref("tyxuan");
-
-// const factoryList = ref([
-//   { label: "Ty Xuan", value: "tyxuan" },
-//   { label: "Ty Bach", value: "tybach" },
-//   { label: "Ty Thac", value: "tythac" },
-// ]);
 const factoryList = [
   { label: "TỶ XUÂN", value: "LYN" },
   { label: "TỶ BÁCH", value: "LYV" },
   { label: "TỶ THẠC", value: "LYS" },
 ];
 
-// Lấy DB_CHOICE từ localStorage nhưng không ghi lại
-const dbChoice = localStorage.getItem("DB_CHOICE") || "Unknown";
+const selectedFactoryTemp = ref(localStorage.getItem("DB_CHOICE") || "Unknown");
+const selectedFactory = ref(selectedFactoryTemp.value);
 
-// Biến tạm lưu giá trị nhà máy được chọn
-const selectedFactoryTemp = ref(dbChoice);
-const selectedFactory = ref(dbChoice);
+// ECharts hook
+const { updateChart } = useECharts(echart, rawData, activeFilter, chooseYear);
+
+// Methods
+const confirmComparison = () => {
+  console.log(
+    `Selected Start Month: ${selectedStartMonth.value}, End Month: ${selectedEndMonth.value}`
+  );
+  console.log(
+    `Base Year: ${baseYear.value}, Comparison Year: ${comparisonYear.value}, Choose Year: ${chooseYear.value}`
+  );
+  showComparison.value = false; // Close the dialog
+};
+
+const confirmYear = () => {
+  // This function will be triggered only by the "Apply" button
+  showYear.value = false; // Close the dialog
+  if (rawData[yearForButton.value]) { // Checking the year for button actions
+    updateChart(); // Update the chart with the selected year
+  } else {
+    console.error("No data available for the selected year.");
+  }
+};
+
+const confirmFactory = () => {
+  selectedFactory.value = selectedFactoryTemp.value; // Apply the selected factory
+  console.log(`Selected Factory: ${selectedFactory.value}`);
+  showFactoryPicker.value = false; // Automatically close the factory picker
+};
+
+const toggleDatePicker = () => {
+  showComparison.value = true;
+};
+
+const toggleDatePickerYear = () => {
+  showYear.value = true;
+};
+
+const toggleFactoryPicker = () => {
+  showFactoryPicker.value = true;
+};
+
+// Log initial factory selection
 console.log(
-  `Nhà máy đang hiển thị khi mới vào: ${
+  `Initial Factory Displayed: ${
     factoryList.find((f) => f.value === selectedFactory.value)?.label
   }`
 );
-// Khi người dùng bấm nút xác nhận
-const confirmFactorySelection = () => {
-  selectedFactory.value = selectedFactoryTemp.value;
-  console.log(
-    `Nhà máy đang hiển thị: ${
-      factoryList.find((f) => f.value === selectedFactory.value)?.label
-    }`
-  );
-};
 </script>
 
 <style scoped>
