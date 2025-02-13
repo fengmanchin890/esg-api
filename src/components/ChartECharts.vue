@@ -1,19 +1,4 @@
   <template>
-  <!-- Category -->
-  <el-dialog v-model="showCategory" :style="{ width: '270px' }">
-    <h1 class="title-choose">Choose Category</h1>
-    <div class="category-picker-container">
-      <el-select v-model="selectedCategory" class="styled-select">
-        <el-option label="Water + Energy" value="water-energy" />
-        <el-option label="Recycled Water + Solar Energy" value="recycledwater-solarenergy" />
-      </el-select>
-    </div>
-    <div class="footer-buttons">
-      <el-button type="primary" @click="confirmCategory">Apply</el-button>
-      <el-button @click="showCategory = false">Cancel</el-button>
-    </div>
-  </el-dialog>
-
   <!-- Comparisom -->
   <el-dialog v-model="showComparison" :style="{ width: '320px' }">
     <h1 class="title-choose">Comparison</h1>
@@ -74,59 +59,45 @@
     </div>
   </el-dialog>
 
-  <!-- Year -->
-  <el-dialog v-model="showYear" :style="{ width: '220px', height: '165px' }">
-    <div class="date-picker-year-container">
-      <h1 class="title-choose">Choose Year</h1>
-      <div class="picker-row">
-        <div class="picker-group">
-          <el-select
-            v-model="chooseYear"
-            class="styled-select"
-            @change="confirmYear"
-          >
-            <el-option
-              v-for="year in availableYears"
-              :key="year"
-              :label="year"
-              :value="year"
-            />
-          </el-select>
-          <div class="footer-buttons">
-            <el-button type="primary" @click="confirmYear">Apply</el-button>
-            <el-button @click="showYear = false">Cancel</el-button>
-          </div>
-        </div>
+  <el-dialog v-model="showDialog" :style="{ width: '350px' }">
+    <h1 class="title-choose">Select Options</h1>
+    <div class="picker-container">
+      <div class="picker-group">
+        <label class="picker-label">Category</label>
+        <el-select v-model="selectedCategory" class="styled-select">
+          <el-option label="Water + Energy" value="water-energy" />
+          <el-option
+            label="Recycled Water + Solar Energy"
+            value="recycledwater-solarenergy"
+          />
+        </el-select>
+      </div>
+      <div class="picker-group">
+        <label class="picker-label">Factory</label>
+        <el-select v-model="selectedFactory" class="styled-select">
+          <el-option
+            v-for="factory in factoryList"
+            :key="factory.value"
+            :label="factory.label"
+            :value="factory.value"
+          />
+        </el-select>
+      </div>
+      <div class="picker-group">
+        <label class="picker-label">Year</label>
+        <el-select v-model="chooseYear" class="styled-select">
+          <el-option
+            v-for="year in availableYears"
+            :key="year"
+            :label="year"
+            :value="year"
+          />
+        </el-select>
       </div>
     </div>
-  </el-dialog>
-
-  <!-- Factory -->
-  <el-dialog
-    v-model="showFactoryPicker"
-    :style="{ width: '220px', height: '165px' }"
-  >
-    <div class="factory-picker-container">
-      <h1 class="title-choose">Factory</h1>
-      <div class="picker-row">
-        <div class="picker-group">
-          <el-select v-model="selectedFactoryTemp" class="styled-select">
-            <el-option
-              v-for="factory in factoryList"
-              :key="factory.value"
-              :label="factory.label"
-              :value="factory.value"
-            />
-          </el-select>
-          <div class="footer-buttons">
-            <el-button type="primary" @click="confirmFactory">
-              Apply
-            </el-button>
-            <el-button @click="showFactoryPicker = false">Cancel</el-button>
-          </div>
-        </div>
-      </div>
-      <!-- <h2>Nhà máy hiện tại: {{ factoryList.find(f => f.value === selectedFactory)?.label || "Chưa chọn" }}</h2> -->
+    <div class="footer-buttons">
+      <el-button type="primary" @click="applySelection">Apply</el-button>
+      <el-button @click="showDialog = false">Cancel</el-button>
     </div>
   </el-dialog>
 
@@ -142,10 +113,6 @@
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
       <div class="left-buttons-bottom">
-        <el-button type="primary" class="button-echarts" @click="toggleCategory"
-          >Category</el-button
-        >
-
         <el-button
           type="primary"
           @click="toggleDatePicker"
@@ -156,15 +123,9 @@
       <div class="right-buttons-bottom">
         <el-button
           type="primary"
-          @click="toggleDatePickerYear"
           class="button-echarts"
-          >Year</el-button
-        >
-        <el-button
-          type="primary"
-          @click="toggleFactoryPicker"
-          class="button-echarts"
-          >Factory</el-button
+          @click="showDialog = true"
+          >Filter</el-button
         >
       </div>
     </div>
@@ -177,68 +138,54 @@ import useECharts from "@/hooks/useECharts";
 // State variables
 const activeFilter = ref("all");
 const echart = ref(null);
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 const rawData = {
-  2023: {
-    months: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 55],
-    water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 1001],
+  LYV: {
+    2025: {
+      energy: [45, 20, 55, 30, 70, 65, 60, 58, 55, 40, 50, 55],
+      water: [30, 40, 25, 20, 60, 80, 75, 70, 65, 45, 35, 201],
+      recycledwater: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+      solarenergy: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
+    },
+    2024: {
+      energy: [50, 30, 60, 35, 75, 70, 65, 63, 60, 45, 55, 61],
+      water: [35, 45, 30, 25, 65, 85, 80, 75, 70, 50, 40, 105],
+      recycledwater: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
+      solarenergy: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+    },
   },
-  2024: {
-    months: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    energy: [50, 30, 60, 35, 75, 70, 65, 63, 60, 45, 55, 6011],
-    water: [35, 45, 30, 25, 65, 85, 80, 75, 70, 50, 40, 105],
-  },
-  2025: {
-    months: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    energy: [-1, 35, 65, 40, 80, 75, -1, 0, 65, 50, 60, 65],
-    water: [-1, 50, 35, 30, 70, 90, -1, 20, 75, 55, 45, 110],
+  LYN: {
+    2025: {
+      energy: [410, 25, 50, 35, 65, 60, 55, 53, 50, 35, 45, 50],
+      water: [25, 35, 20, 15, 55, 75, 70, 65, 60, 40, 30, 350],
+      recycledwater: [2, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55],
+      solarenergy: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23],
+    },
   },
 };
-const showCategory = ref(false);
+const factoryList = [
+  { label: "TỶ XUÂN", value: "LYN" },
+  { label: "TỶ BÁCH", value: "LYV" },
+  { label: "TỶ THẠC", value: "LYS" },
+];
+
 const selectedCategory = ref("water-energy");
 
 const showComparison = ref(false);
-
-const showYear = ref(false);
 
 const baseYear = ref(new Date().getFullYear().toString());
 
@@ -248,8 +195,6 @@ const selectedStartMonth = ref(
   new Date().getMonth().toString().padStart(2, "0")
 );
 const selectedEndMonth = ref("12");
-
-const yearForButton = ref(new Date().getFullYear().toString());
 
 const availableYears = ref(
   [...Array(new Date().getFullYear() - 1999 + 1).keys()]
@@ -271,14 +216,36 @@ const availableMonths = ref([
   { label: "December", value: "12" },
 ]);
 
-const showFactoryPicker = ref(false);
-const factoryList = [
-  { label: "TỶ XUÂN", value: "LYN" },
-  { label: "TỶ BÁCH", value: "LYV" },
-  { label: "TỶ THẠC", value: "LYS" },
-];
 
-const selectedFactoryTemp = ref(localStorage.getItem("DB_CHOICE") || "Unknown");
+const showDialog = ref(false);
+
+
+
+const applySelection = () => {
+  if (!rawData[selectedFactory.value]) {
+    console.error(`Factory ${selectedFactory.value} không có dữ liệu!`);
+    return;
+  }
+  if (!rawData[selectedFactory.value][chooseYear.value]) {
+    console.error(`Năm ${chooseYear.value} không có dữ liệu cho factory ${selectedFactory.value}!`);
+    return;
+  }
+
+  console.log(
+    `Category: ${selectedCategory.value}, Factory: ${selectedFactory.value}, Year: ${chooseYear.value}`
+  );
+
+  showDialog.value = false;
+
+  // Cập nhật dữ liệu biểu đồ với factory, năm và danh mục đã chọn
+  updateChart(selectedFactory.value, chooseYear.value, selectedCategory.value);
+};
+
+
+const selectedFactoryTemp = ref(localStorage.getItem("DB_CHOICE") || "LYV");
+if (!factoryList.some(f => f.value === selectedFactoryTemp.value)) {
+  selectedFactoryTemp.value = "LYV"; 
+}
 const selectedFactory = ref(selectedFactoryTemp.value);
 
 // ECharts hook
@@ -294,45 +261,9 @@ const confirmComparison = () => {
   showComparison.value = false;
 };
 
-const confirmYear = () => {
-  showYear.value = false;
-  if (rawData[yearForButton.value]) {
-    updateChart();
-  } else {
-    console.error("No data available for the selected year.");
-  }
-};
-
-const confirmFactory = () => {
-  selectedFactory.value = selectedFactoryTemp.value;
-  console.log(`Selected Factory: ${selectedFactory.value}`);
-  showFactoryPicker.value = false;
-};
-
-const confirmCategory = () => {
-  console.log(`Selected Category: ${selectedCategory.value}`);
-  showCategory.value = false;
-};
-
-
-
-const toggleCategory = () => {
-  showCategory.value = true;
-};
-
 const toggleDatePicker = () => {
   showComparison.value = true;
 };
-
-const toggleDatePickerYear = () => {
-  showYear.value = true;
-};
-
-const toggleFactoryPicker = () => {
-  showFactoryPicker.value = true;
-};
-
-
 
 console.log(
   `Initial Factory Displayed: ${
@@ -346,32 +277,20 @@ console.log(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   max-width: 900px;
   margin: 0 auto;
   padding: 10px 0;
 }
 
-.right-buttons-bottom {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.left-buttons-bottom {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
+.right-buttons-bottom,
+.left-buttons-bottom,
 .right-buttons-top {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.right-buttons-top .el-button,
-.left-buttons-bottom .el-button,
-.right-buttons-bottom .el-button {
+.el-button {
   min-width: 80px;
   text-align: center;
   padding: 8px 12px;
@@ -379,8 +298,7 @@ console.log(
 
 .chart-container {
   position: relative;
-  width: 100%;
-  max-width: 900px;
+  width: 1000px;
   background: #cfe2f0c5;
   padding: 20px;
   border-radius: 10px;
@@ -400,8 +318,6 @@ console.log(
   display: flex;
   justify-content: space-between;
   width: 80%;
-}
-.chart-controls {
   pointer-events: none;
 }
 
@@ -409,56 +325,20 @@ console.log(
   pointer-events: auto;
 }
 
-.left-buttons-bottom .right-buttons-top {
-  display: flex;
-  gap: 10px;
+.button-echarts {
+  width: 90px;
+  padding: 8px 12px;
 }
-.left-buttons-bottom button.active {
-  background: #0288d1;
-  color: white;
-}
-.right-buttons-top button.active {
-  background: #0288d1;
-  color: white;
-}
+
 .title {
   color: #0055aa;
   font-size: 28px;
   margin-bottom: 10px;
   margin-top: -20px;
 }
-.demo-date-picker {
-  display: flex;
-  width: 100%;
-  padding: 0;
-  flex-wrap: wrap;
-}
 
-.demo-date-picker .block {
-  text-align: center;
-  border-right: solid 1px var(--el-border-color);
-  flex: 1;
-}
-
-.demo-date-picker .block:last-child {
-  border-right: none;
-}
-
-.demo-date-picker .demonstration-energy {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--el-text-color-secondary);
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: rgb(100, 52, 6);
-  font-weight: bold;
-}
-.button-w {
-  width: 65px;
-}
-.factory-pd,
-.button-w {
+.button-w,
+.factory-pd {
   width: 65px;
   background-color: #fff;
   color: #333;
@@ -469,14 +349,14 @@ console.log(
   transition: background-color 0.2s, color 0.2s;
 }
 
-.factory-pd.active,
-.button-w.active {
+.button-w.active,
+.factory-pd.active {
   background-color: #0288d1;
   color: white;
   font-weight: bold;
 }
+
 :deep(.el-dialog) {
-  width: 320px !important;
   max-width: 90%;
   border-radius: 12px;
   padding: 12px;
@@ -498,7 +378,8 @@ console.log(
   margin-top: -10px;
 }
 
-.date-picker-container {
+.date-picker-container,
+.picker-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -522,6 +403,7 @@ console.log(
   margin-bottom: 4px;
   text-align: center;
 }
+
 .styled-select {
   width: 100%;
 }
@@ -536,24 +418,5 @@ console.log(
 .footer-buttons .el-button {
   flex: 1;
   font-size: 14px;
-}
-
-.button-echarts {
-  width: 90px;
-  text-align: center;
-  padding: 8px 12px;
-}
-.mg {
-  margin-left: -64px;
-}
-
-.category-picker-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-.styled-select {
-  width: 100%;
 }
 </style>
