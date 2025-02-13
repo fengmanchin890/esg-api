@@ -30,7 +30,7 @@
 
     <ry-edit-table ref="ryEditTable" class="table-container" :listData="filteredList" :listConfig="listConfig"
       :rowButtons="rowButtons" :operationsConfig="{ width: 173 }" :action="'action'" :cellStyle="{ color: 'orange' }"
-      :cellClassName="'custom-cell-class'" trigger="onChange" height="625px" />
+      :cellClassName="'custom-cell-class'" trigger="onChange" height="725px" />
   </div>
 </template>
 

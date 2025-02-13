@@ -55,7 +55,7 @@ import Footer from "../components/Footer.vue";
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 25px;
   overflow: auto;
   background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
 }
