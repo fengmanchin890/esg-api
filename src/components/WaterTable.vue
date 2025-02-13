@@ -29,8 +29,8 @@
     </div>
 
     <ry-edit-table ref="ryEditTable" class="table-container" :listData="filteredList" :listConfig="listConfig"
-      :rowButtons="rowButtons" :operationsConfig="{ width: 165 }" :action="'action'" :cellStyle="{ color: 'orange' }"
-      :cellClassName="'custom-cell-class'" trigger="onChange" height="725px" />
+      :rowButtons="rowButtons" :operationsConfig="{ width: 170 }" :action="'action'" :cellStyle="{ color: 'orange' }"
+      :cellClassName="'custom-cell-class'" trigger="onChange" height="675px" />
   </div>
 </template>
 
@@ -81,6 +81,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 .water-input label {
   white-space: nowrap;
   text-align: right;
+  
 }
 
 .table-container {
@@ -90,6 +91,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  
 }
 
 :deep(.el-table) {
@@ -106,5 +108,6 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 :deep(.el-table .cell) {
   display: flex;
   flex-wrap: nowrap;
+  padding:  0 10px;
 }
 </style>
