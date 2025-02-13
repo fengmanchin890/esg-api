@@ -1,4 +1,19 @@
   <template>
+  <!-- Category -->
+  <el-dialog v-model="showCategory" :style="{ width: '270px' }">
+    <h1 class="title-choose">Choose Category</h1>
+    <div class="category-picker-container">
+      <el-select v-model="selectedCategory" class="styled-select">
+        <el-option label="Water + Energy" value="water-energy" />
+        <el-option label="Recycled Water + Solar Energy" value="recycledwater-solarenergy" />
+      </el-select>
+    </div>
+    <div class="footer-buttons">
+      <el-button type="primary" @click="confirmCategory">Apply</el-button>
+      <el-button @click="showCategory = false">Cancel</el-button>
+    </div>
+  </el-dialog>
+
   <!-- Comparisom -->
   <el-dialog v-model="showComparison" :style="{ width: '320px' }">
     <h1 class="title-choose">Comparison</h1>
@@ -127,7 +142,9 @@
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
       <div class="left-buttons-bottom">
-        <el-button type="primary" class="button-echarts">Category</el-button>
+        <el-button type="primary" class="button-echarts" @click="toggleCategory"
+          >Category</el-button
+        >
 
         <el-button
           type="primary"
@@ -216,6 +233,8 @@ const rawData = {
     water: [-1, 50, 35, 30, 70, 90, -1, 20, 75, 55, 45, 110],
   },
 };
+const showCategory = ref(false);
+const selectedCategory = ref("water-energy");
 
 const showComparison = ref(false);
 
@@ -290,6 +309,17 @@ const confirmFactory = () => {
   showFactoryPicker.value = false;
 };
 
+const confirmCategory = () => {
+  console.log(`Selected Category: ${selectedCategory.value}`);
+  showCategory.value = false;
+};
+
+
+
+const toggleCategory = () => {
+  showCategory.value = true;
+};
+
 const toggleDatePicker = () => {
   showComparison.value = true;
 };
@@ -301,6 +331,8 @@ const toggleDatePickerYear = () => {
 const toggleFactoryPicker = () => {
   showFactoryPicker.value = true;
 };
+
+
 
 console.log(
   `Initial Factory Displayed: ${
@@ -513,5 +545,15 @@ console.log(
 }
 .mg {
   margin-left: -64px;
+}
+
+.category-picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.styled-select {
+  width: 100%;
 }
 </style>
