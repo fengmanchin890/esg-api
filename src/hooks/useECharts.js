@@ -38,7 +38,7 @@ export default function useECharts(echartRef, rawData, chooseYear) {
     if (category === "water-recycledwater") {
       primaryData = data.water || Array(12).fill(null);
       secondaryData = data.recycledwater || Array(12).fill(null);
-      legendNames = ["Water", "Recycled Water"];
+      legendNames = ["Tap Water Meter", "Recycled Water Meter"];
       yAxisLabel = "Value (m³)";
       barColor = "rgba(100, 181, 246, 1)";
       lineColor = "#239081 ";
