@@ -106,7 +106,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   overflow-y: auto;
   overflow: hidden;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 :deep(.el-table) {

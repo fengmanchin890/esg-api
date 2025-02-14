@@ -94,6 +94,7 @@ observer.observe(document.body);
   height: 60px;
   z-index: 1000;
   background-image: linear-gradient(to right, #07ef8a 0%, #0f6b03 100%);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .header-row {
