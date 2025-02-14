@@ -22,40 +22,40 @@ export default function useECharts(echartRef, rawData, chooseYear) {
 
   const updateChart = async (factory, year, category) => {
     await nextTick();
-  
+
     if (!rawData[factory] || !rawData[factory][year]) {
       return;
     }
-  
+
     const data = rawData[factory][year];
     let primaryData = [];
     let secondaryData = [];
     let legendNames = [];
     let yAxisLabel = "";
-    let barColor = ""; 
-    let lineColor = ""; 
+    let barColor = "";
+    let lineColor = "";
 
     if (category === "water-recycledwater") {
       primaryData = data.water || Array(12).fill(null);
       secondaryData = data.recycledwater || Array(12).fill(null);
       legendNames = ["Water", "Recycled Water"];
       yAxisLabel = "Value (m³)";
-      barColor = "#40E0D0"; 
-      lineColor = "#5F9EA0"; 
+      barColor = "rgba(100, 181, 246, 1)";
+      lineColor = "#239081 ";
     } else if (category === "energy-solarenergy") {
       primaryData = data.energy || Array(12).fill(null);
       secondaryData = data.solarenergy || Array(12).fill(null);
       legendNames = ["Grid Electric", "Solar Energy"];
       yAxisLabel = "Value (kWh)";
-      barColor = "rgba(255, 183, 77, 0.8)"; 
-      lineColor = "#d34d30"; 
+      barColor = "rgba(255, 183, 77, 0.8)";
+      lineColor = "#d34d30";
     }
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
+
     const allData = [...primaryData, ...secondaryData].filter(v => v !== null);
     const { niceMin: finalYMin, niceMax: finalYMax } = getNiceScale(Math.min(...allData), Math.max(...allData));
-  
+
     const option = {
       tooltip: {
         trigger: "axis",
@@ -74,35 +74,35 @@ export default function useECharts(echartRef, rawData, chooseYear) {
         containLabel: true,
       },
       xAxis: { type: "category", data: months },
-      yAxis: { 
-        type: "value", 
-        name: yAxisLabel, 
-        min: finalYMin, 
+      yAxis: {
+        type: "value",
+        name: yAxisLabel,
+        min: finalYMin,
         max: finalYMax,
-        splitLine: { 
+        splitLine: {
           show: true,
           lineStyle: { type: "dashed", color: "#78909C" }, // Xám đậm hơn
         },
       },
       series: [
-        { 
-          name: legendNames[0], 
-          type: "bar", 
-          data: primaryData, 
-          itemStyle: { color: barColor } 
+        {
+          name: legendNames[0],
+          type: "bar",
+          data: primaryData,
+          itemStyle: { color: barColor }
         },
-        { 
-          name: legendNames[1], 
-          type: "line", 
-          data: secondaryData, 
-          smooth: true, 
-          lineStyle: { width: 6, color: lineColor }, 
-          itemStyle: { color: lineColor }, 
-          emphasis: { focus: "series", lineStyle: { width: 8 } } 
+        {
+          name: legendNames[1],
+          type: "line",
+          data: secondaryData,
+          smooth: true,
+          lineStyle: { width: 6, color: lineColor },
+          itemStyle: { color: lineColor },
+          emphasis: { focus: "series", lineStyle: { width: 8 } }
         },
       ],
     };
-  
+
     chart.setOption(option);
   };
 
