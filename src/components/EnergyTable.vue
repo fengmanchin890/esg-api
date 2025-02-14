@@ -91,9 +91,11 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 }
 
 .search-bar {
- display: flex;
- align-items: center;
- min-width: 90px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 90px;
+  max-width: 250px;
 }
 
 .table-container {
@@ -118,6 +120,6 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 :deep(.el-table .cell) {
   display: flex;
   flex-wrap: nowrap;
-  padding:  0 10px;
+  padding: 0 10px;
 }
 </style>

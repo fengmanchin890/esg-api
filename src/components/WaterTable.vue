@@ -95,16 +95,17 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 .search-bar {
   display: flex;
   align-items: center;
+  width: 100%;
   min-width: 90px;
+  max-width: 250px;
 }
 
 .table-container {
   display: flex;
-  min-width: 100%;
   max-height: 1000px;
   overflow-y: auto;
-  border-radius: 10px;
   overflow: hidden;
+  border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
