@@ -84,6 +84,7 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   align-items: center;
   width: 100%;
   max-width: fit-content;
+  color: #303133;
 }
 
 .water-input .el-input {

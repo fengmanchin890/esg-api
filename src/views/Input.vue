@@ -24,6 +24,6 @@ const route = useRoute();
 }
 
 .container {
-  max-height: 410px;
+  height: 410px;
 }
 </style>
