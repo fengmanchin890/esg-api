@@ -22,60 +22,89 @@ export default function useECharts(echartRef, rawData, chooseYear) {
 
   const updateChart = async (factory, year, category) => {
     await nextTick();
-
+  
     if (!rawData[factory] || !rawData[factory][year]) {
       return;
     }
-
+  
     const data = rawData[factory][year];
-    let energyData = [];
-    let waterData = [];
+    let primaryData = [];
+    let secondaryData = [];
     let legendNames = [];
+    let yAxisLabel = "";
+    let barColor = ""; 
+    let lineColor = ""; 
 
-    if (category === "water-energy") {
-      energyData = data.energy || Array(12).fill(null);
-      waterData = data.water || Array(12).fill(null);
-      legendNames = ["Water", "Energy"];
-    } else if (category === "recycledwater-solarenergy") {
-      energyData = data.solarenergy || Array(12).fill(null);
-      waterData = data.recycledwater || Array(12).fill(null);
-      legendNames = ["Recycled Water", "Solar Energy"];
+    if (category === "water-recycledwater") {
+      primaryData = data.water || Array(12).fill(null);
+      secondaryData = data.recycledwater || Array(12).fill(null);
+      legendNames = ["Water", "Recycled Water"];
+      yAxisLabel = "Value (m³)";
+      barColor = "#40E0D0"; 
+      lineColor = "#5F9EA0"; 
+    } else if (category === "energy-solarenergy") {
+      primaryData = data.energy || Array(12).fill(null);
+      secondaryData = data.solarenergy || Array(12).fill(null);
+      legendNames = ["Grid Electric", "Solar Energy"];
+      yAxisLabel = "Value (kWh)";
+      barColor = "rgba(255, 183, 77, 0.8)"; 
+      lineColor = "#d34d30"; 
     }
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const yMin1 = Math.min(...energyData.filter(v => v !== null));
-    const yMax1 = Math.max(...energyData.filter(v => v !== null));
-    const yMin2 = Math.min(...waterData.filter(v => v !== null));
-    const yMax2 = Math.max(...waterData.filter(v => v !== null));
-
-    const { niceMin: finalYMin1, niceMax: finalYMax1 } = getNiceScale(yMin1, yMax1);
-    const { niceMin: finalYMin2, niceMax: finalYMax2 } = getNiceScale(yMin2, yMax2);
-
+    
+    const allData = [...primaryData, ...secondaryData].filter(v => v !== null);
+    const { niceMin: finalYMin, niceMax: finalYMax } = getNiceScale(Math.min(...allData), Math.max(...allData));
+  
     const option = {
       tooltip: {
         trigger: "axis",
         axisPointer: { type: "cross", lineStyle: { width: 3 } },
       },
       legend: {
-        data: legendNames, // Cập nhật tên legend theo category
+        data: legendNames,
         bottom: 0,
         left: "center",
         orient: "horizontal",
       },
+      grid: {
+        left: "10%",
+        right: "10%",
+        bottom: "15%",
+        containLabel: true,
+      },
       xAxis: { type: "category", data: months },
-      yAxis: [
-        { type: "value", name: `${legendNames[1]} (kWh)`, min: finalYMin1, max: finalYMax1 },
-        { type: "value", name: `${legendNames[0]} (m³)`, min: finalYMin2, max: finalYMax2 },
-      ],
+      yAxis: { 
+        type: "value", 
+        name: yAxisLabel, 
+        min: finalYMin, 
+        max: finalYMax,
+        splitLine: { 
+          show: true,
+          lineStyle: { type: "dashed", color: "#78909C" }, // Xám đậm hơn
+        },
+      },
       series: [
-        { name: legendNames[1], type: "bar", data: energyData, yAxisIndex: 0, itemStyle: { color: "#FFB74D" } },
-        { name: legendNames[0], type: "line", data: waterData, yAxisIndex: 1, smooth: true, lineStyle: { width: 6 }, itemStyle: { color: "#1E90FF" }, emphasis: { focus: "series", lineStyle: { width: 8 } } },
+        { 
+          name: legendNames[0], 
+          type: "bar", 
+          data: primaryData, 
+          itemStyle: { color: barColor } 
+        },
+        { 
+          name: legendNames[1], 
+          type: "line", 
+          data: secondaryData, 
+          smooth: true, 
+          lineStyle: { width: 6, color: lineColor }, 
+          itemStyle: { color: lineColor }, 
+          emphasis: { focus: "series", lineStyle: { width: 8 } } 
+        },
       ],
     };
-
+  
     chart.setOption(option);
   };
-
 
   onMounted(() => {
     initChart();

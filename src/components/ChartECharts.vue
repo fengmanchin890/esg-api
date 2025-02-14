@@ -65,11 +65,8 @@
       <div class="picker-group">
         <label class="picker-label">Category</label>
         <el-select v-model="selectedCategory" class="styled-select">
-          <el-option label="Water và Energy" value="water-energy" />
-          <el-option
-            label="Recycled Water và Solar Energy"
-            value="recycledwater-solarenergy"
-          />
+          <el-option label="Water-Recycledwater" value="water-recycledwater" />
+          <el-option label="Energy-Solarenergy" value="energy-solarenergy" />
         </el-select>
       </div>
       <div class="picker-group">
@@ -130,21 +127,30 @@
       </div>
     </div>
   </div>
-</template><script setup>
+</template>
+
+<script setup>
 import { ref, onMounted } from "vue";
 import useECharts from "@/hooks/useECharts";
-import { rawData, factoryList, availableYears, availableMonths } from "@/hooks/useECharts-api";
+import {
+  rawData,
+  factoryList,
+  availableYears,
+  availableMonths,
+} from "@/hooks/useECharts-api";
 
 // State variables
 const activeFilter = ref("all");
 const echart = ref(null);
 
-const selectedCategory = ref("water-energy");
+const selectedCategory = ref("water-recycledwater");
 const showComparison = ref(false);
 const baseYear = ref(new Date().getFullYear().toString());
 const chooseYear = ref(new Date().getFullYear().toString());
 const comparisonYear = ref("");
-const selectedStartMonth = ref(new Date().getMonth().toString().padStart(2, "0"));
+const selectedStartMonth = ref(
+  new Date().getMonth().toString().padStart(2, "0")
+);
 const selectedEndMonth = ref("12");
 const showDialog = ref(false);
 
@@ -167,7 +173,9 @@ const applySelection = () => {
     return;
   }
   if (!rawData[selectedFactory.value][chooseYear.value]) {
-    ElMessage.warning(`Năm ${chooseYear.value} không có dữ liệu cho factory ${selectedFactory.value}!`);
+    ElMessage.warning(
+      `Năm ${chooseYear.value} không có dữ liệu cho factory ${selectedFactory.value}!`
+    );
     return;
   }
 
@@ -177,8 +185,12 @@ const applySelection = () => {
 };
 
 const confirmComparison = () => {
-  console.log(`Selected Start Month: ${selectedStartMonth.value}, End Month: ${selectedEndMonth.value}`);
-  console.log(`Base Year: ${baseYear.value}, Comparison Year: ${comparisonYear.value}, Choose Year: ${chooseYear.value}`);
+  console.log(
+    `Selected Start Month: ${selectedStartMonth.value}, End Month: ${selectedEndMonth.value}`
+  );
+  console.log(
+    `Base Year: ${baseYear.value}, Comparison Year: ${comparisonYear.value}, Choose Year: ${chooseYear.value}`
+  );
   showComparison.value = false;
 };
 
@@ -187,7 +199,9 @@ const toggleDatePicker = () => {
 };
 
 console.log(
-  `Initial Factory Displayed: ${factoryList.find((f) => f.value === selectedFactory.value)?.label}`
+  `Initial Factory Displayed: ${
+    factoryList.find((f) => f.value === selectedFactory.value)?.label
+  }`
 );
 
 onMounted(() => {
