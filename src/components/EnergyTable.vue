@@ -62,27 +62,42 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 
 .energy-input {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  padding: 20px 0;
+  flex-direction: row;
   gap: 20px;
+  padding: 20px 0;
   font-size: 18px;
-
 }
 
 .energy-input div {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 }
 
 .energy-input label {
-  white-space: nowrap;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: fit-content;
+}
+
+.energy-input .el-input {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+}
+
+.search-bar {
+ display: flex;
+ align-items: center;
+ min-width: 90px;
 }
 
 .table-container {
   display: flex;
-  flex-direction: column;
   max-height: 1000px;
   overflow-y: auto;
   border-radius: 10px;

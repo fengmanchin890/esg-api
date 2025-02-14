@@ -46,7 +46,6 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
-
 }
 
 .title {
@@ -57,7 +56,6 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   justify-content: center;
   margin: -50px 0 -50px -64px;
-
 }
 
 .icon {
@@ -66,32 +64,48 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 
 .water-input {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  padding: 20px 0;
+  flex-direction: row;
   gap: 20px;
+  padding: 20px 0;
   font-size: 18px;
 }
 
 .water-input div {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 }
 
 .water-input label {
-  white-space: nowrap;
-  text-align: right;
-  
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: fit-content;
+}
+
+.water-input .el-input {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  min-width: 90px;
 }
 
 .table-container {
   display: flex;
+  min-width: 100%;
   max-height: 1000px;
   overflow-y: auto;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  
 }
 
 :deep(.el-table) {
@@ -108,6 +122,6 @@ const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord 
 :deep(.el-table .cell) {
   display: flex;
   flex-wrap: nowrap;
-  padding:  0 10px;
+  padding: 0 10px;
 }
 </style>
