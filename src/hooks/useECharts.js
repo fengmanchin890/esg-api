@@ -1,6 +1,5 @@
 import { onMounted, watch, nextTick } from "vue";
 import * as echarts from "echarts";
-import { ElMessage } from "element-plus";
 
 export default function useECharts(echartRef, rawData, chooseYear) {
   let chart = null;
@@ -25,20 +24,22 @@ export default function useECharts(echartRef, rawData, chooseYear) {
     await nextTick();
 
     if (!rawData[factory] || !rawData[factory][year]) {
-      // ElMessage.warning(`Dữ liệu không có sẵn cho ${factory} - ${year}, hiển thị dữ liệu mặc định.`);
       return;
     }
 
     const data = rawData[factory][year];
     let energyData = [];
     let waterData = [];
+    let legendNames = [];
 
     if (category === "water-energy") {
       energyData = data.energy || Array(12).fill(null);
       waterData = data.water || Array(12).fill(null);
+      legendNames = ["Water", "Energy"];
     } else if (category === "recycledwater-solarenergy") {
       energyData = data.solarenergy || Array(12).fill(null);
       waterData = data.recycledwater || Array(12).fill(null);
+      legendNames = ["Recycled Water", "Solar Energy"];
     }
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -56,25 +57,25 @@ export default function useECharts(echartRef, rawData, chooseYear) {
         axisPointer: { type: "cross", lineStyle: { width: 3 } },
       },
       legend: {
-        data: ["Energy (kWh)", "Water (m³)"],
+        data: legendNames, // Cập nhật tên legend theo category
         bottom: 0,
         left: "center",
         orient: "horizontal",
       },
       xAxis: { type: "category", data: months },
       yAxis: [
-        { type: "value", name: "Energy (kWh)", min: finalYMin1, max: finalYMax1 },
-        { type: "value", name: "Water (m³)", min: finalYMin2, max: finalYMax2 },
+        { type: "value", name: `${legendNames[1]} (kWh)`, min: finalYMin1, max: finalYMax1 },
+        { type: "value", name: `${legendNames[0]} (m³)`, min: finalYMin2, max: finalYMax2 },
       ],
-      
       series: [
-        { name: "Energy (kWh)", type: "bar", data: energyData, yAxisIndex: 0, itemStyle: { color: "#FFB74D" } },
-        { name: "Water (m³)", type: "line", data: waterData, yAxisIndex: 1, smooth: true, lineStyle: { width: 5 }, itemStyle: { color: "#1E90FF" }, emphasis: { focus: "series", lineStyle: { width: 6 } } },
+        { name: legendNames[1], type: "bar", data: energyData, yAxisIndex: 0, itemStyle: { color: "#FFB74D" } },
+        { name: legendNames[0], type: "line", data: waterData, yAxisIndex: 1, smooth: true, lineStyle: { width: 7 }, itemStyle: { color: "#1E90FF" }, emphasis: { focus: "series", lineStyle: { width: 16 } } },
       ],
     };
 
     chart.setOption(option);
   };
+
 
   onMounted(() => {
     initChart();
