@@ -65,9 +65,9 @@
       <div class="picker-group">
         <label class="picker-label">Category</label>
         <el-select v-model="selectedCategory" class="styled-select">
-          <el-option label="Water + Energy" value="water-energy" />
+          <el-option label="Water và Energy" value="water-energy" />
           <el-option
-            label="Recycled Water + Solar Energy"
+            label="Recycled Water và Solar Energy"
             value="recycledwater-solarenergy"
           />
         </el-select>
@@ -132,26 +132,11 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import useECharts from "@/hooks/useECharts";
-
 // State variables
 const activeFilter = ref("all");
 const echart = ref(null);
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
 
 const rawData = {
   LYV: {
@@ -215,38 +200,41 @@ const availableMonths = ref([
   { label: "November", value: "11" },
   { label: "December", value: "12" },
 ]);
-
-
 const showDialog = ref(false);
 
-
-
 const applySelection = () => {
+  if (!selectedFactory.value || !chooseYear.value) {
+    ElMessage.warning("Vui lòng chọn Factory và Year trước khi áp dụng!");
+    return;
+  }
+
   if (!rawData[selectedFactory.value]) {
-    console.error(`Factory ${selectedFactory.value} không có dữ liệu!`);
+    ElMessage.warning(`Factory ${selectedFactory.value} không có dữ liệu!`);
     return;
   }
   if (!rawData[selectedFactory.value][chooseYear.value]) {
-    console.error(`Năm ${chooseYear.value} không có dữ liệu cho factory ${selectedFactory.value}!`);
+    ElMessage.warning(
+      `Năm ${chooseYear.value} không có dữ liệu cho factory ${selectedFactory.value}!`
+    );
     return;
   }
 
-  console.log(
-    `Category: ${selectedCategory.value}, Factory: ${selectedFactory.value}, Year: ${chooseYear.value}`
+  ElMessage.success(
+    // `Category: ${selectedCategory.value}, Factory: ${selectedFactory.value}, Year: ${chooseYear.value}`
+    `Hiện thị dữ liệu thành công!`
   );
 
   showDialog.value = false;
-
-  // Cập nhật dữ liệu biểu đồ với factory, năm và danh mục đã chọn
   updateChart(selectedFactory.value, chooseYear.value, selectedCategory.value);
 };
 
 
-const selectedFactoryTemp = ref(localStorage.getItem("DB_CHOICE") || "LYV");
-if (!factoryList.some(f => f.value === selectedFactoryTemp.value)) {
-  selectedFactoryTemp.value = "LYV"; 
+
+const selectedFactoryTemp = ref(localStorage.getItem("DB_CHOICE"));
+if (!factoryList.some((f) => f.value === selectedFactoryTemp.value)) {
+  selectedFactoryTemp.value = "LYV";
 }
-const selectedFactory = ref(selectedFactoryTemp.value);
+const selectedFactory = ref(localStorage.getItem("DB_CHOICE"));
 
 // ECharts hook
 const { updateChart } = useECharts(echart, rawData, activeFilter, chooseYear);
@@ -270,6 +258,13 @@ console.log(
     factoryList.find((f) => f.value === selectedFactory.value)?.label
   }`
 );
+
+onMounted(() => {
+  updateChart(selectedFactory.value, chooseYear.value, selectedCategory.value);
+});
+
+
+
 </script>
 
 <style scoped>
