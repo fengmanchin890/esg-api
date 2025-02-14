@@ -1,64 +1,5 @@
   <template>
-  <!-- Comparisom -->
-  <el-dialog v-model="showComparison" :style="{ width: '320px' }">
-    <h1 class="title-choose">Comparison</h1>
-    <div class="date-picker-container">
-      <div class="picker-row">
-        <div class="picker-group">
-          <label class="picker-label">Start Month</label>
-          <el-select v-model="selectedStartMonth" class="styled-select">
-            <el-option
-              v-for="month in availableMonths"
-              :key="month.value"
-              :label="month.label"
-              :value="month.value"
-            />
-          </el-select>
-        </div>
-        <div class="picker-group">
-          <label class="picker-label">End Month</label>
-          <el-select v-model="selectedEndMonth" class="styled-select">
-            <el-option
-              v-for="month in availableMonths"
-              :key="month.value"
-              :label="month.label"
-              :value="month.value"
-            />
-          </el-select>
-        </div>
-      </div>
-
-      <div class="picker-row">
-        <div class="picker-group">
-          <label class="picker-label">Base Year</label>
-          <el-select v-model="baseYear" class="styled-select">
-            <el-option
-              v-for="year in availableYears"
-              :key="year"
-              :label="year"
-              :value="year"
-            />
-          </el-select>
-        </div>
-        <div class="picker-group">
-          <label class="picker-label">Comparison Year</label>
-          <el-select v-model="comparisonYear" class="styled-select">
-            <el-option
-              v-for="year in availableYears"
-              :key="year"
-              :label="year"
-              :value="year"
-            />
-          </el-select>
-        </div>
-      </div>
-    </div>
-    <div class="footer-buttons">
-      <el-button type="primary" @click="confirmComparison">Apply</el-button>
-      <el-button @click="showComparison = false">Cancel</el-button>
-    </div>
-  </el-dialog>
-
+  
   <el-dialog v-model="showDialog" :style="{ width: '350px' }">
     <h1 class="title-choose">Select Options</h1>
     <div class="picker-container">
@@ -110,12 +51,7 @@
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
       <div class="left-buttons-bottom">
-        <el-button
-          type="primary"
-          @click="toggleDatePicker"
-          class="button-echarts"
-          >Comparison</el-button
-        >
+        <Comparison />
       </div>
       <div class="right-buttons-bottom">
         <el-button
@@ -132,6 +68,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import useECharts from "@/hooks/useECharts";
+import Comparison from "@/components/Comparison.vue";
 import {
   rawData,
   factoryList,
