@@ -69,7 +69,7 @@ export default function useECharts(echartRef, rawData, chooseYear) {
       ],
       series: [
         { name: legendNames[1], type: "bar", data: energyData, yAxisIndex: 0, itemStyle: { color: "#FFB74D" } },
-        { name: legendNames[0], type: "line", data: waterData, yAxisIndex: 1, smooth: true, lineStyle: { width: 7 }, itemStyle: { color: "#1E90FF" }, emphasis: { focus: "series", lineStyle: { width: 16 } } },
+        { name: legendNames[0], type: "line", data: waterData, yAxisIndex: 1, smooth: true, lineStyle: { width: 6 }, itemStyle: { color: "#1E90FF" }, emphasis: { focus: "series", lineStyle: { width: 8 } } },
       ],
     };
 
