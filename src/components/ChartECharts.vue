@@ -40,6 +40,8 @@
   </el-dialog>
 
   <!-- Filter Dialog -->
+  <template>
+  
   <el-dialog v-model="showDialog" :style="{ width: '350px' }">
     <h1 class="title-choose">Select Options</h1>
     <div class="picker-container">
@@ -82,6 +84,7 @@
     <div class="chart-controls">
       <div class="left-buttons-bottom">
         <el-button type="primary" @click="toggleDatePicker" class="button-echarts">Comparison</el-button>
+        <Comparison />
       </div>
       <div class="right-buttons-bottom">
         <el-button type="primary" class="button-echarts" @click="showDialog = true">Filter</el-button>
@@ -95,6 +98,13 @@ import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import useECharts from "@/hooks/useECharts";
 import { rawData, factoryList, availableYears, useEChartsData, initData } from "@/hooks/useECharts-api";
+import Comparison from "@/components/Comparison.vue";
+import {
+  rawData,
+  factoryList,
+  availableYears,
+  availableMonths,
+} from "@/hooks/useECharts-api";
 
 // State variables
 const activeFilter = ref("all");
