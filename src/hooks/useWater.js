@@ -90,7 +90,7 @@ export function useWater() {
         recycledWaterMeter: isNaN(parseFloat(newRecord.value.recycledWaterMeter)) ? 0 : parseFloat(newRecord.value.recycledWaterMeter),
         userid: userId,
       });
-  
+      console.log(response)
       // Kiểm tra mã phản hồi từ server
       if (response.data.code === 200) {
         ElMessage.success("Thêm dữ liệu thành công!");

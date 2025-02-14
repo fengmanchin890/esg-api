@@ -1,33 +1,37 @@
 import { onMounted, watch, nextTick } from "vue";
 import * as echarts from "echarts";
 
-export default function useECharts(echartRef, rawData, chooseYear) {
+export default function useECharts(echartRef, rawData, selectedFactory, chooseYear, selectedCategory) {
   let chart = null;
 
-  const initChart = () => {
-    if (echartRef.value) {
-      chart = echarts.init(echartRef.value);
-      updateChart();
-    }
-  };
+  const initChart = async () => {
+    await nextTick(); // ✅ Đợi DOM cập nhật
 
-  const getNiceScale = (min, max) => {
-    const range = max - min;
-    const step = Math.pow(10, Math.floor(Math.log10(range)));
-    const niceStep = Math.ceil(step / 10) * 10;
-    const niceMin = Math.floor(min / niceStep) * niceStep;
-    const niceMax = Math.ceil(max / niceStep) * niceStep;
-    return { niceMin, niceMax };
+    if (!echartRef.value) {
+      console.warn("⚠️ echartRef chưa sẵn sàng!");
+      return;
+    }
+
+    chart = echarts.init(echartRef.value);
+    console.log("✅ ECharts đã được khởi tạo!");
+
+    updateChart(selectedFactory.value, chooseYear.value, selectedCategory.value);
   };
 
   const updateChart = async (factory, year, category) => {
     await nextTick();
 
-    if (!rawData[factory] || !rawData[factory][year]) {
+    if (!echartRef.value || !chart) {
+      console.warn("⚠️ Chart chưa được khởi tạo!");
       return;
     }
 
-    const data = rawData[factory][year];
+    if (!rawData.value[factory] || !rawData.value[factory][year]) {
+      console.warn("⚠️ Không có dữ liệu để cập nhật biểu đồ!");
+      return;
+    }
+
+    const data = rawData.value[factory][year];
     let primaryData = [];
     let secondaryData = [];
     let legendNames = [];
@@ -41,7 +45,7 @@ export default function useECharts(echartRef, rawData, chooseYear) {
       legendNames = ["Tap Water Meter", "Recycled Water Meter"];
       yAxisLabel = "Value (m³)";
       barColor = "rgba(100, 181, 246, 1)";
-      lineColor = "#239081 ";
+      lineColor = "#239081";
     } else if (category === "energy-solarenergy") {
       primaryData = data.energy || Array(12).fill(null);
       secondaryData = data.solarenergy || Array(12).fill(null);
@@ -52,9 +56,11 @@ export default function useECharts(echartRef, rawData, chooseYear) {
     }
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
     const allData = [...primaryData, ...secondaryData].filter(v => v !== null);
-    const { niceMin: finalYMin, niceMax: finalYMax } = getNiceScale(Math.min(...allData), Math.max(...allData));
+    const minY = Math.min(...allData);
+    const maxY = Math.max(...allData);
+    const finalYMin = Math.floor(minY / 10) * 10;
+    const finalYMax = Math.ceil(maxY / 10) * 10;
 
     const option = {
       tooltip: {
@@ -81,7 +87,7 @@ export default function useECharts(echartRef, rawData, chooseYear) {
         max: finalYMax,
         splitLine: {
           show: true,
-          lineStyle: { type: "dashed", color: "#78909C" }, // Xám đậm hơn
+          lineStyle: { type: "dashed", color: "#78909C" },
         },
       },
       series: [
@@ -89,7 +95,7 @@ export default function useECharts(echartRef, rawData, chooseYear) {
           name: legendNames[0],
           type: "bar",
           data: primaryData,
-          itemStyle: { color: barColor }
+          itemStyle: { color: barColor },
         },
         {
           name: legendNames[1],
@@ -98,7 +104,7 @@ export default function useECharts(echartRef, rawData, chooseYear) {
           smooth: true,
           lineStyle: { width: 6, color: lineColor },
           itemStyle: { color: lineColor },
-          emphasis: { focus: "series", lineStyle: { width: 8 } }
+          emphasis: { focus: "series", lineStyle: { width: 8 } },
         },
       ],
     };
@@ -110,10 +116,10 @@ export default function useECharts(echartRef, rawData, chooseYear) {
     initChart();
   });
 
-  watch(chooseYear, async () => {
-    await nextTick();
-    updateChart();
+  watch([selectedFactory, chooseYear, selectedCategory], async ([factory, year, category]) => {
+    console.log(`🔄 Cập nhật biểu đồ: Factory=${factory}, Year=${year}, Category=${category}`);
+    await updateChart(factory, year, category);
   });
 
-  return { updateChart, chooseYear };
+  return { updateChart };
 }
