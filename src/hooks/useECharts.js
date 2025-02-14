@@ -18,6 +18,10 @@ export default function useECharts(echartRef, rawData, selectedFactory, chooseYe
     updateChart(selectedFactory.value, chooseYear.value, selectedCategory.value);
   };
 
+  const processData = (data) => {
+    return data.map(item => (item === -1 ? 0 : item));
+  };
+
   const updateChart = async (factory, year, category) => {
     await nextTick();
 
@@ -40,15 +44,15 @@ export default function useECharts(echartRef, rawData, selectedFactory, chooseYe
     let lineColor = "";
 
     if (category === "water-recycledwater") {
-      primaryData = data.water || Array(12).fill(null);
-      secondaryData = data.recycledwater || Array(12).fill(null);
+      primaryData = processData(data.water || Array(12).fill(null));
+      secondaryData = processData(data.recycledwater || Array(12).fill(null));
       legendNames = ["Tap Water Meter", "Recycled Water Meter"];
       yAxisLabel = "Value (m³)";
       barColor = "rgba(100, 181, 246, 1)";
       lineColor = "#239081";
     } else if (category === "energy-solarenergy") {
-      primaryData = data.energy || Array(12).fill(null);
-      secondaryData = data.solarenergy || Array(12).fill(null);
+      primaryData = processData(data.energy || Array(12).fill(null));
+      secondaryData = processData(data.solarenergy || Array(12).fill(null));
       legendNames = ["Grid Electric", "Solar Energy"];
       yAxisLabel = "Value (kWh)";
       barColor = "rgba(255, 183, 77, 0.8)";
@@ -66,6 +70,14 @@ export default function useECharts(echartRef, rawData, selectedFactory, chooseYe
       tooltip: {
         trigger: "axis",
         axisPointer: { type: "cross", lineStyle: { width: 3 } },
+        formatter: function (params) {
+          let tooltipText = `${params[0].name}<br/>`;
+          params.forEach(param => {
+            const value = param.value === 0 ? "N/A" : param.value;
+            tooltipText += `${param.seriesName}: ${value}<br/>`;
+          });
+          return tooltipText;
+        }
       },
       legend: {
         data: legendNames,

@@ -6,8 +6,9 @@ const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 export const rawData = ref({});
 export const factoryList = ref([]);
 export const availableYears = ref(
-  Array.from({ length: 11 }, (_, i) => (2020 + i).toString()) // Tạo mảng từ 2020 -> 2030
+  Array.from({ length: new Date().getFullYear() - 2000 + 1 }, (_, i) => (2000 + i).toString()).reverse()
 );
+
 export const availableMonths = ref([
   { label: "January", value: "01" },
   { label: "February", value: "02" },
