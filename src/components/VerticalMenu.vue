@@ -6,10 +6,10 @@
         <el-icon @click="navigateTo('/mainPage/input')">
           <Edit />
         </el-icon>
-        <span @click="navigateTo('/mainPage/input')">Input</span>
+        <span @click="navigateTo('/mainPage/input')">輸入</span>
       </template>
-      <el-menu-item index="1-1" @click="navigateTo('/mainPage/input/water')">Water</el-menu-item>
-      <el-menu-item index="1-2" @click="navigateTo('/mainPage/input/energy')">Energy</el-menu-item>
+      <el-menu-item index="1-1" @click="navigateTo('/mainPage/input/water')">輸入用水量</el-menu-item>
+      <el-menu-item index="1-2" @click="navigateTo('/mainPage/input/energy')">輸入用電量</el-menu-item>
     </el-sub-menu>
 
     <!-- Analyze 頁面 -->
@@ -17,7 +17,7 @@
       <el-icon>
         <DataAnalysis />
       </el-icon>
-      <template #title>Analyze</template>
+      <template #title>資料分析</template>
     </el-menu-item>
 
     <!-- 設定 -->
@@ -56,6 +56,11 @@ const navigateTo = (path: string) => {
 </script>
 
 <style>
+.el-menu-vertical-demo {
+  height: 100%;
+  background-color: white ;
+  color: #fff;
+}
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
 }

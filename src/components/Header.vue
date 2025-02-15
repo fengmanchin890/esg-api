@@ -93,20 +93,26 @@ observer.observe(document.body);
   width: 100%;
   height: 60px;
   z-index: 1000;
-  background-image: linear-gradient(to right, #07ef8a 0%, #0f6b03 100%);
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid lightgray;
+  color: gray;
+  background: rgba(255, 255, 255, 0.1); /* 10% 透明 */
+  backdrop-filter: blur(10px); /* 背景模糊效果 */
+  transition: all 0.5s ease-in-out; /* 平滑過渡效果 */
 }
+
+
+
 
 .header-row {
   display: flex;
   align-items: center;
   height: 100%;
+  
 }
 
 .left-section,
 .center-section,
 .right-section {
-  color: white;
   display: flex;
   align-items: center;
   height: 100%;
@@ -164,7 +170,6 @@ observer.observe(document.body);
 }
 
 .dashboard-title {
-  color: white;
   padding: 5px 15px;
   font-size: 24px;
 }
@@ -210,10 +215,10 @@ observer.observe(document.body);
 
 .user-name {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   user-select: none;
   cursor: pointer;
-  color:white;
+  color: rgb(11, 169, 231);
 }
 
 @media (max-width: 768px) {

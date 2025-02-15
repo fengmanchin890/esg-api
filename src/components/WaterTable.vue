@@ -1,129 +1,205 @@
 <template>
-  <div id="DemoPage">
-    <div class="title">
-      <img src="../assets/water.png" alt="water" class="icon" />
-      <h1>Water</h1>
-    </div>
-    <div class="water-input">
-      <div>
-        <label>Record Year</label>
-        <el-input v-model="newRecord.recordyear" />
+  <div style=" border: 1px solid lightgray; padding: 20px; border-radius: 20px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; background-color: white; min-width: 800px;">
+    <div class="header">
+      <div class="icon-section">
+        <img src="../assets/water.png" alt="water" class="icon" />
+        <span>Water Usage</span>
       </div>
-      <div>
-        <label>Record Month</label>
-        <el-input v-model="newRecord.recordmonth" />
-      </div>
-      <div>
-        <label>Tap Water Meter</label>
-        <el-input v-model="newRecord.tapWaterMeter" />
-      </div>
-      <div>
-        <label>Recycled Water Meter</label>
-        <el-input v-model="newRecord.recycledWaterMeter" />
-      </div>
-      <el-button type="primary" @click="addRecord">INSERT</el-button>
-      <div class="search-bar">
-        <el-input v-model="searchQuery" placeholder="Search by Year - Month" clearable :prefix-icon="Search">
+      <div class="search-section">
+        <el-input v-model="searchQuery" placeholder="yyyymm" class="input-with-select">
+          <template #prepend>
+            <el-button :icon="Search" />
+          </template>
+          <template #append>
+            <div>Year - Month</div>
+          </template>
         </el-input>
+        <el-button type="success" @click="dialogVisible = true">
+        <el-icon class="el-icon--left"><Back /></el-icon> INSERT
+      </el-button>
       </div>
+
     </div>
 
-    <ry-edit-table ref="ryEditTable" class="table-container" :listData="filteredList" :listConfig="listConfig"
-      :rowButtons="rowButtons" :operationsConfig="{ width: 170 }" :action="'action'" :cellStyle="{ color: 'orange' }"
-      :cellClassName="'custom-cell-class'" trigger="onChange" height="675px" />
+    <!-- 資料表 -->
+      <ry-edit-table 
+      ref="ryEditTable" 
+      class="table-container" 
+      :listData="filteredList" 
+      :listConfig="listConfig"
+      :rowButtons="rowButtons" 
+      :operationsConfig="{ width: 170 }" 
+      :action="'action'" 
+      :cellStyle="{ color: 'black' }"
+      :cellClassName="'custom-cell-class'" 
+      trigger="onChange" 
+      height="700"
+    />
+
+
+    <!-- INSERT Dialog -->
+    <el-dialog v-model="dialogVisible" title="Add New Record" width="520px" class="custom-dialog">
+      <div class="input-container">
+        <div class="input-row">
+          <label>Record Year</label>
+          <el-date-picker
+            style="width: 100%;"
+            v-model="newRecord.recordyear"
+            type="year"
+            placeholder="Select Year"
+            format="YYYY"
+            value-format="YYYY"
+            clearable
+          />
+        </div>
+        <div class="input-row">
+          <label>Record Month</label>
+          <el-select v-model="newRecord.recordmonth" placeholder="Select Month" clearable>
+            <el-option v-for="month in 12" :key="month" :label="month" :value="String(month).padStart(2, '0')" />
+          </el-select>
+        </div>
+        <div class="input-row">
+          <label>Tap Water Meter</label>
+          <el-input v-model="newRecord.tapWaterMeter" clearable />
+        </div>
+        <div class="input-row">
+          <label>Recycled Water Meter</label>
+          <el-input v-model="newRecord.recycledWaterMeter" clearable />
+        </div>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible = false" type="info" plain>Cancel</el-button>
+          <el-button type="success" @click="addRecord">Confirm</el-button>
+        </div>
+      </template>
+</el-dialog>
+
+
   </div>
 </template>
 
 <script setup>
-import { Search } from "@element-plus/icons-vue";
+import { ref } from "vue";
+import { Search, Back } from "@element-plus/icons-vue";
 import { useWater } from "@/hooks/useWater";
 
 const { newRecord, searchQuery, listConfig, rowButtons, filteredList, addRecord } = useWater();
+const dialogVisible = ref(false);
 </script>
 
 <style scoped>
-#DemoPage {
+
+
+.input-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
+  gap: 10px;
 }
 
-.title {
+.input-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: rgba(226, 44, 31, 0.829);
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.input-row label {
+  width: 300px; /* 固定 Label 寬度，讓輸入框對齊 */
+  text-align: left;
+  font-weight: 600;
+}
+
+
+
+/* 頂部 Header */
+.header {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  margin: -50px 0 -50px -64px;
-}
-
-.icon {
-  width: 60px;
-}
-
-.water-input {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: row;
-  gap: 20px;
-  padding: 20px 0;
-  font-size: 18px;
-}
-
-.water-input div {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 5px;
-}
-
-.water-input label {
-  display: flex;
-  align-items: center;
   width: 100%;
-  max-width: fit-content;
-  color: #303133;
+  flex-wrap: wrap; /* 允許換行 */
+}
+.icon{
+  width: 70px;
 }
 
-.water-input .el-input {
+.input-with-select{
+  max-width: 300px;
+}
+/* Icon 部分 */
+.icon-section {
   display: flex;
   align-items: center;
-  min-width: 60px;
+  gap: 10px;
+  color: rgba(15, 87, 213, 0.9);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  font-size: 40px;
+  width: 35%;
+  min-width: 200px;
+  font-weight: 700;
+  padding-bottom: 10px;
 }
 
-.search-bar {
+/* 搜尋欄 */
+.search-section {
   display: flex;
   align-items: center;
-  width: 100%;
-  min-width: 90px;
-  max-width: 250px;
+  gap: 10px;
+  flex-grow: 1;
 }
 
+/* RWD 設計：小螢幕時 Header 改為 Column */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .icon-section, 
+  .search-section {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-section {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Table 樣式 */
 .table-container {
   display: flex;
-  max-height: 1000px;
-  overflow-y: auto;
   overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  align-items: start;
+  justify-content: center;
+  border: 1px solid lightgray;
+
 }
 
-:deep(.el-table) {
-  font-size: 18px;
+/* Dialog 美化 */
+.custom-dialog {
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-:deep(.el-table thead th) {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  font-size: 18px;
-}
-
-:deep(.el-table .cell) {
+/* 輸入框 */
+.input-container {
   display: flex;
-  flex-wrap: nowrap;
-  padding: 0 10px;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px;
+}
+
+
+
+/* Dialog Footer */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 </style>

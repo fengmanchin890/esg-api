@@ -1,8 +1,6 @@
 <template>
   <el-container class="app-container">
-    <el-header class="fixed-header">
       <Header />
-    </el-header>
     <el-container class="content-container">
       <el-aside class="aside-menu">
         <VerticalMenu />
@@ -28,16 +26,7 @@ import Footer from "../components/Footer.vue";
   flex-direction: column;
 }
 
-.fixed-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  z-index: 1000;
-  background: white;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-}
+
 
 .content-container {
   display: flex;

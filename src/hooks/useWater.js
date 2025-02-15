@@ -4,7 +4,8 @@ import { ElMessage, ElMessageBox } from "element-plus";
 const VITE_BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}`;
 export function useWater() {
   const listData = ref([]);
-  const searchQuery = ref("");
+  const searchQuery = ref(getCurrentYearMonth());
+
   const newRecord = ref({
     recordyear: "",
     recordmonth: "",
@@ -50,6 +51,16 @@ export function useWater() {
       click: (ref, row) => deleteWater(row.recordid),
     },
   ];
+
+
+  function getCurrentYearMonth() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // 確保月份兩位數
+    return `${year}${month}`;
+  }
+
+
 
   const fetchWaterData = async () => {
     try {
