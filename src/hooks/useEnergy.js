@@ -55,8 +55,9 @@ export function useEnergy() {
   function getCurrentYearMonth() {
     const now = new Date();
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // 確保月份兩位數
-    return `${year}${month}`;
+    // const month = String(now.getMonth() + 1).padStart(2, "0"); // 確保月份兩位數
+    return `${year}`;
+    // return `${year}${month}`;
   }
 
 

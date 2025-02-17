@@ -120,7 +120,8 @@ const dialogVisible = ref(false);
   flex-wrap: wrap; /* 允許換行 */
 }
 .icon{
-  width: 70px;
+  width: 60px;
+  /* margin-right: -5px; */
 }
 
 .input-with-select{
