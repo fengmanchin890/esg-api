@@ -1,74 +1,232 @@
 <template>
   <div class="usage-card-water">
     <h3 class="title-water">
-      <img src="@/assets/water.png" alt="water" class="icon" />Water Usage
-      <span class="percent greentext">5% ↓</span>
+      <img src="@/assets/water.png" alt="water" class="icon" /> Water Usage
     </h3>
+
+    <div class="filter-section">
+      <a-select v-model:value="selectedFactory" :options="factoryOptions" placeholder="Select Factory" />
+      <!-- Dropdown để chọn nhà máy -->
+      <a-range-picker v-model:value="dateRange" picker="month" format="YYYY-MM" />
+      <!-- Chọn khoảng thời gian (tháng) để xem dữ liệu -->
+      <a-button type="primary" @click="fetchWaterChartData">Create charts</a-button>
+      <!-- Nút để tạo biểu đồ sử dụng nước -->
+    </div>
+
     <div class="usage-content">
-      <div class="usage-year">
-        <p>Jan - Dec 2020</p>
-        <div class="circle blue">5,660</div>
-      </div>
-      <div class="usage-year">
-        <p>Jan - Dec 2021</p>
-        <div class="circle green">5,377</div>
+      <div class="usage-year" v-for="(data, index) in usageData" :key="index">
+        <div class="data-column">
+          <p class="day">{{ data.label }}</p>
+          <!-- Hiển thị khoảng thời gian -->
+        </div>
+
+        <div class="circle-container">
+          <div class="circle" :class="data.color">
+            {{ data.total_tap_start }} m³
+            <p class="label">Total Tap Start</p>
+            <!-- Hiển thị tổng nước đầu vào tại thời điểm đầu kỳ -->
+          </div>
+
+          <div class="circle" :class="data.color">
+            {{ data.total_tap_end }} m³
+            <p class="label">Total Tap End</p>
+            <!-- Hiển thị tổng nước đầu ra tại thời điểm cuối kỳ -->
+          </div>
+
+        </div>
+
+        <span class="percent" :class="{
+          red: data.tap_change_percent < 0,
+          green: data.tap_change_percent > 0
+        }">
+          {{ data.tap_change_percent !== undefined ? data.tap_change_percent : 0 }}%
+          <!-- Hiển thị phần trăm thay đổi nước đầu vào -->
+          <span v-if="data.tap_change_percent > 0">↑</span>
+          <!-- Mũi tên lên nếu thay đổi phần trăm là dương -->
+          <span v-if="data.tap_change_percent < 0">↓</span>
+          <!-- Mũi tên xuống nếu thay đổi phần trăm là âm -->
+        </span>
       </div>
     </div>
   </div>
 </template>
 
+
+
+
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import dayjs from "dayjs";
+import { message } from "ant-design-vue";
+
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const selectedFactory = ref(null);
+const dateRange = ref([dayjs().startOf('month'), dayjs().endOf('month')]);
+const factoryOptions = ref([]);
+const usageData = ref([]);
+
+// 🛠 API: Lấy danh sách nhà máy
+const fetchFactoryList = async () => {
+  try {
+    const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
+    if (response.data?.data && Array.isArray(response.data.data)) {
+      factoryOptions.value = response.data.data.map(factory => ({
+        label: factory.factoryname,
+        value: factory.factoryid,
+      }));
+      if (factoryOptions.value.length > 0) {
+        selectedFactory.value = factoryOptions.value[0].value;
+      }
+    }
+  } catch (error) {
+    console.error("❌ Lỗi khi gọi API danh sách factories:", error);
+  }
+};
+
+// 🛠 API: Lấy dữ liệu biểu đồ nước
+const fetchWaterChartData = async () => {
+  if (!selectedFactory.value || dateRange.value.length !== 2) {
+    message.error("Vui lòng chọn nhà máy và khoảng thời gian.");
+    return;
+  }
+
+  const startDate = dateRange.value[0];
+  const endDate = dateRange.value[1];
+
+  const payload = {
+    factory_id: selectedFactory.value,
+    start_year: startDate.year(),
+    start_month: startDate.month() + 1,
+    end_year: endDate.year(),
+    end_month: endDate.month() + 1,
+  };
+
+  try {
+    const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/stats/waterchart`, payload);
+
+    if (response.data && Array.isArray(response.data)) {
+      usageData.value = response.data.map((item) => ({
+        label: `${item.record_month_start}/${item.record_year_start} - ${item.record_month_end}/${item.record_year_end}`,
+        total_tap_start: item.total_tap_start,
+        total_tap_end: item.total_tap_end,
+        tap_change_percent: item.tap_change_percent,
+        total_recycled_start: item.total_recycled_start,
+        total_recycled_end: item.total_recycled_end,
+        recycled_change_percent: item.recycled_change_percent,
+        color: item.tap_change_percent > 0 ? "green" : "red",
+      }));
+    }
+  } catch (error) {
+    console.error("❌ Lỗi khi gọi API biểu đồ nước:", error);
+  }
+};
+
+onMounted(() => {
+  fetchFactoryList();
+});
+</script>
+
+
 <style scoped>
 .title-water {
-  margin-top: -0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
+
 .usage-card-water {
   flex: 1;
-  max-width: 600px;
+  max-width: 700px;
   background: rgba(173, 216, 230, 0.6);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.usage-card-water .circle {
-  background: rgba(100, 181, 246, 0.8);
+
+.filter-section {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
 }
+
 .usage-content {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
+  flex-wrap: wrap;
 }
+
 .usage-year {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.title-water {
-  display: flex;
   justify-content: center;
-  align-items: center;
+  margin-top: 20px;
 }
+
+.data-column {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.day {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.circle-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
 .circle {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin-bottom: 10px;
 }
+
+.green {
+  background: rgba(144, 238, 144, 0.8);
+}
+
+.red {
+  background: rgba(255, 99, 71, 0.8);
+}
+
 .percent {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
-  margin-left: 5px;
 }
-.greentext {
-  color: green;
+
+.label {
+  font-size: 12px;
+  color: #555;
 }
+
 .icon {
   width: 30px;
   margin-right: 10px;
+}
+
+.percent-recycled {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
 }
 </style>
