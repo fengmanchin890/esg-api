@@ -74,9 +74,17 @@ import {
 
 const echart = ref(null);
 
-const selectedFactory = ref(localStorage.getItem("DB_CHOICE") || "Unknown");
-const selectedCategory = ref(localStorage.getItem("CATEGORY") || "water-recycledwater");
-const tempCategory = ref(selectedCategory.value); // Lưu tạm giá trị chọn mới
+const selectedFactory = ref(
+  localStorage.getItem("DB_CHOICE2") &&
+    localStorage.getItem("DB_CHOICE2") !== "undefined"
+    ? localStorage.getItem("DB_CHOICE2").trim()
+    : localStorage.getItem("DB_CHOICE")?.trim() || "Unknown"
+);
+
+const selectedCategory = ref(
+  localStorage.getItem("CATEGORY") || "water-recycledwater"
+);
+const tempCategory = ref(selectedCategory.value);
 
 const chooseYear = ref(
   localStorage.getItem("YEAR") || new Date().getFullYear().toString()
@@ -98,15 +106,13 @@ onMounted(async () => {
 });
 
 watch([selectedFactory, chooseYear], () => {
-  localStorage.setItem("DB_CHOICE", selectedFactory.value);
+  localStorage.setItem("DB_CHOICE2", selectedFactory.value);
   localStorage.setItem("YEAR", chooseYear.value);
 });
-
 
 const applySelection = async () => {
   showDialog.value = false;
 
-  // Cập nhật giá trị chính thức từ biến tạm
   selectedCategory.value = tempCategory.value;
   localStorage.setItem("CATEGORY", selectedCategory.value);
 

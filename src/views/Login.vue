@@ -92,7 +92,9 @@ const Users = reactive({
   USERID: localStorage.getItem("USERID") || "",
   PWD: localStorage.getItem("PASSWORD") || "",
   DB_CHOICE: localStorage.getItem("DB_CHOICE") || "",
+  DB_CHOICE2: localStorage.getItem("DB_CHOICE2") || "",
   USERNAME: sessionStorage.getItem("USERNAME") || "",
+  
 });
 
 const Factory = ref("");
@@ -105,6 +107,7 @@ const login = async () => {
     if (typeof response.data.data === "object") {
       localStorage.setItem("USERID", response.data.data.USERID);
       localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
+      localStorage.setItem("DB_CHOICE2", response.data.data.DB_CHOICE2);
       sessionStorage.setItem("TOKEN", response.data.data.TOKEN);
       localStorage.setItem("USERNAME", response.data.data.USERNAME);
       Object.assign(Users, response.data.data);
