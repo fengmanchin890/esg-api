@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" title="Logout Confirmation" width="400px">
+  <el-dialog v-model="visible" title="Logout Confirmation" width="400px" append-to-body>
     <p>Are you sure you want to log out?</p>
     <template #footer>
       <span class="dialog-footer">
