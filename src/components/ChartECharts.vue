@@ -1,43 +1,4 @@
 <template>
-  <!-- Comparisom -->
-  <el-dialog v-model="showComparison" :style="{ width: '320px' }">
-    <h1 class="title-choose">Comparison</h1>
-    <div class="date-picker-container">
-      <div class="picker-row">
-        <div class="picker-group">
-          <label class="picker-label">Start Month</label>
-          <el-select v-model="selectedStartMonth" class="styled-select">
-            <el-option v-for="month in availableMonths" :key="month" :label="month" :value="month" />
-          </el-select>
-        </div>
-        <div class="picker-group">
-          <label class="picker-label">End Month</label>
-          <el-select v-model="selectedEndMonth" class="styled-select">
-            <el-option v-for="month in availableMonths" :key="month" :label="month" :value="month" />
-          </el-select>
-        </div>
-      </div>
-
-      <div class="picker-row">
-        <div class="picker-group">
-          <label class="picker-label">Base Year</label>
-          <el-select v-model="baseYear" class="styled-select">
-            <el-option v-for="year in availableYears" :key="year" :label="year" :value="year" />
-          </el-select>
-        </div>
-        <div class="picker-group">
-          <label class="picker-label">Comparison Year</label>
-          <el-select v-model="comparisonYear" class="styled-select">
-            <el-option v-for="year in availableYears" :key="year" :label="year" :value="year" />
-          </el-select>
-        </div>
-      </div>
-    </div>
-    <div class="footer-buttons">
-      <el-button type="primary" @click="confirmComparison">Apply</el-button>
-      <el-button @click="showComparison = false">Cancel</el-button>
-    </div>
-  </el-dialog>
 
   <!-- Filter Dialog -->
   <el-dialog v-model="showDialog" :style="{ width: '350px' }">
@@ -53,14 +14,23 @@
       <div class="picker-group">
         <label class="picker-label">Factory</label>
         <el-select v-model="selectedFactory" class="styled-select">
-          <el-option v-for="factory in factoryList" :key="factory.value" :label="factory.label"
-            :value="factory.value" />
+          <el-option
+            v-for="factory in factoryList"
+            :key="factory.value"
+            :label="factory.label"
+            :value="factory.value"
+          />
         </el-select>
       </div>
       <div class="picker-group">
         <label class="picker-label">Year</label>
         <el-select v-model="chooseYear" class="styled-select">
-          <el-option v-for="year in availableYears" :key="year" :label="year" :value="year" />
+          <el-option
+            v-for="year in availableYears"
+            :key="year"
+            :label="year"
+            :value="year"
+          />
         </el-select>
       </div>
     </div>
@@ -81,21 +51,32 @@
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
       <div class="left-buttons-bottom">
-        <el-button type="primary" @click="toggleDatePicker" class="button-echarts">Comparison</el-button>
+      
       </div>
       <div class="right-buttons-bottom">
-        <el-button type="primary" class="button-echarts" @click="showDialog = true">Filter</el-button>
+        <el-button
+          type="primary"
+          class="button-echarts"
+          @click="showDialog = true"
+          >Filter</el-button
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
+
 import { ElMessage } from "element-plus";
 import useECharts from "@/hooks/useECharts";
-import { rawData, factoryList, availableYears, useEChartsData, initData } from "@/hooks/useECharts-api";
-
+import {
+  rawData,
+  factoryList,
+  availableYears,
+  useEChartsData,
+  initData,
+} from "@/hooks/useECharts-api";
 // State variables
 const activeFilter = ref("all");
 const echart = ref(null);
@@ -107,7 +88,8 @@ const tempYear = ref(chooseYear.value);
 const showDialog = ref(false);
 
 // Khởi tạo biểu đồ
-const { updateChart } = useECharts(echart, rawData, activeFilter, chooseYear);
+const { updateChart } = useECharts(echart, selectedFactory, chooseYear, selectedCategory, rawData);
+
 
 // ✅ Gọi API khi component mounted
 onMounted(async () => {
@@ -116,8 +98,8 @@ onMounted(async () => {
   console.log("📌 Danh sách factory sau khi gọi API:", factoryList.value);
 });
 
-// ✅ Chỉ gọi API khi nhấn Apply
 const applySelection = async () => {
+  
   selectedFactory.value = tempFactory.value;
   chooseYear.value = tempYear.value;
   showDialog.value = false;
@@ -126,6 +108,10 @@ const applySelection = async () => {
 
   try {
     await useEChartsData(selectedFactory.value, Number(chooseYear.value));
+
+    // 🛠 Đợi Vue cập nhật lại rawData trước khi gọi updateChart
+    await nextTick();
+
     console.log("🔥 rawData sau API:", JSON.stringify(rawData.value, null, 2));
 
     const chartData = rawData.value[selectedFactory.value]?.[chooseYear.value];
@@ -139,6 +125,7 @@ const applySelection = async () => {
     console.error("❌ Lỗi khi gọi API:", error);
   }
 };
+
 </script>
 
 
