@@ -25,35 +25,40 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
   };
 
   const handleNegativeValues = (data) => {
-    let negativeMonths = [];  
-
+    // let negativeMonths = [];
+  
     const result = data.map((value, index) => {
-      if (value < 0) {
-        negativeMonths.push(index + 1);  
-        return 'N/A';
+      if (value === -1) {
+        return 'N/A';  // Khi giá trị là -1, thay thế bằng 'N/A'
       }
-      return value === 0 ? 0 : value;
+      return value === 0 ? '' : value;  // Nếu giá trị là 0 thì không hiển thị gì
     });
-
+  
     return result;
   };
-
+  
   const updateChart = async (factory, year, category) => {
     await nextTick();
     if (!echartRef.value || !chart.value) {
       return;
     }
-  
+
     if (!rawData?.value || !rawData.value[factory] || !rawData.value[factory][year]) {
       return;
     }
-  
+
     const data = rawData.value[factory][year];
     let primaryData = [], secondaryData = [], legendNames = [], yAxisLabel = "", barColor = "", lineColor = "";
-  
+
     if (category === "water-recycledwater") {
       primaryData = handleNegativeValues(data.water || Array(12).fill(0));
       secondaryData = handleNegativeValues(data.recycledwater || Array(12).fill(0));
+
+      console.log("-------------------------------------------");
+      console.log("📌 selectedFactory:", selectedFactory.value);
+      console.log("📦 chooseYear:", chooseYear.value);
+      console.log("Water",primaryData, secondaryData);
+
       legendNames = ["Tap Water Meter", "Recycled Water Meter"];
       yAxisLabel = "Value (m³)";
       barColor = "rgba(100, 181, 246, 1)";
@@ -61,24 +66,35 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
     } else if (category === "energy-solarenergy") {
       primaryData = handleNegativeValues(data.energy || Array(12).fill(0));
       secondaryData = handleNegativeValues(data.solarenergy || Array(12).fill(0));
+
+      console.log("-------------------------------------------");
+      console.log("📌 selectedFactory:", selectedFactory.value);
+      console.log("📦 chooseYear:", chooseYear.value);
+      console.log("Energy",primaryData, secondaryData);
+      
       legendNames = ["Grid Electric", "Solar Energy"];
       yAxisLabel = "Value (kWh)";
       barColor = "rgba(255, 183, 77, 0.8)";
       lineColor = "#d34d30";
     }
-  
+
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const availableMonths = data.water ? Object.keys(data.water) : [];
-  
+
     const allData = primaryData.concat(secondaryData);
-    const minData = Math.min(...allData.filter(value => value !== 'N/A'));
-    const maxData = Math.max(...allData.filter(value => value !== 'N/A'));
-  
-    const { niceMin, niceMax } = getNiceScale(minData, maxData);
-  
+    const validData = allData.filter(value => value !== 'N/A');
+    const minData = validData.length > 0 ? Math.min(...validData) : 0;
+    const maxData = validData.length > 0 ? Math.max(...validData) : 0;
+
+    // Nếu chỉ có vài tháng, đảm bảo min/max không bị trùng
+    const adjustedMin = validData.length <= 2 ? Math.min(minData, maxData) - 1 : minData;
+    const adjustedMax = validData.length <= 2 ? Math.max(minData, maxData) + 1 : maxData;
+
+    const { niceMin, niceMax } = getNiceScale(adjustedMin, adjustedMax);
+
     const option = {
       tooltip: {
-        trigger: "item", // Đổi trigger từ "axis" sang "item"
+        trigger: "item",
         formatter: function (params) {
           return `${params.seriesName}: ${params.value}`;
         }
@@ -99,8 +115,8 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
       yAxis: { 
         type: "value", 
         name: yAxisLabel, 
-        min: niceMin,
-        max: niceMax,
+        min: niceMin !== niceMax ? niceMin : adjustedMin,
+        max: niceMax !== niceMin ? niceMax : adjustedMax,
         splitLine: {
           show: true,
           lineStyle: {
@@ -113,21 +129,32 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
         {
           name: legendNames[0],
           type: "bar",
-          data: primaryData,
+          data: primaryData.filter(value => value !== ''),  // Loại bỏ giá trị rỗng (0) ở đây
           itemStyle: { color: barColor }
         },
         {
           name: legendNames[1],
           type: "line",
-          data: secondaryData,
-          lineStyle: { color: lineColor }
+          data: secondaryData.filter(value => value !== ''),  // Loại bỏ giá trị rỗng (0) ở đây
+          lineStyle: { 
+            color: lineColor, 
+            width: 6 
+          },
+          smooth: true,
+          symbolSize: 10,
+          emphasis: {
+            lineStyle: {
+              width: 8
+            },
+            symbolSize: 12
+          }
         },
       ],
     };
-  
+    
+
     chart.value.setOption(option);
   };
-  
 
   onMounted(() => {
     initChart();

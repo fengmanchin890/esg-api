@@ -119,9 +119,7 @@ const applySelection = async () => {
         chooseYear.value,
         selectedCategory.value
       );
-      console.log("-------------------------------------------");
-      console.log("📌 selectedFactory:", selectedFactory.value);
-      console.log("📦 chooseYear:", chooseYear.value);
+
       // ElMessage.success("Hiện thị thành công ");
     } else {
       updateChart(
