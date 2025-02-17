@@ -23,6 +23,7 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
   const updateChart = async (factory, year, category) => {
     await nextTick();
     if (!echartRef.value || !chart.value) {
+      
       return;
     }
 

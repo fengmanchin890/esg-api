@@ -91,7 +91,6 @@ const { updateChart } = useECharts(
 
 onMounted(async () => {
   await initData(); 
-
   await applySelection();
 });
 
@@ -115,13 +114,14 @@ const applySelection = async () => {
       updateChart(
         selectedFactory.value,
         chooseYear.value,
-        selectedCategory.value
+        selectedCategory.value,
+        
       );
       console.log("📌 selectedFactory:", selectedFactory.value);
       console.log("📌 chooseYear:", chooseYear.value);
       ElMessage.success(
         "Hiện thị thành công "
-      );
+      )
     } else {
       ElMessage.warning(
         "Không có dữ liệu cho trường này. Dữ liệu mặc định sẽ được hiển thị."
@@ -136,6 +136,17 @@ const applySelection = async () => {
     console.error("❌ Lỗi khi gọi API:", error);
   }
 };
+onMounted(async () => {
+  await initData(); // Khởi tạo dữ liệu nếu cần thiết
+
+  // Gọi applySelection khi component được mount
+  await applySelection();
+});
+
+watch([selectedFactory, selectedCategory, chooseYear], async () => {
+  await applySelection(); // Tự động gọi applySelection khi một trong các giá trị thay đổi
+});
+
 </script>
 
 <style scoped>
