@@ -1,7 +1,8 @@
 <template>
   <div class="dashboard">
-    <ChartECharts />
-    <br />
+    <div class="chart-container">
+      <ChartECharts />
+    </div>
     <div class="usage-container">
       <UsageWater />
       <UsageEnergy />
@@ -17,19 +18,17 @@ import ChartECharts from "@/components/ChartECharts.vue";
 .dashboard {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 20px;
   padding: 20px;
-  margin-top: -30px;
-  margin-left: -64px;
+}
+
+.chart-container {
+  display: flex;
 }
 
 .usage-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   gap: 20px;
-  width: 100%;
-  max-width: 940px;
-  flex-wrap: wrap;
 }
 </style>
