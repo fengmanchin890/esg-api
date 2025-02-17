@@ -28,7 +28,7 @@
         :listData="filteredList" 
         :listConfig="listConfig"
         :rowButtons="rowButtons" 
-        :operationsConfig="{ width: 170 }" 
+        :operationsConfig="{ width: 180 }" 
         :action="'action'" 
         :cellStyle="{ color: 'black' }"
         :cellClassName="'custom-cell-class'" 
@@ -188,6 +188,11 @@
     border: 1px solid lightgray;
   
   }
+
+  /* button nowrap */
+:deep(.cell) {
+  display: flex;
+}
   
   /* Dialog 美化 */
   .custom-dialog {

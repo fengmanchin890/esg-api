@@ -28,7 +28,7 @@
       :listData="filteredList" 
       :listConfig="listConfig"
       :rowButtons="rowButtons" 
-      :operationsConfig="{ width: 170 }" 
+      :operationsConfig="{ width: 180 }"
       :action="'action'" 
       :cellStyle="{ color: 'black' }"
       :cellClassName="'custom-cell-class'" 
@@ -178,7 +178,12 @@ const dialogVisible = ref(false);
   align-items: start;
   justify-content: center;
   border: 1px solid lightgray;
+  
+}
 
+/* button nowrap */
+:deep(.cell) {
+  display: flex;
 }
 
 /* Dialog 美化 */
