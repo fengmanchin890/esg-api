@@ -1,6 +1,15 @@
 import { ref, onMounted, nextTick, watch } from "vue";
 import * as echarts from "echarts";
 
+const getNiceScale = (min, max) => {
+  const range = max - min;
+  const step = Math.pow(10, Math.floor(Math.log10(range)));
+  const niceStep = Math.ceil(step / 10) * 10;
+  const niceMin = Math.floor(min / niceStep) * niceStep;
+  const niceMax = Math.ceil(max / niceStep) * niceStep;
+  return { niceMin, niceMax };
+};
+
 export default function useECharts(echartRef, selectedFactory, chooseYear, selectedCategory, rawData) {
   const chart = ref(null);
 
@@ -15,7 +24,7 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
     }
   };
 
-  const handleNegativeValues = (data, columnName) => {
+  const handleNegativeValues = (data) => {
     let negativeMonths = [];  
 
     const result = data.map((value, index) => {
@@ -25,12 +34,6 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
       }
       return value === 0 ? 0 : value;
     });
-
-    // if (negativeMonths.length > 0) {
-    //   ElMessage.warning(
-    //     `Cột ${columnName} của factory ${selectedFactory.value} năm ${chooseYear.value} chưa có dữ liệu ở các tháng: ${negativeMonths.join(", ")}`
-    //   );
-    // }
 
     return result;
   };
@@ -65,8 +68,13 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
     }
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
     const availableMonths = data.water ? Object.keys(data.water) : [];
+
+    const allData = primaryData.concat(secondaryData);
+    const minData = Math.min(...allData.filter(value => value !== 'N/A'));
+    const maxData = Math.max(...allData.filter(value => value !== 'N/A'));
+
+    const { niceMin, niceMax } = getNiceScale(minData, maxData);
 
     const option = {
       tooltip: {
@@ -96,7 +104,19 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
           }
         }
       },
-      yAxis: { type: "value", name: yAxisLabel },
+      yAxis: { 
+        type: "value", 
+        name: yAxisLabel, 
+        min: niceMin,
+        max: niceMax,
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: '#B0B0B0', 
+            type: 'dashed',
+          }
+        }
+      },
       series: [
         {
           name: legendNames[0],
@@ -112,6 +132,7 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
         },
       ],
     };
+    
 
     chart.value.setOption(option);
   };
