@@ -29,7 +29,7 @@ export const availableMonths = ref([
 // 🔄 Lấy danh sách nhà máy
 export const fetchFactoryList = async () => {
   try {
-    console.log("🔄 Đang gọi API: /api/v1/factories/get");
+    // console.log("🔄 Đang gọi API: /api/v1/factories/get");
 
     const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
     console.log("✅ API Response:", JSON.stringify(response.data, null, 2));
@@ -41,17 +41,17 @@ export const fetchFactoryList = async () => {
       }));
       console.log("✅ Factory List Updated:", factoryList.value);
     } else {
-      console.error("❌ API không trả về danh sách factories hợp lệ:", response.data);
+      // console.error("❌ API không trả về danh sách factories hợp lệ:", response.data);
     }
   } catch (error) {
-    console.error("❌ Lỗi khi gọi API danh sách factories:", error);
+    // console.error("❌ Lỗi khi gọi API danh sách factories:", error);
   }
 };
 
 // 🔄 Lấy dữ liệu ECharts
 export const fetchRawData = async (factoryId, year) => {
   try {
-    console.log(`🔄 Gọi API dữ liệu cho Factory: ${factoryId}, Year: ${year}`);
+    // console.log(`🔄 Gọi API dữ liệu cho Factory: ${factoryId}, Year: ${year}`);
 
     if (!rawData.value[factoryId]) {
       rawData.value[factoryId] = {};

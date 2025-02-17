@@ -1,5 +1,4 @@
 <template>
-
   <!-- Filter Dialog -->
   <el-dialog v-model="showDialog" :style="{ width: '350px' }">
     <h1 class="title-choose">Select Options</h1>
@@ -50,9 +49,7 @@
     <h2 class="title">Performance Dashboard</h2>
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
-      <div class="left-buttons-bottom">
-      
-      </div>
+      <div class="left-buttons-bottom"></div>
       <div class="right-buttons-bottom">
         <el-button
           type="primary"
@@ -67,7 +64,6 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-
 import { ElMessage } from "element-plus";
 import useECharts from "@/hooks/useECharts";
 import {
@@ -77,6 +73,7 @@ import {
   useEChartsData,
   initData,
 } from "@/hooks/useECharts-api";
+
 // State variables
 const activeFilter = ref("all");
 const echart = ref(null);
@@ -88,28 +85,28 @@ const tempYear = ref(chooseYear.value);
 const showDialog = ref(false);
 
 // Khởi tạo biểu đồ
-const { updateChart } = useECharts(echart, selectedFactory, chooseYear, selectedCategory, rawData);
-
+const { updateChart } = useECharts(
+  echart,
+  selectedFactory,
+  chooseYear,
+  selectedCategory,
+  rawData
+);
 
 // ✅ Gọi API khi component mounted
 onMounted(async () => {
-  console.log("🚀 Gọi API lấy danh sách factories...");
   await initData();
-  console.log("📌 Danh sách factory sau khi gọi API:", factoryList.value);
+  // console.log("📌 Danh sách factory sau khi gọi API:", factoryList.value);
 });
 
 const applySelection = async () => {
-  
   selectedFactory.value = tempFactory.value;
   chooseYear.value = tempYear.value;
   showDialog.value = false;
 
-  console.log("📡 Gọi API với Factory:", selectedFactory.value, "Năm:", chooseYear.value);
-
   try {
     await useEChartsData(selectedFactory.value, Number(chooseYear.value));
 
-    // 🛠 Đợi Vue cập nhật lại rawData trước khi gọi updateChart
     await nextTick();
 
     console.log("🔥 rawData sau API:", JSON.stringify(rawData.value, null, 2));
@@ -117,16 +114,31 @@ const applySelection = async () => {
     const chartData = rawData.value[selectedFactory.value]?.[chooseYear.value];
 
     if (chartData && Object.keys(chartData).length > 0) {
-      updateChart(selectedFactory.value, chooseYear.value, selectedCategory.value);
+      updateChart(
+        selectedFactory.value,
+        chooseYear.value,
+        selectedCategory.value,
+        console.log("📌 selectedFactory:", selectedFactory.value),
+        console.log("📌 chooseYear:", chooseYear.value)
+      );
     } else {
-      console.warn("⚠️ Không có dữ liệu để cập nhật biểu đồ!");
+      // Nếu không có dữ liệu cho trường đã chọn
+      ElMessage.warning(
+        "Không có dữ liệu cho trường này. Dữ liệu mặc định sẽ được hiển thị."
+      );
+      // Trả về dữ liệu mặc định (ví dụ: các mảng trống hoặc giá trị mặc định)
+      updateChart(
+        selectedFactory.value,
+        chooseYear.value,
+        selectedCategory.value
+      );
     }
   } catch (error) {
     console.error("❌ Lỗi khi gọi API:", error);
   }
 };
-
 </script>
+
 
 
 
