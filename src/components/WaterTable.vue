@@ -154,6 +154,7 @@ const dialogVisible = ref(false);
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    margin-bottom: 15px;
   }
 
   .icon-section, 
