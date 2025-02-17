@@ -75,16 +75,22 @@ import {
 } from "@/hooks/useECharts-api";
 
 // State variables
-const activeFilter = ref("all");
+// const activeFilter = ref("all");
 const echart = ref(null);
+
 const selectedCategory = ref("water-recycledwater");
-const selectedFactory = ref(localStorage.getItem("DB_CHOICE") || "LYV");
+
+const selectedFactory= ref("LYV");
 const chooseYear = ref(new Date().getFullYear().toString());
-const tempFactory = ref(selectedFactory.value);
-const tempYear = ref(chooseYear.value);
+
+
+// const selectedFactory = ref(localStorage.getItem("DB_CHOICE") || "LYV");
+// const chooseYear = ref(new Date().getFullYear().toString());
+console.log(selectedFactory.value);
+console.log(chooseYear.value);
+
 const showDialog = ref(false);
 
-// Khởi tạo biểu đồ
 const { updateChart } = useECharts(
   echart,
   selectedFactory,
@@ -92,16 +98,13 @@ const { updateChart } = useECharts(
   selectedCategory,
   rawData
 );
-
-// ✅ Gọi API khi component mounted
 onMounted(async () => {
   await initData();
-  // console.log("📌 Danh sách factory sau khi gọi API:", factoryList.value);
 });
 
 const applySelection = async () => {
-  selectedFactory.value = tempFactory.value;
-  chooseYear.value = tempYear.value;
+  selectedFactory.value = selectedFactory.value;
+  chooseYear.value = chooseYear.value;
   showDialog.value = false;
 
   try {
@@ -109,7 +112,6 @@ const applySelection = async () => {
 
     await nextTick();
 
-    console.log("🔥 rawData sau API:", JSON.stringify(rawData.value, null, 2));
 
     const chartData = rawData.value[selectedFactory.value]?.[chooseYear.value];
 
@@ -122,11 +124,9 @@ const applySelection = async () => {
         console.log("📌 chooseYear:", chooseYear.value)
       );
     } else {
-      // Nếu không có dữ liệu cho trường đã chọn
       ElMessage.warning(
         "Không có dữ liệu cho trường này. Dữ liệu mặc định sẽ được hiển thị."
       );
-      // Trả về dữ liệu mặc định (ví dụ: các mảng trống hoặc giá trị mặc định)
       updateChart(
         selectedFactory.value,
         chooseYear.value,

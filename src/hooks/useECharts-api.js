@@ -31,7 +31,7 @@ export const fetchFactoryList = async () => {
   try {
     // console.log("🔄 Đang gọi API: /api/v1/factories/get");
 
-    const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
+    // const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
     console.log("✅ API Response:", JSON.stringify(response.data, null, 2));
 
     if (response.data?.data && Array.isArray(response.data.data)) {
@@ -73,9 +73,9 @@ export const fetchRawData = async (factoryId, year) => {
       recycledwater: results[3].status === "fulfilled" ? results[3].value.data.data.map(item => item.value) : [],
     };
 
-    console.log("✅ Dữ liệu rawData sau khi cập nhật:", JSON.stringify(rawData.value, null, 2));
+    // console.log("✅ Dữ liệu rawData sau khi cập nhật:", JSON.stringify(rawData.value, null, 2));
   } catch (error) {
-    console.error(`❌ Lỗi khi lấy dữ liệu cho Factory ${factoryId}, Year ${year}:`, error);
+    // console.error(`❌ Lỗi khi lấy dữ liệu cho Factory ${factoryId}, Year ${year}:`, error);
   }
 };
 
