@@ -169,10 +169,10 @@ onMounted(async () => {
   text-align: center;
   padding: 8px 12px;
 }
-
 .chart-container {
   position: relative;
-  width: 1000px;
+  width: 100%; 
+  max-width: 90%; 
   background: #cfe2f0c5;
   padding: 20px;
   border-radius: 10px;
@@ -180,8 +180,8 @@ onMounted(async () => {
 }
 
 .chart {
-  height: 390px;
-  margin-top: -20px;
+  width: 100%;
+  height: 705px;
 }
 
 .chart-controls {
