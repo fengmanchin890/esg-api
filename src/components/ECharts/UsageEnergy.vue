@@ -5,11 +5,18 @@
     </h3>
 
     <div class="filter-section">
-      <a-select v-model:value="selectedFactory" :options="factoryOptions" placeholder="Select Factory" />
+      <el-select v-model="selectedFactory" :options="factoryOptions" placeholder="Select Factory">
+        <el-option
+          v-for="option in factoryOptions"
+          :key="option.value"
+          :label="option.label"
+          :value="option.value"
+        />
+      </el-select>
       <!-- Dropdown để chọn nhà máy -->
-      <a-range-picker v-model:value="dateRange" picker="month" format="YYYY-MM" />
+      <el-date-picker v-model="dateRange" type="month" format="yyyy-MM" />
       <!-- Chọn khoảng thời gian (tháng) để xem dữ liệu -->
-      <a-button type="primary" @click="fetchEnergyChartData">Create charts</a-button>
+      <el-button type="primary" @click="fetchEnergyChartData">Create charts</el-button>
       <!-- Nút để tạo biểu đồ năng lượng -->
     </div>
 
@@ -17,11 +24,10 @@
       <div class="usage-year" v-for="(data, index) in usageData" :key="index">
         <div class="data-column">
           <p class="day">{{ data.label }}</p>
-          <!-- Hiển thị khoảng thời gian, ví dụ: Tháng 1/2023 - Tháng 2/2023 -->
+          <!-- Hiển thị khoảng thời gian -->
         </div>
 
         <div class="circle-container">
-
           <div class="circle" :class="data.color">
             {{ data.total_grid_start }} kWh
             <p class="label">Total Grid Start</p>
@@ -33,7 +39,6 @@
             <p class="label">Total Grid End</p>
             <!-- Hiển thị tổng năng lượng lưới tại thời điểm cuối kỳ -->
           </div>
-          
         </div>
 
         <span class="percent" :class="{
@@ -52,14 +57,11 @@
   </div>
 </template>
 
-
-
-
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import dayjs from "dayjs";
-import { message } from "ant-design-vue";
+import { ElMessage } from "element-plus";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -89,7 +91,7 @@ const fetchFactoryList = async () => {
 // 🛠 API: Lấy dữ liệu biểu đồ năng lượng
 const fetchEnergyChartData = async () => {
   if (!selectedFactory.value || dateRange.value.length !== 2) {
-    message.error("Vui lòng chọn nhà máy và khoảng thời gian.");
+    ElMessage.error("Vui lòng chọn nhà máy và khoảng thời gian.");
     return;
   }
 
@@ -136,7 +138,6 @@ onMounted(() => {
   fetchFactoryList();
 });
 </script>
-
 
 <style scoped>
 .title-energy {
