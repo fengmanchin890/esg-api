@@ -1,11 +1,11 @@
 <template>
   <!-- Filter Dialog -->
-  <el-dialog v-model="showDialog" :style="{ width: '350px' }">
+  <el-dialog v-model="showDialog" :style="{ width: '250px' }">
     <h1 class="title-choose">Select Options</h1>
     <div class="picker-container">
       <div class="picker-group">
         <label class="picker-label">Category</label>
-        <el-select v-model="selectedCategory" class="styled-select">
+        <el-select v-model="tempCategory" class="styled-select">
           <el-option label="Water-Recycledwater" value="water-recycledwater" />
           <el-option label="Energy-Solarenergy" value="energy-solarenergy" />
         </el-select>
@@ -75,9 +75,9 @@ import {
 const echart = ref(null);
 
 const selectedFactory = ref(localStorage.getItem("DB_CHOICE") || "Unknown");
-const selectedCategory = ref(
-  localStorage.getItem("CATEGORY") || "water-recycledwater"
-);
+const selectedCategory = ref(localStorage.getItem("CATEGORY") || "water-recycledwater");
+const tempCategory = ref(selectedCategory.value); // Lưu tạm giá trị chọn mới
+
 const chooseYear = ref(
   localStorage.getItem("YEAR") || new Date().getFullYear().toString()
 );
@@ -97,14 +97,18 @@ onMounted(async () => {
   await applySelection();
 });
 
-watch([selectedFactory, selectedCategory, chooseYear], () => {
+watch([selectedFactory, chooseYear], () => {
   localStorage.setItem("DB_CHOICE", selectedFactory.value);
-  localStorage.setItem("CATEGORY", selectedCategory.value);
   localStorage.setItem("YEAR", chooseYear.value);
 });
 
+
 const applySelection = async () => {
   showDialog.value = false;
+
+  // Cập nhật giá trị chính thức từ biến tạm
+  selectedCategory.value = tempCategory.value;
+  localStorage.setItem("CATEGORY", selectedCategory.value);
 
   try {
     await useEChartsData(selectedFactory.value, Number(chooseYear.value));
@@ -119,8 +123,6 @@ const applySelection = async () => {
         chooseYear.value,
         selectedCategory.value
       );
-
-      // ElMessage.success("Hiện thị thành công ");
     } else {
       updateChart(
         selectedFactory.value,
@@ -132,6 +134,7 @@ const applySelection = async () => {
     console.error("❌ Lỗi khi gọi API:", error);
   }
 };
+
 onMounted(async () => {
   await applySelection();
 });
@@ -266,11 +269,12 @@ onMounted(async () => {
   font-weight: 500;
   color: #333;
   margin-bottom: 4px;
-  text-align: center;
+  text-align: left;
 }
 
 .styled-select {
   width: 100%;
+  text-align: center;
 }
 
 .footer-buttons {

@@ -5,11 +5,11 @@
     </h3>
 
     <div class="filter-section">
-      <a-select v-model:value="selectedFactory" :options="factoryOptions" placeholder="Select Factory" />
+      <el-select v-model="selectedFactory" :options="factoryOptions" placeholder="Select Factory" />
       <!-- Dropdown để chọn nhà máy -->
-      <a-range-picker v-model:value="dateRange" picker="month" format="YYYY-MM" />
+      <el-date-picker v-model="dateRange" type="month" format="YYYY-MM" placeholder="Select Month" />
       <!-- Chọn khoảng thời gian (tháng) để xem dữ liệu -->
-      <a-button type="primary" @click="fetchWaterChartData">Create charts</a-button>
+      <el-button type="primary" @click="fetchWaterChartData">Create charts</el-button>
       <!-- Nút để tạo biểu đồ sử dụng nước -->
     </div>
 
@@ -51,14 +51,11 @@
   </div>
 </template>
 
-
-
-
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import dayjs from "dayjs";
-import { message } from "ant-design-vue";
+import { ElMessage } from "element-plus";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -88,7 +85,7 @@ const fetchFactoryList = async () => {
 // 🛠 API: Lấy dữ liệu biểu đồ nước
 const fetchWaterChartData = async () => {
   if (!selectedFactory.value || dateRange.value.length !== 2) {
-    message.error("Vui lòng chọn nhà máy và khoảng thời gian.");
+    ElMessage.error("Vui lòng chọn nhà máy và khoảng thời gian.");
     return;
   }
 
@@ -127,7 +124,6 @@ onMounted(() => {
   fetchFactoryList();
 });
 </script>
-
 
 <style scoped>
 .title-water {
