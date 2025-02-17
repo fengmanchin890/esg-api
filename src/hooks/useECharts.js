@@ -43,52 +43,44 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
     if (!echartRef.value || !chart.value) {
       return;
     }
-
+  
     if (!rawData?.value || !rawData.value[factory] || !rawData.value[factory][year]) {
       return;
     }
-
+  
     const data = rawData.value[factory][year];
     let primaryData = [], secondaryData = [], legendNames = [], yAxisLabel = "", barColor = "", lineColor = "";
-
+  
     if (category === "water-recycledwater") {
-      primaryData = handleNegativeValues(data.water || Array(12).fill(0), "water");
-      secondaryData = handleNegativeValues(data.recycledwater || Array(12).fill(0), "recycledwater");
+      primaryData = handleNegativeValues(data.water || Array(12).fill(0));
+      secondaryData = handleNegativeValues(data.recycledwater || Array(12).fill(0));
       legendNames = ["Tap Water Meter", "Recycled Water Meter"];
       yAxisLabel = "Value (m³)";
       barColor = "rgba(100, 181, 246, 1)";
       lineColor = "#239081";
     } else if (category === "energy-solarenergy") {
-      primaryData = handleNegativeValues(data.energy || Array(12).fill(0), "energy");
-      secondaryData = handleNegativeValues(data.solarenergy || Array(12).fill(0), "solarenergy");
+      primaryData = handleNegativeValues(data.energy || Array(12).fill(0));
+      secondaryData = handleNegativeValues(data.solarenergy || Array(12).fill(0));
       legendNames = ["Grid Electric", "Solar Energy"];
       yAxisLabel = "Value (kWh)";
       barColor = "rgba(255, 183, 77, 0.8)";
       lineColor = "#d34d30";
     }
-
+  
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const availableMonths = data.water ? Object.keys(data.water) : [];
-
+  
     const allData = primaryData.concat(secondaryData);
     const minData = Math.min(...allData.filter(value => value !== 'N/A'));
     const maxData = Math.max(...allData.filter(value => value !== 'N/A'));
-
+  
     const { niceMin, niceMax } = getNiceScale(minData, maxData);
-
+  
     const option = {
       tooltip: {
-        trigger: "axis",
+        trigger: "item", // Đổi trigger từ "axis" sang "item"
         formatter: function (params) {
-          let tooltipContent = '';
-          params.forEach(param => {
-            let value = param.value;
-            if (value === 'N/A') {
-              value = 'N/A'; 
-            }
-            tooltipContent += `${param.seriesName}: ${value} <br>`;
-          });
-          return tooltipContent;
+          return `${params.seriesName}: ${params.value}`;
         }
       },
       legend: { data: legendNames, bottom: 0, left: "center" },
@@ -132,10 +124,10 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
         },
       ],
     };
-    
-
+  
     chart.value.setOption(option);
   };
+  
 
   onMounted(() => {
     initChart();
