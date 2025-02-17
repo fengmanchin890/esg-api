@@ -63,7 +63,6 @@
 </template>
 <script setup>
 import { ref, onMounted, nextTick, watch } from "vue";
-import { ElMessage } from "element-plus";
 import useECharts from "@/hooks/useECharts";
 import {
   rawData,
@@ -76,8 +75,12 @@ import {
 const echart = ref(null);
 
 const selectedFactory = ref(localStorage.getItem("DB_CHOICE") || "Unknown");
-const selectedCategory = ref(localStorage.getItem("CATEGORY") || "water-recycledwater");
-const chooseYear = ref(localStorage.getItem("YEAR") || new Date().getFullYear().toString());
+const selectedCategory = ref(
+  localStorage.getItem("CATEGORY") || "water-recycledwater"
+);
+const chooseYear = ref(
+  localStorage.getItem("YEAR") || new Date().getFullYear().toString()
+);
 
 const showDialog = ref(false);
 
@@ -90,7 +93,7 @@ const { updateChart } = useECharts(
 );
 
 onMounted(async () => {
-  await initData(); 
+  await initData();
   await applySelection();
 });
 
@@ -114,18 +117,13 @@ const applySelection = async () => {
       updateChart(
         selectedFactory.value,
         chooseYear.value,
-        selectedCategory.value,
-        
+        selectedCategory.value
       );
+      console.log("-------------------------------------------");
       console.log("📌 selectedFactory:", selectedFactory.value);
-      console.log("📌 chooseYear:", chooseYear.value);
-      ElMessage.success(
-        "Hiện thị thành công "
-      )
+      console.log("📦 chooseYear:", chooseYear.value);
+      // ElMessage.success("Hiện thị thành công ");
     } else {
-      ElMessage.warning(
-        "Không có dữ liệu cho trường này. Dữ liệu mặc định sẽ được hiển thị."
-      );
       updateChart(
         selectedFactory.value,
         chooseYear.value,
@@ -137,16 +135,8 @@ const applySelection = async () => {
   }
 };
 onMounted(async () => {
-  await initData(); // Khởi tạo dữ liệu nếu cần thiết
-
-  // Gọi applySelection khi component được mount
   await applySelection();
 });
-
-watch([selectedFactory, selectedCategory, chooseYear], async () => {
-  await applySelection(); // Tự động gọi applySelection khi một trong các giá trị thay đổi
-});
-
 </script>
 
 <style scoped>

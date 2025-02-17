@@ -1,6 +1,5 @@
 import { ref, onMounted, nextTick, watch } from "vue";
 import * as echarts from "echarts";
-// import { ElMessage } from "element-plus";
 
 export default function useECharts(echartRef, selectedFactory, chooseYear, selectedCategory, rawData) {
   const chart = ref(null);
@@ -16,14 +15,29 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
     }
   };
 
-  const handleNegativeValues = (data) => {
-    return data.map((value) => (value < 0 ? 0 : value));
+  const handleNegativeValues = (data, columnName) => {
+    let negativeMonths = [];  
+
+    const result = data.map((value, index) => {
+      if (value < 0) {
+        negativeMonths.push(index + 1);  
+        return 'N/A';
+      }
+      return value === 0 ? 0 : value;
+    });
+
+    // if (negativeMonths.length > 0) {
+    //   ElMessage.warning(
+    //     `Cột ${columnName} của factory ${selectedFactory.value} năm ${chooseYear.value} chưa có dữ liệu ở các tháng: ${negativeMonths.join(", ")}`
+    //   );
+    // }
+
+    return result;
   };
 
   const updateChart = async (factory, year, category) => {
     await nextTick();
     if (!echartRef.value || !chart.value) {
-      
       return;
     }
 
@@ -35,15 +49,15 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
     let primaryData = [], secondaryData = [], legendNames = [], yAxisLabel = "", barColor = "", lineColor = "";
 
     if (category === "water-recycledwater") {
-      primaryData = handleNegativeValues(data.water || Array(12).fill(0));
-      secondaryData = handleNegativeValues(data.recycledwater || Array(12).fill(0));
+      primaryData = handleNegativeValues(data.water || Array(12).fill(0), "water");
+      secondaryData = handleNegativeValues(data.recycledwater || Array(12).fill(0), "recycledwater");
       legendNames = ["Tap Water Meter", "Recycled Water Meter"];
       yAxisLabel = "Value (m³)";
       barColor = "rgba(100, 181, 246, 1)";
       lineColor = "#239081";
     } else if (category === "energy-solarenergy") {
-      primaryData = handleNegativeValues(data.energy || Array(12).fill(0));
-      secondaryData = handleNegativeValues(data.solarenergy || Array(12).fill(0));
+      primaryData = handleNegativeValues(data.energy || Array(12).fill(0), "energy");
+      secondaryData = handleNegativeValues(data.solarenergy || Array(12).fill(0), "solarenergy");
       legendNames = ["Grid Electric", "Solar Energy"];
       yAxisLabel = "Value (kWh)";
       barColor = "rgba(255, 183, 77, 0.8)";
@@ -61,7 +75,7 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
           let tooltipContent = '';
           params.forEach(param => {
             let value = param.value;
-            if (value === 0 || value === null) {
+            if (value === 'N/A') {
               value = 'N/A'; 
             }
             tooltipContent += `${param.seriesName}: ${value} <br>`;
@@ -107,8 +121,6 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
   });
 
   watch([selectedFactory, chooseYear, selectedCategory, rawData], async ([factory, year, category]) => {
-    // ElMessage.info(`🔄 Cập nhật biểu đồ: Factory=${factory}, Year=${year}, Category=${category}`);
-
     await nextTick();
 
     if (rawData?.value?.[factory]?.[year]) {

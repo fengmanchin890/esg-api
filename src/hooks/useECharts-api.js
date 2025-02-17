@@ -34,7 +34,7 @@ export const fetchFactoryList = async () => {
         label: factory.factoryname,
         value: factory.factoryid,
       }));
-      console.log("✅ Factory List Updated:", factoryList.value);
+      // console.log("✅ Factory List Updated:", factoryList.value);
     }
   } catch (error) {
     console.error("❌ Lỗi khi gọi API danh sách factories:", error);
