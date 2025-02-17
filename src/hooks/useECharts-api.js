@@ -26,25 +26,18 @@ export const availableMonths = ref([
   { label: "December", value: "12" },
 ]);
 
-// 🔄 Lấy danh sách nhà máy
 export const fetchFactoryList = async () => {
   try {
-    // console.log("🔄 Đang gọi API: /api/v1/factories/get");
-
-    // const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
-    console.log("✅ API Response:", JSON.stringify(response.data, null, 2));
-
+    const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
     if (response.data?.data && Array.isArray(response.data.data)) {
       factoryList.value = response.data.data.map(factory => ({
         label: factory.factoryname,
         value: factory.factoryid,
       }));
       console.log("✅ Factory List Updated:", factoryList.value);
-    } else {
-      // console.error("❌ API không trả về danh sách factories hợp lệ:", response.data);
     }
   } catch (error) {
-    // console.error("❌ Lỗi khi gọi API danh sách factories:", error);
+    console.error("❌ Lỗi khi gọi API danh sách factories:", error);
   }
 };
 

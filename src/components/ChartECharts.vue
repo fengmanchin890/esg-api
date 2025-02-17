@@ -61,9 +61,8 @@
     </div>
   </div>
 </template>
-
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, watch } from "vue";
 import { ElMessage } from "element-plus";
 import useECharts from "@/hooks/useECharts";
 import {
@@ -74,20 +73,11 @@ import {
   initData,
 } from "@/hooks/useECharts-api";
 
-// State variables
-// const activeFilter = ref("all");
 const echart = ref(null);
 
-const selectedCategory = ref("water-recycledwater");
-
-const selectedFactory= ref("LYV");
-const chooseYear = ref(new Date().getFullYear().toString());
-
-
-// const selectedFactory = ref(localStorage.getItem("DB_CHOICE") || "LYV");
-// const chooseYear = ref(new Date().getFullYear().toString());
-console.log(selectedFactory.value);
-console.log(chooseYear.value);
+const selectedFactory = ref(localStorage.getItem("DB_CHOICE") || "Unknown");
+const selectedCategory = ref(localStorage.getItem("CATEGORY") || "water-recycledwater");
+const chooseYear = ref(localStorage.getItem("YEAR") || new Date().getFullYear().toString());
 
 const showDialog = ref(false);
 
@@ -98,13 +88,20 @@ const { updateChart } = useECharts(
   selectedCategory,
   rawData
 );
+
 onMounted(async () => {
-  await initData();
+  await initData(); 
+
+  await applySelection();
+});
+
+watch([selectedFactory, selectedCategory, chooseYear], () => {
+  localStorage.setItem("DB_CHOICE", selectedFactory.value);
+  localStorage.setItem("CATEGORY", selectedCategory.value);
+  localStorage.setItem("YEAR", chooseYear.value);
 });
 
 const applySelection = async () => {
-  selectedFactory.value = selectedFactory.value;
-  chooseYear.value = chooseYear.value;
   showDialog.value = false;
 
   try {
@@ -112,16 +109,18 @@ const applySelection = async () => {
 
     await nextTick();
 
-
     const chartData = rawData.value[selectedFactory.value]?.[chooseYear.value];
 
     if (chartData && Object.keys(chartData).length > 0) {
       updateChart(
         selectedFactory.value,
         chooseYear.value,
-        selectedCategory.value,
-        console.log("📌 selectedFactory:", selectedFactory.value),
-        console.log("📌 chooseYear:", chooseYear.value)
+        selectedCategory.value
+      );
+      console.log("📌 selectedFactory:", selectedFactory.value);
+      console.log("📌 chooseYear:", chooseYear.value);
+      ElMessage.success(
+        "Hiện thị thành công "
       );
     } else {
       ElMessage.warning(
@@ -138,9 +137,6 @@ const applySelection = async () => {
   }
 };
 </script>
-
-
-
 
 <style scoped>
 .button-group {
