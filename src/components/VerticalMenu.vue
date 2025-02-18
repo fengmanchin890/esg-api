@@ -1,5 +1,9 @@
 <template>
-  <el-menu class="el-menu-vertical-demo" :collapse="isCollapse" :default-active="activeIndex">
+  <el-menu
+    class="el-menu-vertical-demo"
+    :collapse="isCollapse"
+    :default-active="activeIndex"
+  >
     <!-- Input 頁面 -->
     <el-sub-menu index="1">
       <template #title>
@@ -8,8 +12,27 @@
         </el-icon>
         <span @click="navigateTo('/mainPage/input')">輸入</span>
       </template>
-      <el-menu-item index="1-1" @click="navigateTo('/mainPage/input/water')">輸入用水量</el-menu-item>
-      <el-menu-item index="1-2" @click="navigateTo('/mainPage/input/energy')">輸入用電量</el-menu-item>
+      <el-menu-item
+        class="first-menu-item"
+        index="1-1"
+        @click="navigateTo('/mainPage/input/water')"
+        ><img
+          src="@/assets/water.png"
+          alt="icon_water"
+          style="width: 24px; margin: 0px 5px 0 -30px"
+        />輸入用水量</el-menu-item
+      >
+      <el-menu-item
+        class="second-menu-item"
+        index="1-2"
+        @click="navigateTo('/mainPage/input/energy')"
+        ><img
+          src="@/assets/energy.png"
+          alt="icon_energy"
+          style="width: 24px; margin: 0px 5px 0 -30px"
+        />
+        輸入用電量</el-menu-item
+      >
     </el-sub-menu>
 
     <!-- Analyze 頁面 -->
@@ -55,13 +78,20 @@ const navigateTo = (path: string) => {
 };
 </script>
 
-<style>
+<style scoped>
 .el-menu-vertical-demo {
   height: 100%;
-  background-color: white ;
+  background-color: white;
   color: #fff;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
+  width: 160px;
+}
+.first-menu-item,
+.second-menu-item {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
 }
 </style>

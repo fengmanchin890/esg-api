@@ -214,11 +214,12 @@ observer.observe(document.body);
 }
 
 .user-name {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   user-select: none;
   cursor: pointer;
-  color: rgb(11, 169, 231);
+  color: rgb(3, 120, 167);
+  text-shadow: rgb(122, 192, 219) 1px 1px 1px; 
 }
 
 @media (max-width: 768px) {
