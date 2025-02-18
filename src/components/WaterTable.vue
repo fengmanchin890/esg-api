@@ -1,5 +1,6 @@
 <template>
-  <div style=" border: 1px solid lightgray; padding: 20px; border-radius: 20px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; background-color: white; min-width: 800px;">
+  <div
+    style=" border: 1px solid lightgray; padding: 20px; border-radius: 20px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; background-color: white; min-width: 800px;">
     <div class="header">
       <div class="icon-section">
         <img src="../assets/water.png" alt="water" class="icon" />
@@ -15,26 +16,18 @@
           </template>
         </el-input>
         <el-button type="success" @click="dialogVisible = true">
-        <el-icon class="el-icon--left"><Back /></el-icon> INSERT
-      </el-button>
+          <el-icon class="el-icon--left">
+            <Back />
+          </el-icon> INSERT
+        </el-button>
       </div>
 
     </div>
 
     <!-- 資料表 -->
-      <ry-edit-table 
-      ref="ryEditTable" 
-      class="table-container" 
-      :listData="filteredList" 
-      :listConfig="listConfig"
-      :rowButtons="rowButtons" 
-      :operationsConfig="{ width: 180 }"
-      :action="'action'" 
-      :cellStyle="{ color: 'black' }"
-      :cellClassName="'custom-cell-class'" 
-      trigger="onChange" 
-      height="700"
-    />
+    <ry-edit-table ref="ryEditTable" class="table-container" :listData="filteredList" :listConfig="listConfig"
+      :rowButtons="rowButtons" :operationsConfig="{ width: 180 }" :action="'action'" :cellStyle="{ color: 'black' }"
+      :cellClassName="'custom-cell-class'" trigger="onChange" height="700" />
 
 
     <!-- INSERT Dialog -->
@@ -42,15 +35,8 @@
       <div class="input-container">
         <div class="input-row">
           <label>Record Year</label>
-          <el-date-picker
-            style="width: 100%;"
-            v-model="newRecord.recordyear"
-            type="year"
-            placeholder="Select Year"
-            format="YYYY"
-            value-format="YYYY"
-            clearable
-          />
+          <el-date-picker style="width: 100%;" v-model="newRecord.recordyear" type="year" placeholder="Select Year"
+            format="YYYY" value-format="YYYY" clearable />
         </div>
         <div class="input-row">
           <label>Record Month</label>
@@ -73,7 +59,7 @@
           <el-button type="success" @click="addRecord">Confirm</el-button>
         </div>
       </template>
-</el-dialog>
+    </el-dialog>
 
 
   </div>
@@ -89,14 +75,6 @@ const dialogVisible = ref(false);
 </script>
 
 <style scoped>
-
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .input-row {
   display: flex;
   align-items: center;
@@ -104,7 +82,8 @@ const dialogVisible = ref(false);
 }
 
 .input-row label {
-  width: 300px; /* 固定 Label 寬度，讓輸入框對齊 */
+  width: 300px;
+  /* 固定 Label 寬度，讓輸入框對齊 */
   text-align: left;
   font-weight: 600;
 }
@@ -117,16 +96,19 @@ const dialogVisible = ref(false);
   align-items: center;
   justify-content: center;
   width: 100%;
-  flex-wrap: wrap; /* 允許換行 */
+  flex-wrap: wrap;
+  /* 允許換行 */
 }
-.icon{
+
+.icon {
   width: 60px;
   /* margin-right: -5px; */
 }
 
-.input-with-select{
+.input-with-select {
   max-width: 300px;
 }
+
 /* Icon 部分 */
 .icon-section {
   display: flex;
@@ -158,7 +140,7 @@ const dialogVisible = ref(false);
     margin-bottom: 15px;
   }
 
-  .icon-section, 
+  .icon-section,
   .search-section {
     width: 100%;
     justify-content: center;
@@ -179,7 +161,7 @@ const dialogVisible = ref(false);
   align-items: start;
   justify-content: center;
   border: 1px solid lightgray;
-  
+
 }
 
 /* button nowrap */
@@ -198,10 +180,8 @@ const dialogVisible = ref(false);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 15px;
+  padding-top: 15px;
 }
-
-
 
 /* Dialog Footer */
 .dialog-footer {

@@ -17,10 +17,15 @@ const niceNumber = (value, round) => {
 const getNiceScale = (min, max, ticks = 5) => {
   const range = max - min;
   const tickSpacing = niceNumber(range / (ticks - 1), true);
+<<<<<<< HEAD
   return {
     niceMin: Math.floor(min / tickSpacing) * tickSpacing,
     niceMax: Math.ceil(max / tickSpacing) * tickSpacing,
   };
+=======
+  const niceMax = Math.ceil(max / tickSpacing) * tickSpacing;
+  return { niceMin, niceMax };
+>>>>>>> b89f50b566dd9d76e8fce0896565a15337ce62ee
 };
 
 export default function useECharts(echartRef, selectedFactory, selectYear, selectedCategory, rawData, factoryTitle) {
@@ -135,8 +140,13 @@ export default function useECharts(echartRef, selectedFactory, selectYear, selec
       yAxis: {
         type: "value",
         name: yAxisLabel,
+<<<<<<< HEAD
         min: niceMin,
         max: niceMax,
+=======
+        min: 0,
+        max: niceMax !== niceMin ? niceMax : adjustedMax,
+>>>>>>> b89f50b566dd9d76e8fce0896565a15337ce62ee
         splitLine: { show: true, lineStyle: { color: "#B0B0B0", type: "dashed" } }
       },
       series: [
