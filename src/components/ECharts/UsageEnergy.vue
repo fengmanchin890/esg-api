@@ -13,31 +13,25 @@
           :value="option.value"
         />
       </el-select>
-      <!-- Dropdown để chọn nhà máy -->
       <el-date-picker v-model="dateRange" type="month" format="yyyy-MM" />
-      <!-- Chọn khoảng thời gian (tháng) để xem dữ liệu -->
       <el-button type="primary" @click="fetchEnergyChartData">Create charts</el-button>
-      <!-- Nút để tạo biểu đồ năng lượng -->
     </div>
 
     <div class="usage-content">
       <div class="usage-year" v-for="(data, index) in usageData" :key="index">
         <div class="data-column">
           <p class="day">{{ data.label }}</p>
-          <!-- Hiển thị khoảng thời gian -->
         </div>
 
         <div class="circle-container">
           <div class="circle" :class="data.color">
             {{ data.total_grid_start }} kWh
             <p class="label">Total Grid Start</p>
-            <!-- Hiển thị tổng năng lượng lưới tại thời điểm đầu kỳ -->
           </div>
 
           <div class="circle" :class="data.color">
             {{ data.total_grid_end }} kWh
             <p class="label">Total Grid End</p>
-            <!-- Hiển thị tổng năng lượng lưới tại thời điểm cuối kỳ -->
           </div>
         </div>
 
@@ -46,11 +40,8 @@
           green: data.grid_change_percent > 0
         }">
           {{ data.grid_change_percent !== undefined ? data.grid_change_percent : 0 }}%
-          <!-- Hiển thị phần trăm thay đổi năng lượng lưới -->
           <span v-if="data.grid_change_percent > 0">↑</span>
-          <!-- Mũi tên lên nếu thay đổi phần trăm là dương -->
           <span v-if="data.grid_change_percent < 0">↓</span>
-          <!-- Mũi tên xuống nếu thay đổi phần trăm là âm -->
         </span>
       </div>
     </div>
@@ -66,11 +57,10 @@ import { ElMessage } from "element-plus";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const selectedFactory = ref(null);
-const dateRange = ref([dayjs().startOf('month'), dayjs().endOf('month')]); // Đặt mặc định là tháng hiện tại
+const dateRange = ref([dayjs().startOf('month'), dayjs().endOf('month')]); 
 const factoryOptions = ref([]);
-const usageData = ref([]); // Dữ liệu biểu đồ
+const usageData = ref([]);
 
-// 🛠 API: Lấy danh sách nhà máy
 const fetchFactoryList = async () => {
   try {
     const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
@@ -88,7 +78,6 @@ const fetchFactoryList = async () => {
   }
 };
 
-// 🛠 API: Lấy dữ liệu biểu đồ năng lượng
 const fetchEnergyChartData = async () => {
   if (!selectedFactory.value || dateRange.value.length !== 2) {
     ElMessage.error("Vui lòng chọn nhà máy và khoảng thời gian.");
@@ -99,20 +88,18 @@ const fetchEnergyChartData = async () => {
   const endDate = dateRange.value[1];
 
   const payload = {
-    factory_id: selectedFactory.value, // Truyền id nhà máy
-    start_year: startDate.year(), // Năm bắt đầu
-    start_month: startDate.month() + 1, // Tháng bắt đầu (cộng 1 vì tháng trả về từ 0 đến 11)
-    end_year: endDate.year(), // Năm kết thúc
-    end_month: endDate.month() + 1, // Tháng kết thúc
+    factory_id: selectedFactory.value, 
+    start_year: startDate.year(), 
+    start_month: startDate.month() + 1,
+    end_year: endDate.year(), 
+    end_month: endDate.month() + 1, 
   };
 
-  // Log dữ liệu truyền vào API
   console.log("Dữ liệu truyền vào API:", payload);
 
   try {
     const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/stats/energychart`, payload);
 
-    // Log dữ liệu trả về từ API
     console.log("Dữ liệu trả về từ API:", response.data);
 
     if (response.data && Array.isArray(response.data)) {
@@ -124,8 +111,8 @@ const fetchEnergyChartData = async () => {
         total_solar_end: item.total_solar_end,
         grid_change_percent: item.grid_change_percent,
         solar_change_percent: item.solar_change_percent,
-        value: item.total_grid_end, // Chọn giá trị hiển thị là total_grid_end hoặc bất kỳ giá trị nào bạn muốn
-        color: item.grid_change_percent > 0 ? "green" : "red", // Màu sắc cho biểu đồ
+        value: item.total_grid_end, 
+        color: item.grid_change_percent > 0 ? "green" : "red",
       }));
     }
   } catch (error) {
@@ -133,7 +120,6 @@ const fetchEnergyChartData = async () => {
   }
 };
 
-// Gọi API khi component được mounted
 onMounted(() => {
   fetchFactoryList();
 });

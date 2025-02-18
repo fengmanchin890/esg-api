@@ -65,9 +65,6 @@
     <div class="chart-controls">
       <div class="left-buttons-bottom"></div>
       <div class="right-buttons-bottom">
-        <el-button type="primary" class="button-echarts" @click="openDialog">
-          Select
-        </el-button>
       </div>
     </div>
   </div>
@@ -166,11 +163,10 @@ const applySelection = async () => {
 onMounted(async () => {
   await applySelection();
 });
-</script>
 
-  
-  
-  <style scoped>
+defineExpose({ openDialog });
+</script>
+<style scoped>
 .button-group {
   display: flex;
   justify-content: space-between;
@@ -316,4 +312,3 @@ onMounted(async () => {
   color: #251010;
 }
 </style>
-  

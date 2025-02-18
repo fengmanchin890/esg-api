@@ -19,7 +19,7 @@
         ><img
           src="@/assets/water.png"
           alt="icon_water"
-          style="width: 24px; margin: 0px 5px 0 -30px"
+          style="width: 24px; margin: 0px 8px 0 -30px"
         />輸入用水量</el-menu-item
       >
       <el-menu-item
@@ -29,7 +29,7 @@
         ><img
           src="@/assets/energy.png"
           alt="icon_energy"
-          style="width: 24px; margin: 0px 5px 0 -30px"
+          style="width: 24px; margin: 0px 8px 0 -30px"
         />
         輸入用電量</el-menu-item
       >
