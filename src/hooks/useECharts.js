@@ -22,7 +22,6 @@ const niceNumber = (value, round) => {
 const getNiceScale = (min, max, ticks = 5) => {
   const range = max - min;
   const tickSpacing = niceNumber(range / (ticks - 1), true);
-  const niceMin = Math.floor(min / tickSpacing) * tickSpacing;
   const niceMax = Math.ceil(max / tickSpacing) * tickSpacing;
   return { niceMin, niceMax };
 };
@@ -114,7 +113,7 @@ export default function useECharts(echartRef, selectedFactory, selectYear, selec
       yAxis: {
         type: "value",
         name: yAxisLabel,
-        min: niceMin !== niceMax ? niceMin : adjustedMin,
+        min: 0,
         max: niceMax !== niceMin ? niceMax : adjustedMax,
         splitLine: { show: true, lineStyle: { color: "#B0B0B0", type: "dashed" } }
       },
