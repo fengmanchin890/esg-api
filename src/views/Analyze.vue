@@ -23,10 +23,10 @@
 <script setup>
 import { ref } from "vue";
 import ChartECharts from "@/components/ChartECharts.vue";
-import UsageWater from "@/components/Echarts/UsageWater.vue";
-import UsageRecycledWater from "@/components/Echarts/UsageRecycledWater.vue";
-import UsageEnergy from "@/components/Echarts/UsageEnergy.vue";
-import UsageSolarEnergy from "@/components/Echarts/UsageSolarEnergy.vue";
+// import UsageWater from "@/components/Echarts/UsageWater.vue";
+// import UsageRecycledWater from "@/components/Echarts/UsageRecycledWater.vue";
+// import UsageEnergy from "@/components/Echarts/UsageEnergy.vue";
+// import UsageSolarEnergy from "@/components/Echarts/UsageSolarEnergy.vue";
 
 const chartEChartsRef = ref(null);
 const openDialog = () => {
