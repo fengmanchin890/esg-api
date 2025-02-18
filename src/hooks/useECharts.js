@@ -29,29 +29,42 @@ const getNiceScale = (min, max, ticks = 5) => {
 
 export default function useECharts(echartRef, selectedFactory, selectYear, selectedCategory, rawData) {
   const chart = ref(null);
+  const lineSeriesName = ref("");
 
-  const initChart = async () => { 
+  const initChart = async () => {
     await nextTick();
     if (!echartRef.value) {
       setTimeout(initChart, 500);
-
       return;
     }
     if (!chart.value) chart.value = echarts.init(echartRef.value);
-
+    chart.value.on("legendselectchanged", (params) => {
+      if (lineSeriesName.value && params.selected[lineSeriesName.value] !== undefined) {
+        const isLineSelected = params.selected[lineSeriesName.value];
+        chart.value.setOption({
+          series: [
+            {
+              name: lineSeriesName.value,
+              showSymbol: isLineSelected,
+              symbolSize: isLineSelected ? 10 : 0,
+              emphasis: {
+                symbolSize: isLineSelected ? 12 : 0
+              }
+            }
+          ]
+        });
+      }
+    });
   };
 
-  const handleNegativeValues = (data) =>
-    data.map(value => value === -1 ? "N/A" : value === 0 ? "" : value);
+  const handleNegativeValues = (data) => data.map(value => value === -1 ? "N/A" : value === 0 ? "" : value);
 
   const updateChart = async (factory, year, category) => {
     await nextTick();
     if (!echartRef.value || !chart.value) return;
     if (!rawData?.value || !rawData.value[factory] || !rawData.value[factory][year]) return;
-
     const data = rawData.value[factory][year];
     let primaryData = [], secondaryData = [], legendNames = [], yAxisLabel = "", barColor = "", lineColor = "";
-
     if (category === "water-recycledwater") {
       primaryData = handleNegativeValues(data.water || Array(12).fill(0));
       secondaryData = handleNegativeValues(data.recycledwater || Array(12).fill(0));
@@ -67,19 +80,17 @@ export default function useECharts(echartRef, selectedFactory, selectYear, selec
       barColor = "rgba(255, 183, 77, 0.8)";
       lineColor = "#d34d30";
     }
-
     const series1Data = primaryData.map(val => val === "" ? null : val);
     const series2Data = secondaryData.map(val => val === "" ? null : val);
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const availableMonths = data.water ? Object.keys(data.water) : [];
-
     const allData = primaryData.concat(secondaryData).filter(val => val !== "N/A" && val !== "");
     const minData = allData.length > 0 ? Math.min(...allData) : 0;
     const maxData = allData.length > 0 ? Math.max(...allData) : 0;
     const adjustedMin = allData.length <= 2 ? Math.min(minData, maxData) - 1 : minData;
     const adjustedMax = allData.length <= 2 ? Math.max(minData, maxData) + 1 : maxData;
     const { niceMin, niceMax } = getNiceScale(adjustedMin, adjustedMax, 5);
-
+    lineSeriesName.value = legendNames[1];
     const option = {
       tooltip: {
         trigger: "item",
@@ -120,11 +131,12 @@ export default function useECharts(echartRef, selectedFactory, selectYear, selec
         }
       ]
     };
-
     chart.value.setOption(option);
   };
 
-  onMounted(() => { initChart(); });
+  onMounted(() => {
+    initChart();
+  });
 
   watch([selectedFactory, selectYear, selectedCategory, rawData], async ([factory, year, category]) => {
     await nextTick();
