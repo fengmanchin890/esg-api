@@ -1,5 +1,5 @@
 <template>
-  <el-dialog class="marginn" v-model="showDialog" :style="{ width: '330px' }">
+  <el-dialog v-model="showDialog" :style="{ width: '330px' } ">
     <h1 class="title-choose">Select Options</h1>
     <div class="picker-container">
       <div class="picker-group">
@@ -28,14 +28,15 @@
       </div>
       <div class="picker-group">
         <label class="picker-label">Year</label>
-        <el-select v-model="selectYear" class="styled-select">
-          <el-option
-            v-for="year in availableYears"
-            :key="year"
-            :label="year"
-            :value="year"
-          />
-        </el-select>
+        <el-date-picker
+          style="width: 100%"
+          v-model="tempYear"
+          type="year"
+          placeholder="Select Year"
+          format="YYYY"
+          value-format="YYYY"
+          clearable
+        />
       </div>
     </div>
     <div class="footer-buttons">
@@ -64,11 +65,7 @@
     <div class="chart-controls">
       <div class="left-buttons-bottom"></div>
       <div class="right-buttons-bottom">
-        <el-button
-          type="primary"
-          class="button-echarts"
-          @click="showDialog = true"
-        >
+        <el-button type="primary" class="button-echarts" @click="openDialog">
           Select
         </el-button>
       </div>
@@ -82,10 +79,10 @@ import useECharts from "@/hooks/useECharts";
 import {
   rawData,
   factoryList,
-  availableYears,
   useEChartsData,
   initData,
 } from "@/hooks/useECharts-api";
+
 const echart = ref(null);
 const selectedFactory = ref(
   localStorage.getItem("DB_CHOICE2") &&
@@ -97,12 +94,16 @@ const selectedCategory = ref(
   localStorage.getItem("CATEGORY") || "water-recycledwater"
 );
 const tempCategory = ref(selectedCategory.value);
+
 const selectYear = ref(
   localStorage.getItem("YEAR") || new Date().getFullYear().toString()
 );
+const tempYear = ref(selectYear.value); 
+
 const showDialog = ref(false);
 const factoryTitle = ref(selectedFactory.value);
 const yearTitle = ref(selectYear.value);
+
 const { updateChart } = useECharts(
   echart,
   selectedFactory,
@@ -110,45 +111,54 @@ const { updateChart } = useECharts(
   selectedCategory,
   rawData
 );
+
 onMounted(async () => {
   await initData();
   await applySelection();
 });
+
 watch([selectedFactory, selectYear], () => {
   localStorage.setItem("DB_CHOICE2", selectedFactory.value);
   localStorage.setItem("YEAR", selectYear.value);
 });
+
+const openDialog = () => {
+  tempYear.value = selectYear.value;
+  showDialog.value = true;
+};
+
 const applySelection = async () => {
   showDialog.value = false;
   selectedCategory.value = tempCategory.value;
+  selectYear.value = tempYear.value;
+
   localStorage.setItem("CATEGORY", selectedCategory.value);
+  localStorage.setItem("YEAR", selectYear.value);
+
   try {
     await useEChartsData(selectedFactory.value, Number(selectYear.value));
     await nextTick();
-    const chartData = rawData.value[selectedFactory.value]?.[selectYear.value];
-    if (chartData && Object.keys(chartData).length > 0) {
-      updateChart(
-        selectedFactory.value,
-        selectYear.value,
-        selectedCategory.value
-      );
-    } else {
-      updateChart(
-        selectedFactory.value,
-        selectYear.value,
-        selectedCategory.value
-      );
-    }
+    // const chartData = rawData.value[selectedFactory.value]?.[selectYear.value];
+    updateChart(
+      selectedFactory.value,
+      selectYear.value,
+      selectedCategory.value
+    );
+
     factoryTitle.value = selectedFactory.value;
     yearTitle.value = selectYear.value;
   } catch (error) {
     console.error("❌ Lỗi khi gọi API:", error);
   }
 };
+
 onMounted(async () => {
   await applySelection();
 });
+
 </script>
+
+
 
 <style scoped>
 .button-group {
@@ -166,9 +176,7 @@ onMounted(async () => {
   text-align: center;
 }
 
-.right-buttons-bottom,
-.left-buttons-bottom,
-.right-buttons-top {
+.right-buttons-bottom {
   display: flex;
   gap: 8px;
   align-items: center;

@@ -27,16 +27,18 @@ const getNiceScale = (min, max, ticks = 5) => {
   return { niceMin, niceMax };
 };
 
-export default function useECharts(echartRef, selectedFactory, chooseYear, selectedCategory, rawData) {
+export default function useECharts(echartRef, selectedFactory, selectYear, selectedCategory, rawData) {
   const chart = ref(null);
 
-  const initChart = async () => {
+  const initChart = async () => { 
     await nextTick();
     if (!echartRef.value) {
       setTimeout(initChart, 500);
+
       return;
     }
     if (!chart.value) chart.value = echarts.init(echartRef.value);
+
   };
 
   const handleNegativeValues = (data) =>
@@ -124,7 +126,7 @@ export default function useECharts(echartRef, selectedFactory, chooseYear, selec
 
   onMounted(() => { initChart(); });
 
-  watch([selectedFactory, chooseYear, selectedCategory, rawData], async ([factory, year, category]) => {
+  watch([selectedFactory, selectYear, selectedCategory, rawData], async ([factory, year, category]) => {
     await nextTick();
     if (rawData?.value?.[factory]?.[year]) updateChart(factory, year, category);
   });
