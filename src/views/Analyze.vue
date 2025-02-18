@@ -5,7 +5,9 @@
     </div>
     <div class="usage-container">
       <UsageWater />
+      <UsageRecycledWater />
       <UsageEnergy />
+      <UsageSolarEnergy />
     </div>
   </div>
 </template>
@@ -19,16 +21,25 @@ import ChartECharts from "@/components/ChartECharts.vue";
   position: relative;
   display: flex;
   gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
   padding: 20px;
+  /* margin-top: -15px; */
+  margin: -15px 0 -20px -10px;
 }
 
 .chart-container {
-  display: flex;
+  flex: 8;
+  max-width: 80%;
+  /* height: 1800px;  */
 }
 
 .usage-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 2;
+  max-width: 20%;
 }
 </style>
+
