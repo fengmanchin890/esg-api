@@ -24,7 +24,7 @@ export const fetchFactoryList = async () => {
   } catch (error) {
     console.error("❌ Lỗi khi gọi API danh sách factories:", error);
   }
-};
+};  
 
 // 🔄 Lấy dữ liệu ECharts
 export const fetchRawData = async (factoryId, year) => {
@@ -34,7 +34,7 @@ export const fetchRawData = async (factoryId, year) => {
     if (!rawData.value[factoryId]) {
       rawData.value[factoryId] = {};
     }
-
+console.log(rawData.value);
     const results = await Promise.allSettled([
       axios.post(`${VITE_BACKEND_URL}/api/v1/stats/searchenergy`, { factory_id: factoryId, year }),
       axios.post(`${VITE_BACKEND_URL}/api/v1/stats/searchsolarenergy`, { factory_id: factoryId, year }),
@@ -42,7 +42,7 @@ export const fetchRawData = async (factoryId, year) => {
       axios.post(`${VITE_BACKEND_URL}/api/v1/stats/searchrecycledwater`, { factory_id: factoryId, year }),
     ]);
 
-    //console.log("📦 Kết quả API:", JSON.stringify(results, null, 2));
+    // console.log("📦 Kết quả API:", JSON.stringify(results, null, 2));
 
     rawData.value[factoryId][year] = {
       energy: results[0].status === "fulfilled" ? results[0].value.data.data.map(item => item.value) : [],

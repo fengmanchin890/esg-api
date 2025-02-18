@@ -116,7 +116,7 @@ export default function useECharts(echartRef, selectedFactory, selectYear, selec
       lineSeriesName.value = legendNames[1];
     
       const option = {
-        title: { text: "", left: "center", top: "middle" }, 
+        title: { text: "", left: "center", top: "middle" },
         tooltip: {
           trigger: "item",
           formatter: (params) => {
@@ -137,9 +137,11 @@ export default function useECharts(echartRef, selectedFactory, selectYear, selec
         },
         series: [
           { name: legendNames[0], type: "bar", data: primaryData.map(v => v === "" ? null : v), itemStyle: { color: barColor } },
-          { name: legendNames[1], type: "line", data: secondaryData.map(v => v === "" ? null : v), lineStyle: { color: lineColor, width: 6 }, smooth: true, symbolSize: 10, emphasis: { lineStyle: { width: 8 }, symbolSize: 12 } }
+          { name: legendNames[1], type: "line", data: secondaryData.map(v => v === "" ? null : v), lineStyle: { color: lineColor, width: 6 }, smooth: true, symbolSize: 10, emphasis: { lineStyle: { width: 8 }, symbolSize: 12 }, animationDurationUpdate: 1000, animationEasing: "cubicOut" }
         ]
       };
+      chart.value.setOption(option);
+      
       chart.value.setOption(option);
     };
     
