@@ -54,7 +54,7 @@
   </el-dialog>
 </template>
 <script setup>
-import { ref, reactive, defineExpose, defineEmits } from "vue";
+import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import { factoryList } from "@/hooks/useECharts-api";
 
@@ -123,7 +123,7 @@ const applyComparison = () => {
     ElMessage.error("Vui lòng chọn đúng 2 tháng!");
     return;
   }
-  
+
   const factory = tempFactoryComparison.value;
   const firstYear = new Date(valueYear.value[0]).getFullYear();
   const secondYear = new Date(valueYear.value[1]).getFullYear();
@@ -172,7 +172,7 @@ defineExpose({ openDialogComparison });
 .styled-select {
   width: 100%;
 }
-::v-deep .el-date-editor {
+:deep(.el-date-editor) {
   width: 100%;
 }
 .footer-buttons {
