@@ -1,20 +1,37 @@
 <template>
   <div class="login-container">
+    <div class="language-select" style="position: absolute; top: 5px; right: 5px;">
+      <el-select
+        v-model="selectedLang"
+        placeholder="Select Language"
+        @change="changeLanguage"
+        style="width: 110px;"
+      >
+        <el-option
+          v-for="option in languageOptions"
+          :key="option.value"
+          :label="option.label"
+          :value="option.value"
+        >
+          <template #default>
+            <img
+              :src="option.flag"
+              style="width: 20px; margin-right: 8px; vertical-align: middle;"
+            />
+            {{ option.label }}
+          </template>
+        </el-option>
+      </el-select>
+    </div>
+
     <div class="image-section">
-      <TripleCircle></TripleCircle>
+      <TripleCircle />
     </div>
 
     <div class="form-section">
       <div class="form-content">
         <div
-          style="
-            position: absolute;
-            top: 5%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-          "
+          style="position: absolute; top: 5%; display: flex; align-items: center; justify-content: center; flex-direction: column;"
         >
           <img
             src="https://www.laiyih.com/uploads/tw/company/20231218206.png"
@@ -27,19 +44,19 @@
             <el-form-item>
               <el-select
                 v-model="Users.DB_CHOICE"
-                placeholder="Select Factory"
+                :placeholder="t('selectFactory')"
                 class="input-field"
               >
-                <el-option label="Ty Xuan" value="LYN"></el-option>
-                <el-option label="Ty Bach" value="LYV"></el-option>
-                <el-option label="Ty Thac" value="LYS"></el-option>
+                <el-option :label="t('factoryTyXuan')" value="LYN"></el-option>
+                <el-option :label="t('factoryTyBach')" value="LYV"></el-option>
+                <el-option :label="t('factoryTyThac')" value="LYS"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item>
               <el-input
                 v-model="Users.USERID"
-                placeholder="ID"
+                :placeholder="t('userId')"
                 class="input-field"
               ></el-input>
             </el-form-item>
@@ -48,7 +65,7 @@
               <el-input
                 v-model="Users.PWD"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="Password"
+                :placeholder="t('password')"
                 class="input-field"
               >
                 <template #append>
@@ -66,24 +83,29 @@
               class="login-button"
               block
             >
-              Login
+              {{ t('loginButton') }}
             </el-button>
           </el-form>
         </el-card>
       </div>
     </div>
-    <div class="footer">© 2025 Lai Yih Web Team. All rights reserved.</div>
+    <div class="footer">
+      © 2025 Lai Yih Web Team. All rights reserved.
+    </div>
   </div>
 </template>
-
 
 <script setup>
 import { reactive, ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import TripleCircle from "../components/LoginPage/TripleCircle.vue";
+import TripleCircle from "@components/LoginPage/TripleCircle.vue";
 import { Hide, View } from "@element-plus/icons-vue";
+import { useI18n } from "vue-i18n";
+
+const { t, locale } = useI18n();
+
 const VITE_BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}`;
 const router = useRouter();
 const showPassword = ref(false);
@@ -94,16 +116,40 @@ const Users = reactive({
   DB_CHOICE: localStorage.getItem("DB_CHOICE") || "",
   DB_CHOICE2: localStorage.getItem("DB_CHOICE2") || "",
   USERNAME: sessionStorage.getItem("USERNAME") || "",
-  
 });
 
-const Factory = ref("");
+const languageOptions = [
+  {
+    label: "Tiếng Việt",
+    value: "vi",
+    flag: new URL("@/assets/flag/VietNam_Flag.png", import.meta.url).href,
+  },
+  {
+    label: "English",
+    value: "en",
+    flag: new URL("@/assets/flag/United_KingDom_Flag.png", import.meta.url).href,
+  },
+  {
+    label: "简体中文",
+    value: "zh-cn",
+    flag: new URL("@/assets/flag/China_Flag.png", import.meta.url).href,
+  },
+  {
+    label: "繁體中文",
+    value: "zh-tw",
+    flag: new URL("@/assets/flag/Taiwan_Flag.png", import.meta.url).href,
+  },
+];
+
+const selectedLang = ref(locale.value);
+
+const changeLanguage = (newLang) => {
+  locale.value = newLang;
+};
+
 const login = async () => {
   try {
-    const response = await axios.post(
-      `${VITE_BACKEND_URL}/api/v1/auth/login`,
-      Users
-    );
+    const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/auth/login`, Users);
     if (typeof response.data.data === "object") {
       localStorage.setItem("USERID", response.data.data.USERID);
       localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
@@ -111,10 +157,9 @@ const login = async () => {
       sessionStorage.setItem("TOKEN", response.data.data.TOKEN);
       localStorage.setItem("USERNAME", response.data.data.USERNAME);
       Object.assign(Users, response.data.data);
-      // console.log("Users sau khi cập nhật:", Users);
 
       ElMessage({
-        message: "Login successful!",
+        message: t("loginSuccess"),
         type: "success",
       });
 
@@ -129,9 +174,8 @@ const login = async () => {
       });
     }
   } catch (error) {
-    // console.log("Lỗi từ API:", error.response);
     ElMessage({
-      message: "Login failed. Please try again!",
+      message: t("loginFailed"),
       type: "error",
     });
   }
@@ -148,6 +192,10 @@ const login = async () => {
 
 .input-field {
   width: 100%;
+}
+
+.language-select {
+  z-index: 999; /* Để không bị che */
 }
 
 .footer {
