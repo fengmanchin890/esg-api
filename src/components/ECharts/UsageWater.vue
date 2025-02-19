@@ -1,50 +1,58 @@
 <template>
+  
+
   <div class="usage-card-water">
     <h3 class="title-water">
       <img src="@/assets/water.png" alt="water" class="icon" /> Water Usage
     </h3>
 
     <div class="filter-section">
-      <el-select v-model="selectedFactory" :options="factoryOptions" placeholder="Select Factory" />
-      <!-- Dropdown để chọn nhà máy -->
-      <el-date-picker v-model="dateRange" type="month" format="YYYY-MM" placeholder="Select Month" />
-      <!-- Chọn khoảng thời gian (tháng) để xem dữ liệu -->
-      <el-button type="primary" @click="fetchWaterChartData">Create charts</el-button>
-      <!-- Nút để tạo biểu đồ sử dụng nước -->
+      <el-select
+        v-model="selectedFactory"
+        :options="factoryOptions"
+        placeholder="Select Factory"
+      />
+      <el-date-picker
+        v-model="dateRange"
+        type="month"
+        format="YYYY-MM"
+        placeholder="Select Month"
+      />
+      <el-button type="primary" @click="fetchWaterChartData"
+        >Create charts</el-button
+      >
     </div>
 
     <div class="usage-content">
       <div class="usage-year" v-for="(data, index) in usageData" :key="index">
         <div class="data-column">
           <p class="day">{{ data.label }}</p>
-          <!-- Hiển thị khoảng thời gian -->
         </div>
 
         <div class="circle-container">
           <div class="circle" :class="data.color">
             {{ data.total_tap_start }} m³
             <p class="label">Total Tap Start</p>
-            <!-- Hiển thị tổng nước đầu vào tại thời điểm đầu kỳ -->
           </div>
 
           <div class="circle" :class="data.color">
             {{ data.total_tap_end }} m³
             <p class="label">Total Tap End</p>
-            <!-- Hiển thị tổng nước đầu ra tại thời điểm cuối kỳ -->
           </div>
-
         </div>
 
-        <span class="percent" :class="{
-          red: data.tap_change_percent < 0,
-          green: data.tap_change_percent > 0
-        }">
-          {{ data.tap_change_percent !== undefined ? data.tap_change_percent : 0 }}%
-          <!-- Hiển thị phần trăm thay đổi nước đầu vào -->
+        <span
+          class="percent"
+          :class="{
+            red: data.tap_change_percent < 0,
+            green: data.tap_change_percent > 0,
+          }"
+        >
+          {{
+            data.tap_change_percent !== undefined ? data.tap_change_percent : 0
+          }}%
           <span v-if="data.tap_change_percent > 0">↑</span>
-          <!-- Mũi tên lên nếu thay đổi phần trăm là dương -->
           <span v-if="data.tap_change_percent < 0">↓</span>
-          <!-- Mũi tên xuống nếu thay đổi phần trăm là âm -->
         </span>
       </div>
     </div>
@@ -52,6 +60,7 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -60,16 +69,17 @@ import { ElMessage } from "element-plus";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const selectedFactory = ref(null);
-const dateRange = ref([dayjs().startOf('month'), dayjs().endOf('month')]);
+const dateRange = ref([dayjs().startOf("month"), dayjs().endOf("month")]);
 const factoryOptions = ref([]);
 const usageData = ref([]);
 
-// 🛠 API: Lấy danh sách nhà máy
 const fetchFactoryList = async () => {
   try {
-    const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
+    const response = await axios.get(
+      `${VITE_BACKEND_URL}/api/v1/factories/get`
+    );
     if (response.data?.data && Array.isArray(response.data.data)) {
-      factoryOptions.value = response.data.data.map(factory => ({
+      factoryOptions.value = response.data.data.map((factory) => ({
         label: factory.factoryname,
         value: factory.factoryid,
       }));
@@ -82,7 +92,6 @@ const fetchFactoryList = async () => {
   }
 };
 
-// 🛠 API: Lấy dữ liệu biểu đồ nước
 const fetchWaterChartData = async () => {
   if (!selectedFactory.value || dateRange.value.length !== 2) {
     ElMessage.error("Vui lòng chọn nhà máy và khoảng thời gian.");
@@ -101,7 +110,10 @@ const fetchWaterChartData = async () => {
   };
 
   try {
-    const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/stats/waterchart`, payload);
+    const response = await axios.post(
+      `${VITE_BACKEND_URL}/api/v1/stats/waterchart`,
+      payload
+    );
 
     if (response.data && Array.isArray(response.data)) {
       usageData.value = response.data.map((item) => ({

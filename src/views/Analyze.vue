@@ -1,14 +1,24 @@
+<!-- views/Analyze.vue -->
 <template>
   <div class="dashboard">
     <div class="chart-container">
       <ChartECharts ref="chartEChartsRef" />
+      <Comparison ref="ComparisonRef" @applyComparisonData="handleComparisonData" />
     </div>
-    <div class="usage-container">
+    <div class="Comparison-container">
       <div class="button-group">
-        <el-button type="primary" class="select-button" @click="openDialog">
+        <el-button
+          type="primary"
+          class="select-button"
+          @click="openDialogECharts"
+        >
           Select
         </el-button>
-        <el-button type="primary" class="select-button">
+        <el-button
+          type="primary"
+          class="select-button"
+          @click="openDialogComparison"
+        >
           Comparison
         </el-button>
       </div>
@@ -23,14 +33,21 @@
 <script setup>
 import { ref } from "vue";
 import ChartECharts from "@/components/ChartECharts.vue";
-// import UsageWater from "@/components/Echarts/UsageWater.vue";
-// import UsageRecycledWater from "@/components/Echarts/UsageRecycledWater.vue";
-// import UsageEnergy from "@/components/Echarts/UsageEnergy.vue";
-// import UsageSolarEnergy from "@/components/Echarts/UsageSolarEnergy.vue";
+import Comparison from "@/components/Comparison.vue";
+import UsageWater from "../components/ECharts/UsageWater.vue";
 
 const chartEChartsRef = ref(null);
-const openDialog = () => {
-  chartEChartsRef.value.openDialog();
+const openDialogECharts = () => {
+  chartEChartsRef.value.openDialogECharts();
+};
+
+const ComparisonRef = ref(null);
+const openDialogComparison = () => {
+  ComparisonRef.value.openDialogComparison();
+};
+
+const handleComparisonData = (data) => {
+  console.log("Dữ liệu nhận được từ Comparison:", data);
 };
 </script>
 
@@ -50,7 +67,7 @@ const openDialog = () => {
   max-width: 80%;
 }
 
-.usage-container {
+.Comparison-container {
   display: flex;
   flex-direction: column;
   gap: 20px;

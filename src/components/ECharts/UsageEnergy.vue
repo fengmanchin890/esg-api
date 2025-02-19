@@ -5,7 +5,11 @@
     </h3>
 
     <div class="filter-section">
-      <el-select v-model="selectedFactory" :options="factoryOptions" placeholder="Select Factory">
+      <el-select
+        v-model="selectedFactory"
+        :options="factoryOptions"
+        placeholder="Select Factory"
+      >
         <el-option
           v-for="option in factoryOptions"
           :key="option.value"
@@ -14,7 +18,9 @@
         />
       </el-select>
       <el-date-picker v-model="dateRange" type="month" format="yyyy-MM" />
-      <el-button type="primary" @click="fetchEnergyChartData">Create charts</el-button>
+      <el-button type="primary" @click="fetchEnergyChartData"
+        >Create charts</el-button
+      >
     </div>
 
     <div class="usage-content">
@@ -35,11 +41,18 @@
           </div>
         </div>
 
-        <span class="percent" :class="{
-          red: data.grid_change_percent < 0,
-          green: data.grid_change_percent > 0
-        }">
-          {{ data.grid_change_percent !== undefined ? data.grid_change_percent : 0 }}%
+        <span
+          class="percent"
+          :class="{
+            red: data.grid_change_percent < 0,
+            green: data.grid_change_percent > 0,
+          }"
+        >
+          {{
+            data.grid_change_percent !== undefined
+              ? data.grid_change_percent
+              : 0
+          }}%
           <span v-if="data.grid_change_percent > 0">↑</span>
           <span v-if="data.grid_change_percent < 0">↓</span>
         </span>
@@ -57,15 +70,17 @@ import { ElMessage } from "element-plus";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const selectedFactory = ref(null);
-const dateRange = ref([dayjs().startOf('month'), dayjs().endOf('month')]); 
+const dateRange = ref([dayjs().startOf("month"), dayjs().endOf("month")]);
 const factoryOptions = ref([]);
 const usageData = ref([]);
 
 const fetchFactoryList = async () => {
   try {
-    const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/factories/get`);
+    const response = await axios.get(
+      `${VITE_BACKEND_URL}/api/v1/factories/get`
+    );
     if (response.data?.data && Array.isArray(response.data.data)) {
-      factoryOptions.value = response.data.data.map(factory => ({
+      factoryOptions.value = response.data.data.map((factory) => ({
         label: factory.factoryname,
         value: factory.factoryid,
       }));
@@ -88,17 +103,20 @@ const fetchEnergyChartData = async () => {
   const endDate = dateRange.value[1];
 
   const payload = {
-    factory_id: selectedFactory.value, 
-    start_year: startDate.year(), 
+    factory_id: selectedFactory.value,
+    start_year: startDate.year(),
     start_month: startDate.month() + 1,
-    end_year: endDate.year(), 
-    end_month: endDate.month() + 1, 
+    end_year: endDate.year(),
+    end_month: endDate.month() + 1,
   };
 
   console.log("Dữ liệu truyền vào API:", payload);
 
   try {
-    const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/stats/energychart`, payload);
+    const response = await axios.post(
+      `${VITE_BACKEND_URL}/api/v1/stats/energychart`,
+      payload
+    );
 
     console.log("Dữ liệu trả về từ API:", response.data);
 
@@ -111,7 +129,7 @@ const fetchEnergyChartData = async () => {
         total_solar_end: item.total_solar_end,
         grid_change_percent: item.grid_change_percent,
         solar_change_percent: item.solar_change_percent,
-        value: item.total_grid_end, 
+        value: item.total_grid_end,
         color: item.grid_change_percent > 0 ? "green" : "red",
       }));
     }
