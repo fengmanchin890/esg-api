@@ -44,19 +44,19 @@
             <el-form-item>
               <el-select
                 v-model="Users.DB_CHOICE"
-                :placeholder="t('selectFactory')"
+                :placeholder="$t('selectFactory')"
                 class="input-field"
               >
-                <el-option :label="t('factoryTyXuan')" value="LYN"></el-option>
-                <el-option :label="t('factoryTyBach')" value="LYV"></el-option>
-                <el-option :label="t('factoryTyThac')" value="LYS"></el-option>
+                <el-option :label="$t('factoryTyXuan')" value="LYN"></el-option>
+                <el-option :label="$t('factoryTyBach')" value="LYV"></el-option>
+                <el-option :label="$t('factoryTyThac')" value="LYS"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item>
               <el-input
                 v-model="Users.USERID"
-                :placeholder="t('userId')"
+                :placeholder="$t('userId')"
                 class="input-field"
               ></el-input>
             </el-form-item>
@@ -65,7 +65,7 @@
               <el-input
                 v-model="Users.PWD"
                 :type="showPassword ? 'text' : 'password'"
-                :placeholder="t('password')"
+                :placeholder="$t('password')"
                 class="input-field"
               >
                 <template #append>
@@ -83,7 +83,7 @@
               class="login-button"
               block
             >
-              {{ t('loginButton') }}
+              {{ $t('loginButton') }}
             </el-button>
           </el-form>
         </el-card>
@@ -195,7 +195,7 @@ const login = async () => {
 }
 
 .language-select {
-  z-index: 999; /* Để không bị che */
+  z-index: 999;
 }
 
 .footer {

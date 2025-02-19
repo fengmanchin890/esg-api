@@ -23,12 +23,12 @@
         <span
           class="percent"
           :class="{
-            red: data.tap_change_percent > 0,
-            green: data.tap_change_percent < 0,
+            red: data.recycled_change_percent > 0,
+            green: data.recycled_change_percent < 0,
           }"
         >
           {{
-            data.tap_change_percent !== undefined ? data.tap_change_percent : 0
+            data.recycled_change_percent !== undefined ? data.recycled_change_percent : 0
           }}%
         </span>
       </div>
@@ -77,11 +77,10 @@ const fetchWaterChartData = async () => {
     if (response.data && Array.isArray(response.data)) {
       usageData.value = response.data.map((item) => ({
         label: `${item.record_month_start}/${item.record_year_start} - ${item.record_month_end}/${item.record_year_end}`,
-        tap_change_percent: item.tap_change_percent,
         total_recycled_start: item.total_recycled_start,
         total_recycled_end: item.total_recycled_end,
         recycled_change_percent: item.recycled_change_percent,
-        color: item.tap_change_percent > 0 ? "red" : "green",
+        color: item.recycled_change_percent > 0 ? "red" : "green",
       }));
     } else {
       usageData.value = [];

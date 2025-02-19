@@ -1,4 +1,4 @@
-// src/i18n.js
+// i18n.js
 import { createI18n } from 'vue-i18n';
 import vi from './locales/vi.js';
 import en from './locales/en.js';
@@ -13,8 +13,10 @@ const messages = {
 };
 
 const i18n = createI18n({
-  locale: 'vi',         // Ngôn ngữ mặc định
-  fallbackLocale: 'en', // Nếu key không có trong locale hiện tại sẽ dùng en
+  legacy: false,      
+  locale: 'vi',        
+  fallbackLocale: 'en',
+  globalInjection: true, 
   messages
 });
 

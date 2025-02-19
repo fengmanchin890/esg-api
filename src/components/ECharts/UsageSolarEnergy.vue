@@ -23,13 +23,13 @@
         <span
           class="percent"
           :class="{
-            red: data.grid_change_percent > 0,
-            green: data.grid_change_percent < 0,
+            red: data.solar_change_percent > 0,
+            green: data.solar_change_percent < 0,
           }"
         >
           {{
-            data.grid_change_percent !== undefined
-              ? data.grid_change_percent
+            data.solar_change_percent !== undefined
+              ? data.solar_change_percent
               : 0
           }}%
         </span>
@@ -81,9 +81,8 @@ const fetchenergyChartData = async () => {
         label: `${item.record_month_start}/${item.record_year_start} - ${item.record_month_end}/${item.record_year_end}`,
         total_solar_start: item.total_solar_start,
         total_solar_end: item.total_solar_end,
-        grid_change_percent: item.grid_change_percent,
         solar_change_percent: item.solar_change_percent,
-        color: item.grid_change_percent > 0 ? "red" : "green",
+        color: item.solar_change_percent > 0 ? "red" : "green",
       }));
     } else {
       usageData.value = [];
