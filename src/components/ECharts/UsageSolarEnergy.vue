@@ -2,7 +2,7 @@
 <template>
   <div class="usage-card-energy">
     <h3 class="title-energy">
-      <img src="@/assets/energy.png" alt="energy" class="icon" />
+      <img src="@/assets/Usage/renewable-energy.png" alt="energy" class="icon" />
       Solar Energy Usage
     </h3>
     <div class="usage-content" v-if="usageData.length">

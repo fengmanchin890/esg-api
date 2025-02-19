@@ -2,7 +2,7 @@
 <template>
   <div class="usage-card-water">
     <h3 class="title-water">
-      <img src="@/assets/water.png" alt="water" class="icon" />
+      <img src="@/assets/Usage/water-drop.png" alt="water" class="icon" />
       Water Usage Meter
     </h3>
     <div class="usage-content" v-if="usageData.length">

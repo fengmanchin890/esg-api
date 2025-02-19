@@ -1,3 +1,4 @@
+<!-- Components/Comparison.vue -->
 <template>
   <el-dialog v-model="showDialogComparison" width="330px">
     <h1 class="title-choose">Select Comparison Options</h1>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import { factoryList } from "@/hooks/useECharts-api";
 
@@ -124,6 +125,11 @@ const applyComparison = () => {
   });
   showDialogComparison.value = false;
 };
+
+onMounted(() => {
+  applyComparison();
+});
+
 defineExpose({ openDialogComparison });
 </script>
 
