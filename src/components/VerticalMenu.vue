@@ -4,51 +4,54 @@
     :collapse="isCollapse"
     :default-active="activeIndex"
   >
-    <!-- Input 頁面 -->
+    <!-- Input page -->
     <el-sub-menu index="1">
       <template #title>
         <el-icon @click="navigateTo('/mainPage/input')">
           <Edit />
         </el-icon>
-        <span @click="navigateTo('/mainPage/input')">輸入</span>
+        <span @click="navigateTo('/mainPage/input')">{{ $t('menu.input') }}</span>
       </template>
       <el-menu-item
         class="first-menu-item"
         index="1-1"
         @click="navigateTo('/mainPage/input/water')"
-        ><img
+      >
+        <img
           src="@/assets/water.png"
           alt="icon_water"
           style="width: 24px; margin: 0px 8px 0 -30px"
-        />輸入用水量</el-menu-item
-      >
+        />
+        {{ $t('menu.inputWater') }}
+      </el-menu-item>
       <el-menu-item
         class="second-menu-item"
         index="1-2"
         @click="navigateTo('/mainPage/input/energy')"
-        ><img
+      >
+        <img
           src="@/assets/energy.png"
           alt="icon_energy"
           style="width: 24px; margin: 0px 8px 0 -30px"
         />
-        輸入用電量</el-menu-item
-      >
+        {{ $t('menu.inputElectricity') }}
+      </el-menu-item>
     </el-sub-menu>
 
-    <!-- Analyze 頁面 -->
+    <!-- Analyze page -->
     <el-menu-item index="2" @click="navigateTo('/mainPage/analyze')">
       <el-icon>
         <DataAnalysis />
       </el-icon>
-      <template #title>資料分析</template>
+      <template #title>{{ $t('menu.dataAnalysis') }}</template>
     </el-menu-item>
 
-    <!-- 設定 -->
+    <!-- Settings -->
     <el-menu-item index="3" @click="navigateTo('/mainPage/settings')">
       <el-icon>
         <Setting />
       </el-icon>
-      <template #title>Settings</template>
+      <template #title>{{ $t('menu.settings') }}</template>
     </el-menu-item>
   </el-menu>
 </template>
@@ -58,12 +61,14 @@ import { computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Edit, DataAnalysis, Setting } from "@element-plus/icons-vue";
 import useMainPage from "../hooks/useMainPage";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const { isCollapse } = useMainPage();
 const router = useRouter();
 const route = useRoute();
 
-// 根據當前路徑動態計算 activeIndex
+// Tính toán activeIndex dựa trên route hiện tại
 const activeIndex = computed(() => {
   if (route.path.includes("/mainPage/input/water")) return "1-1";
   if (route.path.includes("/mainPage/input/energy")) return "1-2";

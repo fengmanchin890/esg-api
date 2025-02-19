@@ -1,21 +1,69 @@
 <template>
-  <div>
-    <select @change="handleChange($event)">
-      <option value="vi">Tiếng Việt</option>
-      <option value="en">English</option>
-      <option value="zh-cn">中文（简体）</option>
-      <option value="zh-tw">中文（繁體）</option>
-    </select>
+  <div class="settings-container">
+    <el-select
+      v-model="selectedLang"
+      placeholder="Select Language"
+      style="width: 150px;"
+    >
+      <el-option
+        v-for="option in languageOptions"
+        :key="option.value"
+        :label="option.label"
+        :value="option.value"
+      >
+        <template #default>
+          <img
+            :src="option.flag"
+            style="width: 20px; margin-right: 8px; vertical-align: middle;"
+          />
+          {{ option.label }}
+        </template>
+      </el-option>
+    </el-select>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 
-const handleChange = (e) => {
-  const newLocale = e.target.value;
-  store.dispatch('changeLocale', newLocale);
-};
+const languageOptions = [
+  {
+    label: "Tiếng Việt",
+    value: "vi",
+    flag: new URL("@/assets/flag/VietNam_Flag.png", import.meta.url).href,
+  },
+  {
+    label: "English",
+    value: "en",
+    flag: new URL("@/assets/flag/United_KingDom_Flag.png", import.meta.url).href,
+  },
+  {
+    label: "中文（简体）",
+    value: "zh-cn",
+    flag: new URL("@/assets/flag/China_Flag.png", import.meta.url).href,
+  },
+  {
+    label: "中文（繁體）",
+    value: "zh-tw",
+    flag: new URL("@/assets/flag/Taiwan_Flag.png", import.meta.url).href,
+  },
+];
+
+const selectedLang = computed({
+  get() {
+    return store.getters.currentLocale;
+  },
+  set(newLocale) {
+    store.dispatch('changeLocale', newLocale);
+  }
+});
 </script>
+
+<style scoped>
+.settings-container {
+  padding: 20px;
+}
+</style>

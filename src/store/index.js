@@ -3,12 +3,12 @@ import { createStore } from 'vuex';
 
 const store = createStore({
   state: {
-    // Ngôn ngữ mặc định là "vi"
-    locale: 'vi'
+    locale: localStorage.getItem('locale') || 'en'
   },
   mutations: {
     setLocale(state, newLocale) {
       state.locale = newLocale;
+      localStorage.setItem('locale', newLocale);
     }
   },
   actions: {

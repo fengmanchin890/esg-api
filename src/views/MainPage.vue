@@ -26,8 +26,6 @@ import Footer from "../components/Footer.vue";
   flex-direction: column;
 }
 
-
-
 .content-container {
   display: flex;
   flex: 1;
