@@ -92,9 +92,19 @@ const form = reactive({
   endMonth: currentMonth
 });
 const openDialogComparison = () => {
-  valueYear.value = [new Date(currentYear - 1, 0, 1), new Date(currentYear, 0, 1)];
-  form.startMonth = currentMonth === 1 ? 1 : currentMonth - 1;
-  form.endMonth = currentMonth;
+  const savedData = localStorage.getItem("COMPARISON_DATA");
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    valueYear.value = [new Date(data.firstYear, 0, 1), new Date(data.secondYear, 0, 1)];
+    form.startMonth = data.startMonth;
+    form.endMonth = data.endMonth;
+    tempFactoryComparison.value = data.factory;
+  } else {
+    valueYear.value = [new Date(currentYear - 1, 0, 1), new Date(currentYear, 0, 1)];
+    form.startMonth = currentMonth === 1 ? 1 : currentMonth - 1;
+    form.endMonth = currentMonth;
+    tempFactoryComparison.value = selectedFactory.value;
+  }
   tempCategoryComparison.value = "";
   showDialogComparison.value = true;
 };
@@ -116,22 +126,26 @@ const applyComparison = () => {
   const factory = tempFactoryComparison.value;
   const startMonth = form.startMonth;
   const endMonth = form.endMonth;
-  emit("applyComparisonData", {
-    factory,
-    firstYear,
-    secondYear,
-    startMonth,
-    endMonth
-  });
+  const comparisonData = { factory, firstYear, secondYear, startMonth, endMonth };
+  localStorage.setItem("COMPARISON_DATA", JSON.stringify(comparisonData));
+  emit("applyComparisonData", comparisonData);
   showDialogComparison.value = false;
 };
 
 onMounted(() => {
-  applyComparison();
+  const savedData = localStorage.getItem("COMPARISON_DATA");
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    valueYear.value = [new Date(data.firstYear, 0, 1), new Date(data.secondYear, 0, 1)];
+    form.startMonth = data.startMonth;
+    form.endMonth = data.endMonth;
+    tempFactoryComparison.value = data.factory;
+  }
 });
 
 defineExpose({ openDialogComparison });
 </script>
+
 
 <style scoped>
 .title-choose {
