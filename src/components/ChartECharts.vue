@@ -142,6 +142,7 @@ defineExpose({ openDialogECharts });
   gap: 5px;
   align-items: center;
   justify-content: center;
+  margin-left:-64px;
 }
 
 .right-buttons-bottom {
@@ -195,6 +196,7 @@ defineExpose({ openDialogECharts });
   font-size: 28px;
   margin-bottom: 10px;
   margin-top: -20px;
+  margin-left:-64px;
 }
 
 .button-w,
@@ -220,6 +222,7 @@ defineExpose({ openDialogECharts });
   max-width: 90%;
   border-radius: 12px;
   padding: 12px;
+
 }
 
 :deep(.el-dialog__body) {

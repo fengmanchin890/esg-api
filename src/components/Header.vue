@@ -56,7 +56,7 @@ import useUser from "../hooks/useUser";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { SwitchButton } from "@element-plus/icons-vue";
-import LogoutConfirmation from "../components/LoginPage/LogoutConfirmation.vue";
+import LogoutConfirmation from "@components/LoginPage/LogoutConfirmation.vue";
 
 const { factory, userName, toggleCollapse } = useMainPage();
 const { clearUserData } = useUser();
@@ -188,12 +188,14 @@ observer.observe(document.body);
 }
 
 .logo {
-  height: 40px;
+  height: 30px;
+  
 }
 
 .company-name {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
+  margin-top: 2px;
 }
 
 .user-info {
@@ -209,17 +211,16 @@ observer.observe(document.body);
 }
 
 .user-icon {
-  height: 35px;
-  border-radius: 50%;
+  width: 32px; 
+  height: 32px;
 }
-
 .user-name {
-  font-size: 20px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: bold;
   user-select: none;
   cursor: pointer;
-  color: rgb(3, 120, 167);
-  text-shadow: rgb(122, 192, 219) 1px 1px 1px; 
+  color: gray;
+
 }
 
 @media (max-width: 768px) {
