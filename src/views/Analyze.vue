@@ -3,21 +3,32 @@
   <div class="dashboard">
     <div class="chart-container">
       <ChartECharts ref="chartEChartsRef" />
-      <Comparison ref="ComparisonRef" @applyComparisonData="handleComparisonData" />
+      <Comparison
+        ref="ComparisonRef"
+        @applyComparisonData="handleComparisonData"
+      />
     </div>
     <div class="Comparison-container">
       <div class="button-group">
-        <el-button type="primary" class="select-button" @click="openDialogECharts">
+        <el-button
+          type="primary"
+          class="select-button"
+          @click="openDialogECharts"
+        >
           Select
         </el-button>
-        <el-button type="primary" class="select-button" @click="openDialogComparison">
+        <el-button
+          type="primary"
+          class="select-button"
+          @click="openDialogComparison"
+        >
           Comparison
         </el-button>
       </div>
       <UsageWaterMeter :comparisonData="comparisonData" />
-      <UsageRecycledWater />
-      <UsageGridEnergy />
-      <UsageSolarEnergy />
+      <UsageRecycledWater :comparisonData="comparisonData" />
+      <UsageGridEnergy :comparisonData="comparisonData" />
+      <UsageSolarEnergy :comparisonData="comparisonData" />
     </div>
   </div>
 </template>

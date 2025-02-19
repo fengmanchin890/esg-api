@@ -1,222 +1,221 @@
+<!-- Components/Echarts/UsageGridEnergy.vue -->
 <template>
   <div class="usage-card-energy">
     <h3 class="title-energy">
-      <img src="@/assets/energy.png" alt="energy" class="icon" /> Grid Energy Usage
+      <img src="@/assets/energy.png" alt="energy" class="icon" />
+      Grid Energy Usage 
     </h3>
-
-   
-    <div class="usage-content">
+    <div class="usage-content" v-if="usageData.length">
       <div class="usage-year" v-for="(data, index) in usageData" :key="index">
         <div class="data-column">
           <p class="day">{{ data.label }}</p>
         </div>
-
         <div class="circle-container">
           <div class="circle" :class="data.color">
-            {{ data.total_grid_start }} kWh
-            <p class="label">Total Grid Start</p>
+            {{ data.total_grid_start }} m³
+            <p class="label">Total Tap Start</p>
           </div>
-
           <div class="circle" :class="data.color">
-            {{ data.total_grid_end }} kWh
-            <p class="label">Total Grid End</p>
+            {{ data.total_grid_end }} m³
+            <p class="label">Total Tap End</p>
           </div>
         </div>
-
         <span
           class="percent"
           :class="{
-            red: data.grid_change_percent < 0,
-            green: data.grid_change_percent > 0,
+            red: data.grid_change_percent > 0,
+            green: data.grid_change_percent < 0
           }"
         >
-          {{
-            data.grid_change_percent !== undefined
-              ? data.grid_change_percent
-              : 0
-          }}%
-          <span v-if="data.grid_change_percent > 0">↑</span>
-          <span v-if="data.grid_change_percent < 0">↓</span>
+          {{ data.grid_change_percent !== undefined ? data.grid_change_percent : 0 }}%
         </span>
       </div>
     </div>
+    <div v-else class="no-data">Không có dữ liệu</div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch } from "vue";
 import axios from "axios";
-import dayjs from "dayjs";
 import { ElMessage } from "element-plus";
 
-const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const props = defineProps({
+  comparisonData: {
+    type: Object,
+    default: () => ({})
+  }
+});
 
-const selectedFactory = ref(null);
-const dateRange = ref([dayjs().startOf("month"), dayjs().endOf("month")]);
-const factoryOptions = ref([]);
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const usageData = ref([]);
 
-const fetchFactoryList = async () => {
-  try {
-    const response = await axios.get(
-      `${VITE_BACKEND_URL}/api/v1/factories/get`
-    );
-    if (response.data?.data && Array.isArray(response.data.data)) {
-      factoryOptions.value = response.data.data.map((factory) => ({
-        label: factory.factoryname,
-        value: factory.factoryid,
-      }));
-      if (factoryOptions.value.length > 0) {
-        selectedFactory.value = factoryOptions.value[0].value;
-      }
-    }
-  } catch (error) {
-    console.error("❌ Lỗi khi gọi API danh sách factories:", error);
-  }
-};
-
-const fetchEnergyChartData = async () => {
-  if (!selectedFactory.value || dateRange.value.length !== 2) {
-    ElMessage.error("Vui lòng chọn nhà máy và khoảng thời gian.");
+const fetchenergyChartData = async () => {
+  if (!props.comparisonData.factory) {
+    ElMessage.error("Dữ liệu Comparison chưa hợp lệ.");
     return;
   }
-
-  const startDate = dateRange.value[0];
-  const endDate = dateRange.value[1];
-
   const payload = {
-    factory_id: selectedFactory.value,
-    start_year: startDate.year(),
-    start_month: startDate.month() + 1,
-    end_year: endDate.year(),
-    end_month: endDate.month() + 1,
+    factory_id: props.comparisonData.factory,
+    start_year: props.comparisonData.firstYear,
+    start_month: props.comparisonData.startMonth,
+    end_year: props.comparisonData.secondYear,
+    end_month: props.comparisonData.endMonth
   };
-
-  console.log("Dữ liệu truyền vào API:", payload);
 
   try {
     const response = await axios.post(
       `${VITE_BACKEND_URL}/api/v1/stats/energychart`,
       payload
     );
-
-    console.log("Dữ liệu trả về từ API:", response.data);
-
     if (response.data && Array.isArray(response.data)) {
       usageData.value = response.data.map((item) => ({
         label: `${item.record_month_start}/${item.record_year_start} - ${item.record_month_end}/${item.record_year_end}`,
+        total_tap_start: item.total_tap_start,
+        total_tap_end: item.total_tap_end,
+        grid_change_percent: item.grid_change_percent,
         total_grid_start: item.total_grid_start,
         total_grid_end: item.total_grid_end,
-        total_solar_start: item.total_solar_start,
-        total_solar_end: item.total_solar_end,
-        grid_change_percent: item.grid_change_percent,
         solar_change_percent: item.solar_change_percent,
-        value: item.total_grid_end,
-        color: item.grid_change_percent > 0 ? "green" : "red",
+        color: item.grid_change_percent > 0 ? "red" : "green"
       }));
     }
   } catch (error) {
-    console.error("❌ Lỗi khi gọi API biểu đồ năng lượng:", error);
+    console.error("❌ Lỗi khi gọi API biểu đồ nước:", error);
   }
 };
 
-onMounted(() => {
-  fetchFactoryList();
-});
+watch(
+  () => props.comparisonData,
+  (newVal) => {
+    if (newVal && newVal.factory) {
+      fetchenergyChartData();
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>
+.usage-card-energy {
+  max-width: 800px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  margin: 20px auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
 .title-energy {
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.usage-card-energy {
-  flex: 1;
-  max-width: 700px;
-  background: rgba(255, 204, 128, 0.6);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.filter-section {
-  display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.icon {
+  width: 40px;
+  margin-right: 12px;
 }
 
 .usage-content {
   display: flex;
-  justify-content: center;
-  gap: 30px;
   flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
 }
 
 .usage-year {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  width: calc(50% - 30px);
+  min-width: 280px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .data-column {
-  text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .day {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
+  color: #555;
 }
 
 .circle-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   gap: 20px;
+  margin-bottom: 15px;
 }
 
 .circle {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 20px;
   font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  margin-bottom: 10px;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.green {
-  background: rgba(144, 238, 144, 0.8);
+.circle.green {
+  background: linear-gradient(135deg, #28a745, #70d77c);
 }
 
-.red {
-  background: rgba(255, 99, 71, 0.8);
-}
-
-.percent {
-  font-size: 14px;
-  font-weight: bold;
+.circle.red {
+  background: linear-gradient(135deg, #dc3545, #f08080);
 }
 
 .label {
   font-size: 12px;
-  color: #555;
+  color: #f0f0f0;
+  margin-top: 5px;
 }
 
-.icon {
-  width: 30px;
-  margin-right: 10px;
+.percent {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.percent.red {
+  color: #dc3545;
+}
+
+.percent.green {
+  color: #28a745;
+}
+
+.no-data {
+  font-size: 16px;
+  color: #888;
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .circle {
+    width: 80px;
+    height: 80px;
+    font-size: 18px;
+  }
+  .usage-year {
+    width: 100%;
+  }
+  .title-energy {
+    font-size: 22px;
+  }
 }
 </style>
