@@ -13,11 +13,11 @@
         <div class="circle-container">
           <div class="circle" :class="data.color">
             {{ data.total_grid_start }} m³
-            <p class="label">Total Tap Start</p>
+            <p class="label">Total grid Start</p>
           </div>
           <div class="circle" :class="data.color">
             {{ data.total_grid_end }} m³
-            <p class="label">Total Tap End</p>
+            <p class="label">Total grid End</p>
           </div>
         </div>
         <span
@@ -71,8 +71,6 @@ const fetchenergyChartData = async () => {
     if (response.data && Array.isArray(response.data)) {
       usageData.value = response.data.map((item) => ({
         label: `${item.record_month_start}/${item.record_year_start} - ${item.record_month_end}/${item.record_year_end}`,
-        total_tap_start: item.total_tap_start,
-        total_tap_end: item.total_tap_end,
         grid_change_percent: item.grid_change_percent,
         total_grid_start: item.total_grid_start,
         total_grid_end: item.total_grid_end,

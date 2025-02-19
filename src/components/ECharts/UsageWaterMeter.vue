@@ -74,8 +74,6 @@ const fetchWaterChartData = async () => {
         total_tap_start: item.total_tap_start,
         total_tap_end: item.total_tap_end,
         tap_change_percent: item.tap_change_percent,
-        total_recycled_start: item.total_recycled_start,
-        total_recycled_end: item.total_recycled_end,
         recycled_change_percent: item.recycled_change_percent,
         color: item.tap_change_percent > 0 ? "red" : "green"
       }));
