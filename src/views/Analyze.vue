@@ -2,29 +2,13 @@
 <template>
   <div class="dashboard">
     <div class="chart-container">
-      <ChartECharts ref="chartEChartsRef" />
+      <ChartECharts ref="chartEChartsRef" @openComparison="openDialogComparison" />
       <Comparison
         ref="ComparisonRef"
         @applyComparisonData="handleComparisonData"
       />
     </div>
-    <div class="Comparison-container">
-      <div class="button-group">
-        <el-button
-          type="primary"
-          class="select-button"
-          @click="openDialogECharts"
-        >
-          Select
-        </el-button>
-        <el-button
-          type="primary"
-          class="select-button"
-          @click="openDialogComparison"
-        >
-          Comparison
-        </el-button>
-      </div>
+    <div class="usage-container">
       <UsageWaterMeter :comparisonData="comparisonData" />
       <UsageRecycledWater :comparisonData="comparisonData" />
       <UsageGridEnergy :comparisonData="comparisonData" />
@@ -39,11 +23,8 @@ import ChartECharts from "@/components/ChartECharts.vue";
 import Comparison from "@/components/Comparison.vue";
 
 const chartEChartsRef = ref(null);
-const openDialogECharts = () => {
-  chartEChartsRef.value.openDialogECharts();
-};
-
 const ComparisonRef = ref(null);
+
 const openDialogComparison = () => {
   ComparisonRef.value.openDialogComparison();
 };
@@ -56,37 +37,25 @@ const handleComparisonData = (data) => {
 };
 </script>
 
-
 <style scoped>
 .dashboard {
-  position: relative;
-  display: flex;
-  gap: 20px;
-  justify-content: space-between;
-  align-items: flex-start;
   padding: 20px;
-  margin: -25px 0 -20px -20px;
-}
-
-.chart-container {
-  flex: 8;
-  max-width: 80%;
-}
-
-.Comparison-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  flex: 2;
-  max-width: 20%;
+  margin: -30px -20px;
 }
 
-.button-group {
-  display: flex;
-  gap: 10px;
+.chart-container {
+  position: relative;
+  background: #cfe2f0c5;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.select-button {
-  flex: 1;
+.usage-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
 }
 </style>

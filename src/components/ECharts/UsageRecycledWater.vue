@@ -3,7 +3,7 @@
   <div class="usage-card-water">
     <h3 class="title-water">
       <img src="@/assets/water.png" alt="water" class="icon" />
-      Water Recycle Usage 
+      Water Recycle Usage
     </h3>
     <div class="usage-content" v-if="usageData.length">
       <div class="usage-year" v-for="(data, index) in usageData" :key="index">
@@ -24,14 +24,16 @@
           class="percent"
           :class="{
             red: data.tap_change_percent > 0,
-            green: data.tap_change_percent < 0
+            green: data.tap_change_percent < 0,
           }"
         >
-          {{ data.tap_change_percent !== undefined ? data.tap_change_percent : 0 }}%
+          {{
+            data.tap_change_percent !== undefined ? data.tap_change_percent : 0
+          }}%
         </span>
       </div>
     </div>
-    <div v-else class="no-data">Không có dữ liệu</div>
+    <div v-else class="no-data">No Data Available</div>
   </div>
 </template>
 
@@ -43,16 +45,20 @@ import { ElMessage } from "element-plus";
 const props = defineProps({
   comparisonData: {
     type: Object,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 });
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const usageData = ref([]);
 
 const fetchWaterChartData = async () => {
-  if (!props.comparisonData.factory) {
-    ElMessage.error("Dữ liệu Comparison chưa hợp lệ.");
+  const { factory, firstYear, startMonth, secondYear, endMonth } =
+    props.comparisonData;
+
+  if (!factory || !firstYear || !startMonth || !secondYear || !endMonth) {
+    usageData.value = [];
+    ElMessage.error("Comparison data is incomplete or invalid.");
     return;
   }
   const payload = {
@@ -60,7 +66,7 @@ const fetchWaterChartData = async () => {
     start_year: props.comparisonData.firstYear,
     start_month: props.comparisonData.startMonth,
     end_year: props.comparisonData.secondYear,
-    end_month: props.comparisonData.endMonth
+    end_month: props.comparisonData.endMonth,
   };
 
   try {
@@ -75,11 +81,15 @@ const fetchWaterChartData = async () => {
         total_recycled_start: item.total_recycled_start,
         total_recycled_end: item.total_recycled_end,
         recycled_change_percent: item.recycled_change_percent,
-        color: item.tap_change_percent > 0 ? "red" : "green"
+        color: item.tap_change_percent > 0 ? "red" : "green",
       }));
+    } else {
+      usageData.value = [];
+      ElMessage.error("Response data format is incorrect.");
     }
   } catch (error) {
-    console.error("❌ Lỗi khi gọi API biểu đồ nước:", error);
+    usageData.value = [];
+    ElMessage.error(`Error fetching Recycled Water chart data`);
   }
 };
 

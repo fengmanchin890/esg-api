@@ -1,3 +1,4 @@
+<!-- components/ChartECharts.vue -->
 <template>
   <el-dialog v-model="showDialog" :style="{ width: '330px' }">
     <h1 class="title-choose">Select Charts Options</h1>
@@ -43,7 +44,10 @@
     </div>
     <div ref="echart" class="chart"></div>
     <div class="chart-controls">
-      <div class="left-buttons-bottom"></div>
+      <div class="left-buttons-bottom">
+        <el-button type="primary" class="button-echarts" @click="openDialogECharts">Select</el-button>
+        <el-button type="primary" class="button-echarts" @click="openComparisonDialog">Comparison</el-button>
+      </div>
       <div class="right-buttons-bottom"></div>
     </div>
   </div>
@@ -75,11 +79,18 @@ const updateFactoryTitle = () => {
 watch(selectedFactory, updateFactoryTitle, { immediate: true });
 const yearTitle = ref(selectYear.value);
 const { updateChart } = useECharts(echart, selectedFactory, selectYear, selectedCategory, rawData, factoryTitle);
+
 const openDialogECharts = () => {
   tempYear.value = selectYear.value;
   tempFactory.value = selectedFactory.value;
   showDialog.value = true;
 };
+
+// Hàm này phát sự kiện để parent mở dialog Comparison
+const openComparisonDialog = () => {
+  emit('openComparison');
+};
+
 const applySelection = async () => {
   showDialog.value = false;
   selectedCategory.value = tempCategory.value;
@@ -97,14 +108,18 @@ const applySelection = async () => {
     console.error("❌ Lỗi khi gọi API:", error);
   }
 };
+
 onMounted(async () => {
   await initData();
   await applySelection();
 });
+
 watch([selectedFactory, selectYear], () => {
   localStorage.setItem("DB_CHOICE2", selectedFactory.value);
   localStorage.setItem("YEAR", selectYear.value);
 });
+
+const emit = defineEmits(['openComparison']);
 defineExpose({ openDialogECharts });
 </script>
 
@@ -118,10 +133,15 @@ defineExpose({ openDialogECharts });
   padding: 10px 0;
 }
 
+.header-container {
+  margin-bottom: 10px;
+}
+
 .interface {
+  display: flex;
   gap: 5px;
   align-items: center;
-  text-align: center;
+  justify-content: center;
 }
 
 .right-buttons-bottom {
@@ -129,11 +149,13 @@ defineExpose({ openDialogECharts });
   gap: 8px;
   align-items: center;
 }
+
 .el-button {
   min-width: 80px;
   text-align: center;
   padding: 8px 12px;
 }
+
 .chart-container {
   position: relative;
   max-width: 100%;
@@ -142,10 +164,12 @@ defineExpose({ openDialogECharts });
   border-radius: 10px;
   text-align: center;
 }
+
 .chart {
   width: 100%;
-  height: 705px;
+  height: 670px;
 }
+
 .chart-controls {
   position: absolute;
   bottom: 20px;
@@ -156,19 +180,23 @@ defineExpose({ openDialogECharts });
   width: 85%;
   pointer-events: none;
 }
+
 .chart-controls button {
   pointer-events: auto;
 }
+
 .button-echarts {
   width: 90px;
   padding: 8px 12px;
 }
+
 .title {
   color: #0055aa;
   font-size: 28px;
   margin-bottom: 10px;
   margin-top: -20px;
 }
+
 .button-w,
 .factory-pd {
   width: 65px;
@@ -180,23 +208,27 @@ defineExpose({ openDialogECharts });
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 }
+
 .button-w.active,
 .factory-pd.active {
   background-color: #0288d1;
   color: white;
   font-weight: bold;
 }
+
 :deep(.el-dialog) {
   max-width: 90%;
   border-radius: 12px;
   padding: 12px;
 }
+
 :deep(.el-dialog__body) {
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
+
 .title-choose {
   font-size: 18px;
   font-weight: 600;
@@ -205,21 +237,19 @@ defineExpose({ openDialogECharts });
   margin-bottom: 20px;
   margin-top: -10px;
 }
-.date-picker-container,
+
 .picker-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.picker-row {
-  display: flex;
-  gap: 20px;
-}
+
 .picker-group {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
+
 .picker-label {
   font-size: 13px;
   font-weight: 500;
@@ -227,30 +257,26 @@ defineExpose({ openDialogECharts });
   margin-bottom: 4px;
   text-align: left;
 }
+
 .styled-select {
   width: 100%;
   text-align: center;
 }
+
 .footer-buttons {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin-top: 20px;
 }
+
 .footer-buttons .el-button {
   flex: 1;
   font-size: 14px;
 }
-.info-label {
+.info-label{
+  color:#0055aa;
+  font-size: 16px;
   font-weight: bold;
-  color: #0055aa;
-}
-.info-value {
-  margin: -55px 5px;
-  color: #333;
-}
-.separator {
-  margin: 0 13px 0 5px;
-  color: #251010;
 }
 </style>
