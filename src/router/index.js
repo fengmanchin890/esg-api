@@ -41,11 +41,11 @@ const routes = [
         children: [
           {
             path: 'water',
-            component: WaterTable, // Chỉ hiển thị WaterTable khi vào /mainPage/input/water
+            component: WaterTable,
           },
           {
             path: 'energy',
-            component: EnergyTable, // Chỉ hiển thị EnergyTable khi vào /mainPage/input/energy
+            component: EnergyTable,
           },
         ],
       },

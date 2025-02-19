@@ -1,17 +1,10 @@
 <template>
     <div class="usage-card-water">
       <h3 class="title-water">
-        <img src="@/assets/water.png" alt="water" class="icon" /> Recycled Water Meter Usage
+        <img src="@/assets/water.png" alt="water" class="icon" /> Recycled Water Usage
       </h3>
   
-      <div class="filter-section">
-        <el-select v-model="selectedFactory" :options="factoryOptions" placeholder="Select Factory" />
-        <!-- Dropdown để chọn nhà máy -->
-        <el-date-picker v-model="dateRange" type="month" format="YYYY-MM" placeholder="Select Month" />
-        <!-- Chọn khoảng thời gian (tháng) để xem dữ liệu -->
-        <el-button type="primary" @click="fetchWaterChartData">Create charts</el-button>
-        <!-- Nút để tạo biểu đồ sử dụng nước -->
-      </div>
+     
   
       <div class="usage-content">
         <div class="usage-year" v-for="(data, index) in usageData" :key="index">

@@ -7,24 +7,16 @@
     </div>
     <div class="Comparison-container">
       <div class="button-group">
-        <el-button
-          type="primary"
-          class="select-button"
-          @click="openDialogECharts"
-        >
+        <el-button type="primary" class="select-button" @click="openDialogECharts">
           Select
         </el-button>
-        <el-button
-          type="primary"
-          class="select-button"
-          @click="openDialogComparison"
-        >
+        <el-button type="primary" class="select-button" @click="openDialogComparison">
           Comparison
         </el-button>
       </div>
-      <UsageWater />
+      <UsageWaterMeter :comparisonData="comparisonData" />
       <UsageRecycledWater />
-      <UsageEnergy />
+      <UsageGridEnergy />
       <UsageSolarEnergy />
     </div>
   </div>
@@ -34,7 +26,6 @@
 import { ref } from "vue";
 import ChartECharts from "@/components/ChartECharts.vue";
 import Comparison from "@/components/Comparison.vue";
-import UsageWater from "../components/ECharts/UsageWater.vue";
 
 const chartEChartsRef = ref(null);
 const openDialogECharts = () => {
@@ -46,10 +37,14 @@ const openDialogComparison = () => {
   ComparisonRef.value.openDialogComparison();
 };
 
+const comparisonData = ref({});
+
 const handleComparisonData = (data) => {
   console.log("Dữ liệu nhận được từ Comparison:", data);
+  comparisonData.value = data;
 };
 </script>
+
 
 <style scoped>
 .dashboard {

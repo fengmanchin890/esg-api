@@ -2,7 +2,7 @@ export default function useUser() {
     const getUserId = () => {
         const USERID = localStorage.getItem("USERID");
         const TOKEN = sessionStorage.getItem("TOKEN");
-        const USERNAME = localStorage.getItem("USERNAME");
+        // const USERNAME = localStorage.getItem("USERNAME");
         if (!USERID || !TOKEN) {
             clearUserData();
         }
@@ -14,7 +14,7 @@ export default function useUser() {
         localStorage.removeItem("DB_CHOICE");
         localStorage.removeItem("DB_CHOICE2");
         sessionStorage.removeItem("TOKEN"); 
-        const USERNAME = localStorage.getItem("USERNAME");
+        // const USERNAME = localStorage.getItem("USERNAME");
         localStorage.clear();
     };
 
@@ -23,7 +23,7 @@ export default function useUser() {
         localStorage.setItem("DB_CHOICE", response.data.data.DB_CHOICE);
         localStorage.setItem("DB_CHOICE2", response.data.data.DB_CHOICE2);
         sessionStorage.setItem("TOKEN", response.data.data.TOKEN);
-        const USERNAME = localStorage.getItem("USERNAME");
+        // const USERNAME = localStorage.getItem("USERNAME");
     };
 
     const getUserData = () => {
@@ -31,7 +31,7 @@ export default function useUser() {
         const DB_CHOICE = localStorage.getItem("DB_CHOICE");
         const DB_CHOICE2 = localStorage.getItem("DB_CHOICE2");
         const TOKEN = sessionStorage.getItem("TOKEN");
-        const USERNAME = localStorage.getItem("USERNAME");
+        // const USERNAME = localStorage.getItem("USERNAME");
 
         if (!USERID || !TOKEN) {
             return null;

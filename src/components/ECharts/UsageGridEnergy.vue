@@ -1,28 +1,10 @@
 <template>
   <div class="usage-card-energy">
     <h3 class="title-energy">
-      <img src="@/assets/energy.png" alt="energy" class="icon" /> Energy Usage
+      <img src="@/assets/energy.png" alt="energy" class="icon" /> Grid Energy Usage
     </h3>
 
-    <div class="filter-section">
-      <el-select
-        v-model="selectedFactory"
-        :options="factoryOptions"
-        placeholder="Select Factory"
-      >
-        <el-option
-          v-for="option in factoryOptions"
-          :key="option.value"
-          :label="option.label"
-          :value="option.value"
-        />
-      </el-select>
-      <el-date-picker v-model="dateRange" type="month" format="yyyy-MM" />
-      <el-button type="primary" @click="fetchEnergyChartData"
-        >Create charts</el-button
-      >
-    </div>
-
+   
     <div class="usage-content">
       <div class="usage-year" v-for="(data, index) in usageData" :key="index">
         <div class="data-column">

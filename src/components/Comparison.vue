@@ -1,4 +1,3 @@
-<!-- components/Comparison.vue -->
 <template>
   <el-dialog v-model="showDialogComparison" width="330px">
     <h1 class="title-choose">Select Comparison Options</h1>
@@ -28,23 +27,24 @@
       </div>
       <div class="form-group">
         <label class="form-label">Select Start and End Month</label>
-        <el-select
-          ref="monthSelect"
-          v-model="form.selectedMonths"
-          multiple
-          :multiple-limit="2"
-          placeholder="Maxium two mounths"
-          class="styled-select"
-          @visible-change="handleVisibleChange"
-          @change="handleMonthSelectChange"
-        >
-          <el-option
-            v-for="month in months"
-            :key="month.value"
-            :label="month.label"
-            :value="month.value"
-          />
-        </el-select>
+        <div class="month-group">
+          <el-select v-model="form.startMonth" placeholder="Start Month" class="styled-select">
+            <el-option
+              v-for="month in months"
+              :key="month.value"
+              :label="month.label"
+              :value="month.value"
+            />
+          </el-select>
+          <el-select v-model="form.endMonth" placeholder="End Month" class="styled-select">
+            <el-option
+              v-for="month in months"
+              :key="month.value"
+              :label="month.label"
+              :value="month.value"
+            />
+          </el-select>
+        </div>
       </div>
     </div>
     <div class="footer-buttons">
@@ -53,25 +53,25 @@
     </div>
   </el-dialog>
 </template>
+
 <script setup>
 import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import { factoryList } from "@/hooks/useECharts-api";
 
 const emit = defineEmits(["applyComparisonData"]);
-
 const showDialogComparison = ref(false);
 const tempCategoryComparison = ref("");
-const valueYear = ref("");
-
+const currentYear = new Date().getFullYear();
+const currentMonth = new Date().getMonth() + 1;
+const valueYear = ref([new Date(currentYear - 1, 0, 1), new Date(currentYear, 0, 1)]);
 const selectedFactory = ref(
   localStorage.getItem("DB_CHOICE2") &&
-    localStorage.getItem("DB_CHOICE2") !== "undefined"
+  localStorage.getItem("DB_CHOICE2") !== "undefined"
     ? localStorage.getItem("DB_CHOICE2").trim()
     : localStorage.getItem("DB_CHOICE")?.trim() || "Unknown"
 );
 const tempFactoryComparison = ref(selectedFactory.value);
-
 const months = [
   { value: 1, label: "January" },
   { value: 2, label: "February" },
@@ -84,66 +84,48 @@ const months = [
   { value: 9, label: "September" },
   { value: 10, label: "October" },
   { value: 11, label: "November" },
-  { value: 12, label: "December" },
+  { value: 12, label: "December" }
 ];
-
-const form = reactive({ selectedMonths: [] });
-const monthSelect = ref(null);
-
+const form = reactive({
+  startMonth: currentMonth === 1 ? 1 : currentMonth - 1,
+  endMonth: currentMonth
+});
 const openDialogComparison = () => {
-  form.selectedMonths = [];
+  valueYear.value = [new Date(currentYear - 1, 0, 1), new Date(currentYear, 0, 1)];
+  form.startMonth = currentMonth === 1 ? 1 : currentMonth - 1;
+  form.endMonth = currentMonth;
   tempCategoryComparison.value = "";
-  valueYear.value = "";
   showDialogComparison.value = true;
 };
-
-const handleMonthSelectChange = () => {
-  if (form.selectedMonths.length === 2) {
-    if (form.selectedMonths[0] > form.selectedMonths[1]) {
-      const temp = form.selectedMonths[0];
-      form.selectedMonths[0] = form.selectedMonths[1];
-      form.selectedMonths[1] = temp;
-    }
-    monthSelect.value?.blur();
-  }
-};
-
-const handleVisibleChange = (visible) => {
-  if (visible && form.selectedMonths.length === 2) {
-    form.selectedMonths = [];
-  }
-};
-
 const applyComparison = () => {
   if (!valueYear.value || valueYear.value.length !== 2) {
     ElMessage.error("Vui lòng chọn đầy đủ năm (Start và End)!");
     return;
   }
-  if (form.selectedMonths.length !== 2) {
-    ElMessage.error("Vui lòng chọn đúng 2 tháng!");
-    return;
-  }
-
-  const factory = tempFactoryComparison.value;
   const firstYear = new Date(valueYear.value[0]).getFullYear();
   const secondYear = new Date(valueYear.value[1]).getFullYear();
-  const startMonth = form.selectedMonths[0];
-  const endMonth = form.selectedMonths[1];
-
+  if (firstYear === secondYear) {
+    ElMessage.error("Năm không được trùng nhau!");
+    return;
+  }
+  if (!form.startMonth || !form.endMonth) {
+    ElMessage.error("Vui lòng chọn đầy đủ tháng!");
+    return;
+  }
+  const factory = tempFactoryComparison.value;
+  const startMonth = form.startMonth;
+  const endMonth = form.endMonth;
   emit("applyComparisonData", {
     factory,
     firstYear,
     secondYear,
     startMonth,
-    endMonth,
+    endMonth
   });
-
   showDialogComparison.value = false;
 };
-
 defineExpose({ openDialogComparison });
 </script>
-
 
 <style scoped>
 .title-choose {
@@ -172,6 +154,10 @@ defineExpose({ openDialogComparison });
 .styled-select {
   width: 100%;
 }
+.month-group {
+  display: flex;
+  gap: 10px;
+}
 :deep(.el-date-editor) {
   width: 100%;
 }
@@ -186,4 +172,3 @@ defineExpose({ openDialogComparison });
   font-size: 14px;
 }
 </style>
-

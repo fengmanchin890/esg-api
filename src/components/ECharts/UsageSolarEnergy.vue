@@ -4,21 +4,7 @@
         <img src="@/assets/energy.png" alt="energy" class="icon" /> Solar Energy Usage
       </h3>
   
-      <div class="filter-section">
-        <el-select v-model="selectedFactory" :options="factoryOptions" placeholder="Select Factory">
-          <el-option
-            v-for="option in factoryOptions"
-            :key="option.value"
-            :label="option.label"
-            :value="option.value"
-          />
-        </el-select>
-        <!-- Dropdown để chọn nhà máy -->
-        <el-date-picker v-model="dateRange" type="month" format="yyyy-MM" />
-        <!-- Chọn khoảng thời gian (tháng) để xem dữ liệu -->
-        <el-button type="primary" @click="fetchEnergyChartData">Create charts</el-button>
-        <!-- Nút để tạo biểu đồ năng lượng -->
-      </div>
+    
   
       <div class="usage-content">
         <div class="usage-year" v-for="(data, index) in usageData" :key="index">
