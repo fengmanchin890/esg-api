@@ -57,6 +57,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    width: 100vw;
   }
   
   /* 圓形圖片樣式 */
@@ -78,7 +79,7 @@
   
   /* 中間大圓 */
   .big-circle {
-    width: 400px; /* 原本 300px → 變大到 400px */
+    width: 400px;
     height: 400px;
     z-index: 10;
     box-shadow:
