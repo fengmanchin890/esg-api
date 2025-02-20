@@ -53,6 +53,7 @@ export default {
       deleteConfirm: "Bạn có chắc chắn muốn xóa bản ghi này?",
       eleteError: "Xóa bản ghi thất bại. Vui lòng thử lại!",
       updateSuccess: "Cập nhật bản ghi thành công!",
-      deleteSuccess: "Xóa bản ghi thành công!"
+      deleteSuccess: "Xóa bản ghi thành công!",
+      addSuccess: "Thêm bản ghi thành công!"
   }
 };

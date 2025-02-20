@@ -53,6 +53,7 @@ export default {
     deleteConfirm: "Are you sure you want to delete this record?",
     deleteError: "Error deleting record. Please try again later.",
     updateSuccess:"Record updated successfully!",
-    deleteSuccess:"Record deleted successfully!"
+    deleteSuccess:"Record deleted successfully!",
+    addSuccess:"Record added successfully!"
   }
 };

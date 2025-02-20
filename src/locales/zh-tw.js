@@ -55,5 +55,6 @@ export default {
     eleteError: "刪除失敗，請再試一次！",
     updateSuccess: "更新成功！",
     deleteSuccess: "刪除成功！",
+    addSuccess: "新增成功！",
   }
 };
