@@ -6,7 +6,7 @@ export default {
     factoryTyXuan: "泰軒",
     factoryTyBach: "泰霸",
     factoryTyThac: "泰塔克",
-    userId: "ID",
+    userId: "使用者ID",
     password: "密碼",
     loginButton: "登入",
     loginSuccess: "登入成功！",
@@ -47,7 +47,7 @@ export default {
       action: "操作"
     },
     edit: "編輯",
-    save:"儲存",
+    save: "儲存",
     delete: "刪除",
     yes: "是",
     no: "否",

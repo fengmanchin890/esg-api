@@ -22,9 +22,18 @@
                   :placeholder="$t('login.selectFactory')"
                   class="input-field"
                 >
-                  <el-option :label="$t('login.factoryTyXuan')" value="LYN"></el-option>
-                  <el-option :label="$t('login.factoryTyBach')" value="LYV"></el-option>
-                  <el-option :label="$t('login.factoryTyThac')" value="LYS"></el-option>
+                  <el-option
+                    :label="$t('login.factoryTyXuan')"
+                    value="LYN"
+                  ></el-option>
+                  <el-option
+                    :label="$t('login.factoryTyBach')"
+                    value="LYV"
+                  ></el-option>
+                  <el-option
+                    :label="$t('login.factoryTyThac')"
+                    value="LYS"
+                  ></el-option>
                 </el-select>
               </el-form-item>
 
@@ -33,6 +42,7 @@
                   v-model="selectedLang"
                   placeholder="Select Language"
                   class="input-field"
+                  :prefix-icon="FlagIconWithSelectedFlag"
                 >
                   <el-option
                     v-for="option in languageOptions"
@@ -96,7 +106,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, h } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -148,6 +158,25 @@ const selectedLang = computed({
   set(newLocale) {
     store.dispatch("changeLocale", newLocale);
   }
+});
+
+// Tìm thông tin của option được chọn dựa vào selectedLang
+const selectedOption = computed(() => {
+  return languageOptions.find(option => option.value === selectedLang.value);
+});
+
+// Tạo computed property trả về một component render lá cờ dựa trên selectedOption
+const FlagIconWithSelectedFlag = computed(() => {
+  return {
+    render() {
+      return selectedOption.value
+        ? h("img", {
+            src: selectedOption.value.flag,
+            style: "width:20px; margin-right:8px; vertical-align:middle;",
+          })
+        : null;
+    }
+  };
 });
 
 const login = async () => {

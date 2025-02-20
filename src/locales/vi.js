@@ -5,7 +5,7 @@ export default {
     factoryTyXuan: "Tỷ Xuân",
     factoryTyBach: "Tỷ Bách",
     factoryTyThac: "Tỷ Thạc",
-    userId: "ID",
+    userId: "Mã",
     password: "Mật khẩu",
     loginButton: "Đăng nhập",
     loginSuccess: "Đăng nhập thành công!",
