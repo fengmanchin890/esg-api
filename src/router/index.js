@@ -4,10 +4,10 @@ import Input from '@/views/Input.vue';
 import Analyze from '@/views/Analyze.vue';
 import WaterTable from '@/components/WaterTable.vue';
 import EnergyTable from '@/components/EnergyTable.vue';
+import TransportationTable from '../components/TransportationTable.vue';
 import LoginPage from '@/views/Login.vue';
 import MainPage from '@/views/MainPage.vue';
 import Settings from '@/views/Settings.vue';
-
 import useUser from '@/hooks/useUser';
 
 const { isAuthenticated } = useUser();
@@ -46,6 +46,10 @@ const routes = [
           {
             path: 'energy',
             component: EnergyTable,
+          },
+          {
+            path: 'transportation',
+            component: TransportationTable,
           },
         ],
       },

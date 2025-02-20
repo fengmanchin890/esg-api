@@ -11,7 +11,9 @@
         <el-icon @click="navigateTo('/mainPage/input')">
           <Edit />
         </el-icon>
-        <span @click="navigateTo('/mainPage/input')">{{ $t('menu.input') }}</span>
+        <span @click="navigateTo('/mainPage/input')">{{
+          $t("menu.input")
+        }}</span>
       </template>
       <el-menu-item
         class="first-menu-item"
@@ -23,7 +25,7 @@
           alt="icon_water"
           style="width: 24px; margin: 0px 8px 0 -30px"
         />
-        {{ $t('menu.inputWater') }}
+        {{ $t("menu.inputWater") }}
       </el-menu-item>
       <el-menu-item
         class="second-menu-item"
@@ -35,7 +37,12 @@
           alt="icon_energy"
           style="width: 24px; margin: 0px 8px 0 -30px"
         />
-        {{ $t('menu.inputElectricity') }}
+        {{ $t("menu.inputElectricity") }}
+      </el-menu-item>
+      <el-menu-item
+        index="1-3"
+        @click="navigateTo('/mainPage/input/transportation')"
+      >
       </el-menu-item>
     </el-sub-menu>
 
@@ -44,7 +51,7 @@
       <el-icon>
         <DataAnalysis />
       </el-icon>
-      <template #title>{{ $t('menu.dataAnalysis') }}</template>
+      <template #title>{{ $t("menu.dataAnalysis") }}</template>
     </el-menu-item>
 
     <!-- Settings -->
@@ -52,7 +59,7 @@
       <el-icon>
         <Setting />
       </el-icon>
-      <template #title>{{ $t('menu.settings') }}</template>
+      <template #title>{{ $t("menu.settings") }}</template>
     </el-menu-item>
   </el-menu>
 </template>
@@ -73,6 +80,7 @@ const route = useRoute();
 const activeIndex = computed(() => {
   if (route.path.includes("/mainPage/input/water")) return "1-1";
   if (route.path.includes("/mainPage/input/energy")) return "1-2";
+  if (route.path.includes("/mainPage/input/transportation")) return "1-3";
   if (route.path.includes("/mainPage/input")) return "1";
   if (route.path.includes("/mainPage/analyze")) return "2";
   if (route.path.includes("/mainPage/settings")) return "3";
