@@ -12,7 +12,6 @@ export default {
     loginFailed: "Login failed. Please try again!",
     Elsucces: "Logout successful!"
   },
-
   menu: {
     input: "Input",
     inputWater: "Input Water Usage",
@@ -23,7 +22,7 @@ export default {
   waterUsage: {
     waterUsage: "Water Usage",
     placeholder: {
-      yyyymm: "yyyymm",
+      yyyymm: "yyyymm"
     },
     yearMonth: "Year - Month",
     insert: "INSERT",
@@ -38,13 +37,22 @@ export default {
     cancel: "Cancel",
     confirm: "Confirm",
     columns: {
-      recordid: "Record ID",  
-      factoryid: "Factory ID", 
+      recordid: "Record ID",
+      factoryid: "Factory ID",
       recordyear: "Record Year",
       recordmonth: "Record Month",
       tapWaterMeter: "Tap Water Meter",
       recycledWaterMeter: "Recycled Water Meter",
-      action: "Actions",
+      action: "Actions"
     },
+    edit: "Edit",
+    save: "Save",
+    delete: "Delete",
+    yes: "Yes",
+    no: "No",  
+    deleteConfirm: "Are you sure you want to delete this record?",
+    deleteError: "Error deleting record. Please try again later.",
+    updateSuccess:"Record updated successfully!",
+    deleteSuccess:"Record deleted successfully!"
   }
 };

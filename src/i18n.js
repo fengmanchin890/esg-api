@@ -12,9 +12,11 @@ const messages = {
   'zh-tw': zhTw
 };
 
+const defaultLocale = localStorage.getItem('locale') || 'en';
+
 const i18n = createI18n({
   legacy: false,      
-  locale: 'en',        
+  locale: defaultLocale,  
   fallbackLocale: 'en',
   globalInjection: true, 
   messages

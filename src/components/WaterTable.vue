@@ -1,39 +1,25 @@
 <!-- components/WaterTable.vue -->
 <template>
-  <div
-    style="
-      border: 1px solid lightgray;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-        rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-      background-color: white;
-      min-width: 800px;
-    "
-  >
+  <div style="border: 1px solid lightgray; padding: 20px; border-radius: 20px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; background-color: white; min-width: 800px;">
     <div class="header">
       <div class="icon-section">
         <img src="../assets/water.png" alt="water" class="icon" />
-        <span>Water Usage</span>
+        <span>{{ t("waterUsage.waterUsage") }}</span>
       </div>
       <div class="search-section">
-        <el-input
-          v-model="searchQuery"
-          placeholder="yyyymm"
-          class="input-with-select"
-        >
+        <el-input v-model="searchQuery" :placeholder="t('waterUsage.placeholder.yyyymm')" class="input-with-select">
           <template #prepend>
             <el-button :icon="Search" />
           </template>
           <template #append>
-            <div>Year - Month</div>
+            <div>{{ t("waterUsage.yearMonth") }}</div>
           </template>
         </el-input>
         <el-button type="success" @click="dialogVisible = true">
           <el-icon class="el-icon--left">
             <Back />
           </el-icon>
-          INSERT
+          {{ t("waterUsage.insert") }}
         </el-button>
       </div>
     </div>
@@ -41,64 +27,44 @@
       ref="ryEditTable"
       class="table-container"
       :listData="filteredList"
-      :listConfig="listConfig"
-      :rowButtons="rowButtons"
-      :operationsConfig="{ width: 180, label: 'Actions' }"
+      :listConfig="listConfigTranslated"
+      :rowButtons="rowButtonsTranslated"
+      :operationsConfig="{ width: 180, label: t('waterUsage.actions') }"
       :action="'action'"
       :cellStyle="{ color: 'black' }"
       :cellClassName="'custom-cell-class'"
       trigger="onChange"
       height="700"
     />
-    <el-dialog
-      v-model="dialogVisible"
-      title="Add New Record"
-      width="520px"
-      class="custom-dialog"
-    >
+    <el-dialog v-model="dialogVisible" :title="t('waterUsage.addNewRecord')" width="520px" class="custom-dialog">
       <div class="input-container">
         <div class="input-row">
-          <label>Record Year</label>
-          <el-date-picker
-            style="width: 100%"
-            v-model="newRecord.recordyear"
-            type="year"
-            placeholder="Select Year"
-            format="YYYY"
-            value-format="YYYY"
-            clearable
-          />
+          <label>{{ t("waterUsage.recordYear") }}</label>
+          <el-date-picker style="width: 100%" v-model="newRecord.recordyear" type="year" :placeholder="t('waterUsage.selectYear')" format="YYYY" value-format="YYYY" clearable />
         </div>
         <div class="input-row">
-          <label>Record Month</label>
-          <el-select
-            v-model="newRecord.recordmonth"
-            placeholder="Select Month"
-            clearable
-          >
-            <el-option
-              v-for="month in 12"
-              :key="month"
-              :label="month"
-              :value="String(month).padStart(2, '0')"
-            />
+          <label>{{ t("waterUsage.recordMonth") }}</label>
+          <el-select v-model="newRecord.recordmonth" :placeholder="t('waterUsage.selectMonth')" clearable>
+            <el-option v-for="month in 12" :key="month" :label="month" :value="String(month).padStart(2, '0')" />
           </el-select>
         </div>
         <div class="input-row">
-          <label>Tap Water Meter</label>
+          <label>{{ t("waterUsage.tapWaterMeter") }}</label>
           <el-input v-model="newRecord.tapWaterMeter" clearable />
         </div>
         <div class="input-row">
-          <label>Recycled Water Meter</label>
+          <label>{{ t("waterUsage.recycledWaterMeter") }}</label>
           <el-input v-model="newRecord.recycledWaterMeter" clearable />
         </div>
       </div>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="dialogVisible = false" type="info" plain
-            >Cancel</el-button
-          >
-          <el-button type="success" @click="addRecord">Confirm</el-button>
+          <el-button @click="dialogVisible = false" type="info" plain>
+            {{ t("waterUsage.cancel") }}
+          </el-button>
+          <el-button type="success" @click="addRecord">
+            {{ t("waterUsage.confirm") }}
+          </el-button>
         </div>
       </template>
     </el-dialog>
@@ -106,24 +72,56 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { Search, Back } from "@element-plus/icons-vue";
 import { useWater } from "@/hooks/useWater";
-const {
-  newRecord,
-  searchQuery,
-  rowButtons,
-  filteredList,
-  addRecord,
-  listConfig: originalListConfig,
-} = useWater();
-const listConfig = ref([...originalListConfig]);
-const index = listConfig.value.findIndex((item) => item.prop === "action");
-if (index !== -1) {
-  listConfig.value[index].label = "Actions";
-}
+import { useI18n } from "vue-i18n";
+const { t, locale } = useI18n();
+const { newRecord, searchQuery, filteredList, addRecord, listConfig: originalListConfig, rowButtons: originalRowButtons } = useWater(t);
+const listConfigArray = Array.isArray(originalListConfig) ? originalListConfig : [];
+const columnsTranslationMap = {
+  recordid: "waterUsage.columns.recordid",
+  factoryid: "waterUsage.columns.factoryid",
+  recordyear: "waterUsage.columns.recordyear",
+  recordmonth: "waterUsage.columns.recordmonth",
+  tapWaterMeter: "waterUsage.columns.tapWaterMeter",
+  recycledWaterMeter: "waterUsage.columns.recycledWaterMeter",
+  action: "waterUsage.columns.action"
+};
+const listConfigTranslated = computed(() => {
+  return listConfigArray.map((col) => {
+    if (columnsTranslationMap[col.prop]) {
+      return { ...col, label: t(columnsTranslationMap[col.prop]) };
+    }
+    return col;
+  });
+});
+const rowButtonsArray = Array.isArray(originalRowButtons) ? originalRowButtons : [];
+const rowButtonsTranslated = computed(() => {
+  const dummy = locale.value;
+  return rowButtonsArray.map((btn) => {
+    const lowerName = btn.name ? btn.name.toLowerCase() : "";
+    if (lowerName === "edit") {
+      return { ...btn, name: t("waterUsage.edit") };
+    }
+    if (lowerName === "save") {
+      return { ...btn, name: t("waterUsage.save") };
+    }
+    if (lowerName === "delete") {
+      return { ...btn, name: t("waterUsage.delete") };
+    }
+    if (lowerName === "cancel") {
+      return { ...btn, name: t("waterUsage.cancel") };
+    }
+    return btn;
+  });
+});
 const dialogVisible = ref(false);
 </script>
+
+
+
+
 
 <style scoped>
 .input-row {

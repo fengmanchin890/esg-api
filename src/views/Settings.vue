@@ -1,3 +1,5 @@
+<!-- views/Settings.vue -->
+
 <template>
   <div class="settings-container">
     <el-select

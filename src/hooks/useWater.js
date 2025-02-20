@@ -1,18 +1,17 @@
+//hooks/useWater.js
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { ElMessage, ElMessageBox } from "element-plus";
 const VITE_BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}`;
-export function useWater() {
+export function useWater(t) {
   const listData = ref([]);
   const searchQuery = ref(getCurrentYearMonth());
-
   const newRecord = ref({
     recordyear: "",
     recordmonth: "",
     tapWaterMeter: "",
     recycledWaterMeter: "",
   });
-
   const listConfig = [
     { label: "ID", prop: "recordid", minWidth: "150px" },
     { label: "Factory", prop: "factoryid", minWidth: "150px" },
@@ -21,7 +20,6 @@ export function useWater() {
     { mode: "text", label: "Tap Water Meter", prop: "tapWaterMeter", minWidth: "150px" },
     { mode: "text", label: "Recycled Water Meter", prop: "recycledWaterMeter", minWidth: "150px" },
   ];
-
   const rowButtons = [
     {
       name: "Edit",
@@ -51,49 +49,34 @@ export function useWater() {
       click: (ref, row) => deleteWater(row.recordid),
     },
   ];
-
-
   function getCurrentYearMonth() {
     const now = new Date();
     const year = now.getFullYear();
-    // const month = String(now.getMonth() + 1).padStart(2, "0"); // 確保月份兩位數
     return `${year}`;
-    // return `${year}${month}`;
   }
-
-
-
   const fetchWaterData = async () => {
     try {
       const factoryID = localStorage.getItem('DB_CHOICE');
-  
       if (!factoryID) {
-        console.error('Không tìm thấy FactoryID trong localStorage.');
+        console.error("FactoryID not found in localStorage.");
         return;
       }
-  
       const response = await axios.get(`${VITE_BACKEND_URL}/api/v1/water/get`, {
-        params: {
-          factoryID: factoryID, // Truyền factoryID vào query string
-        },
+        params: { factoryID },
       });
       listData.value = response.data.data;
     } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu:", error);
+      console.error("Error fetching data:", error);
     }
   };
-
   const addRecord = async () => {
     try {
       const userId = localStorage.getItem("USERID");
       const factoryId = localStorage.getItem("DB_CHOICE");
-  
       if (!userId || !factoryId) {
-        ElMessage.error("Không tìm thấy thông tin đăng nhập!");
+        ElMessage.error(t("waterUsage.noLoginInfo"));
         return;
       }
-  
-      // Gửi request đến API
       const response = await axios.post(`${VITE_BACKEND_URL}/api/v1/water/add`, {
         factoryid: factoryId,
         recordyear: parseInt(newRecord.value.recordyear) || 0,
@@ -102,33 +85,24 @@ export function useWater() {
         recycledWaterMeter: isNaN(parseFloat(newRecord.value.recycledWaterMeter)) ? 0 : parseFloat(newRecord.value.recycledWaterMeter),
         userid: userId,
       });
-      console.log(response)
-      // Kiểm tra mã phản hồi từ server
       if (response.data.code === 200) {
-        ElMessage.success("Thêm dữ liệu thành công!");
+        ElMessage.success(t("waterUsage.addSuccess"));
         fetchWaterData();
         clearForm();
       } else {
-        ElMessage.error("Thêm dữ liệu thất bại: " + response.data.msg);
+        ElMessage.error(t("waterUsage.addFailed") + ": " + response.data.msg);
       }
     } catch (error) {
-      // Ghi log lỗi chi tiết
-      console.error("Lỗi chi tiết khi thêm dữ liệu:", error);
-      
+      console.error("Error adding record:", error);
       if (error.response) {
-        // Nếu lỗi từ server (HTTP response lỗi)
-        ElMessage.error(`Lỗi từ server: ${error.response.data.message || "Không xác định"}`);
+        ElMessage.error(t("waterUsage.serverError") + ": " + (error.response.data.message || t("waterUsage.unknown")));
       } else if (error.request) {
-        // Nếu không có phản hồi từ server (có thể lỗi kết nối mạng)
-        ElMessage.error("Không nhận được phản hồi từ server. Vui lòng kiểm tra kết nối mạng!");
+        ElMessage.error(t("waterUsage.noServerResponse"));
       } else {
-        // Nếu lỗi trong khi thiết lập yêu cầu (có thể do cấu hình sai)
-        ElMessage.error("Lỗi khi thiết lập yêu cầu: " + error.message);
+        ElMessage.error(t("waterUsage.requestSetupError") + ": " + error.message);
       }
     }
   };
-  
-
   const updateRecord = async (row) => {
     try {
       const response = await axios.put(`${VITE_BACKEND_URL}/api/v1/water/update`, {
@@ -139,41 +113,41 @@ export function useWater() {
         tapWaterMeter: isNaN(parseFloat(row.tapWaterMeter)) ? 0 : parseFloat(row.tapWaterMeter),
         recycledWaterMeter: isNaN(parseFloat(row.recycledWaterMeter)) ? 0 : parseFloat(row.recycledWaterMeter),
       });
-
       if (response.data.code === 200) {
-        ElMessage.success("Cập nhật thành công!");
+        ElMessage.success(t("waterUsage.updateSuccess"));
         fetchWaterData();
       } else {
-        ElMessage.error("Cập nhật thất bại: " + response.data.msg);
+        ElMessage.error(t("waterUsage.updateFailed") + ": " + response.data.msg);
       }
     } catch (error) {
-      ElMessage.error("Có lỗi xảy ra khi cập nhật!");
+      ElMessage.error(t("waterUsage.updateError"));
     }
   };
-
   const deleteWater = async (recordid) => {
     try {
-      await ElMessageBox.confirm(`Bạn có chắc chắn muốn xóa bản ghi có ID ${recordid}?`, "Xác nhận", {
-        confirmButtonText: "Có",
-        cancelButtonText: "Không",
-        type: "warning",
-      });
-
+      await ElMessageBox.confirm(
+        t("waterUsage.deleteConfirm", { recordid }),
+        t("waterUsage.confirm"),
+        {
+          confirmButtonText: t("waterUsage.yes"),
+          cancelButtonText: t("waterUsage.no"),
+          type: "warning",
+        }
+      );
+      
       const response = await axios.delete(`${VITE_BACKEND_URL}/api/v1/water/delete`, {
         data: { recordid },
       });
-
       if (response.data.code === 200) {
-        ElMessage.success("Xóa thành công!");
+        ElMessage.success(t("waterUsage.deleteSuccess"));
         fetchWaterData();
       } else {
-        ElMessage.error("Xóa thất bại: " + response.data.msg);
+        ElMessage.error(t("waterUsage.deleteFailed") + ": " + response.data.msg);
       }
     } catch (error) {
-      ElMessage.error("Có lỗi xảy ra khi xóa!");
+      // ElMessage.error(t("waterUsage.deleteError"));
     }
   };
-
   const clearForm = () => {
     newRecord.value = {
       recordyear: "",
@@ -182,11 +156,9 @@ export function useWater() {
       recycledWaterMeter: "",
     };
   };
-
   const filteredList = computed(() => {
     if (!searchQuery.value) return listData.value;
     const searchLower = searchQuery.value.toLowerCase().trim();
-
     return listData.value.filter((item) => {
       const yearMonth = `${item.recordyear}-${item.recordmonth}`;
       return (
@@ -196,9 +168,7 @@ export function useWater() {
       );
     });
   });
-
   onMounted(fetchWaterData);
-
   return {
     listData,
     searchQuery,
