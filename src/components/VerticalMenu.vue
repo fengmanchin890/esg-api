@@ -1,3 +1,4 @@
+<!-- components/VerticalMenu.vue -->
 <template>
   <el-menu
     class="el-menu-vertical-demo"

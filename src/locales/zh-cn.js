@@ -23,5 +23,32 @@ export default {
     inputElectricity: "输入用电量",
     dataAnalysis: "数据分析",
     settings: "设置"
-  }
+  },
+  waterUsage: {
+    waterUsage: "用水量",
+    placeholder: {
+      yyyymm: "yyyymm",
+    },
+    yearMonth: "年份 - 月份",
+    insert: "添加",
+    actions: "操作",
+    addNewRecord: "添加新记录",
+    recordYear: "记录年份",
+    selectYear: "选择年份",
+    recordMonth: "记录月份",
+    selectMonth: "选择月份",
+    tapWaterMeter: "自来水表",
+    recycledWaterMeter: "再生水表",
+    cancel: "取消",
+    confirm: "确认",
+    columns: {
+      recordid: "记录 ID",
+      factoryid: "工厂 ID",
+      recordyear: "记录年份",
+      recordmonth: "记录月份",
+      tapWaterMeter: "自来水表",
+      recycledWaterMeter: "再生水表",
+      action: "操作",
+    },
+  },
 };

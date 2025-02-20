@@ -1,3 +1,4 @@
+<!-- views/Input.vue -->
 <template>
         <div class="input-container">
           <template v-if="route.path === '/mainPage/input'">
@@ -11,11 +12,9 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import WaterTable from "../components/WaterTable.vue";
-import EnergyTable from "../components/EnergyTable.vue";
+import WaterTable from "@components/WaterTable.vue";
+import EnergyTable from "@components/EnergyTable.vue";
 const route = useRoute();
-
-
 
 </script>
 

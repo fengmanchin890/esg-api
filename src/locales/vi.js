@@ -19,5 +19,32 @@ export default {
     inputElectricity: "Nhập lượng điện",
     dataAnalysis: "Phân tích dữ liệu",
     settings: "Cài đặt"
-  }
+  },
+  waterUsage: {
+    waterUsage: "Tiêu thụ Nước",
+    placeholder: {
+      yyyymm: "yyyymm",
+    },
+    yearMonth: "Năm - Tháng",
+    insert: "THÊM",
+    actions: "Hành động",
+    addNewRecord: "Thêm bản ghi mới",
+    recordYear: "Năm ghi",
+    selectYear: "Chọn năm",
+    recordMonth: "Tháng ghi",
+    selectMonth: "Chọn tháng",
+    tapWaterMeter: "Đồng hồ nước máy",
+    recycledWaterMeter: "Đồng hồ nước tái sử dụng",
+    cancel: "Hủy",
+    confirm: "Xác nhận",
+    columns: {
+      recordid: "ID bản ghi",   
+      factoryid: "ID nhà máy",  
+      recordyear: "Năm ghi",
+      recordmonth: "Tháng ghi",
+      tapWaterMeter: "Đồng hồ nước máy",
+      recycledWaterMeter: "Đồng hồ nước tái sử dụng",
+      action: "Hành động",
+    },
+  },
 };

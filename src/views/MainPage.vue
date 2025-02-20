@@ -1,3 +1,4 @@
+<!-- views/MainPage.vue -->
 <template>
   <el-container class="app-container">
       <Header />
