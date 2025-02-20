@@ -1,5 +1,4 @@
-<!-- views/Login.vue -->
-<template>
+<!-- views/Login.vue --><template>
   <div class="login-container">
     <div class="image-section">
       <TripleCircle />
@@ -44,7 +43,7 @@
                   placeholder="Select Language"
                   class="input-field"
                 >
-                  <!-- Sử dụng slot prefix để hiển thị cờ của ngôn ngữ được chọn -->
+                  <!-- Hiển thị cờ của ngôn ngữ được chọn -->
                   <template #prefix>
                     <img
                       v-if="selectedOption"
@@ -156,6 +155,11 @@ const languageOptions = [
     label: "繁體中文",
     value: "zh-tw",
     flag: new URL("@/assets/flag/Taiwan_Flag.png", import.meta.url).href,
+  },
+  {
+    label: "日本語",
+    value: "ja",
+    flag: new URL("@/assets/flag/Japan_Flag.png", import.meta.url).href,
   },
 ];
 

@@ -58,6 +58,11 @@ const languageOptions = [
     value: "zh-tw",
     flag: new URL("@/assets/flag/Taiwan_Flag.png", import.meta.url).href,
   },
+  {
+    label: "日本語",
+    value: "ja",
+    flag: new URL("@/assets/flag/Japan_Flag.png", import.meta.url).href,
+  },
 ];
 
 const selectedLang = computed({

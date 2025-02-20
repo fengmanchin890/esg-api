@@ -4,12 +4,14 @@ import vi from './locales/vi.js';
 import en from './locales/en.js';
 import zhCn from './locales/zh-cn.js';
 import zhTw from './locales/zh-tw.js';
+import ja from './locales/ja.js';
 
 const messages = {
   vi,
   en,
   'zh-cn': zhCn,
-  'zh-tw': zhTw
+  'zh-tw': zhTw,
+  ja
 };
 
 const defaultLocale = localStorage.getItem('locale') || 'en';
